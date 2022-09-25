@@ -1,0 +1,20 @@
+.SideBar_container{
+    height: 100vh;
+    background-color: rgb(12, 12, 39);
+    width: 10vw;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    a{
+        color: white;
+        text-decoration: none;
+    }
+
+}
+
+.testIcon{
+    color: white;
+    background-color: red;
+}
