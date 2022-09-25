@@ -12,8 +12,8 @@ const MainComponent = () => {
 
     <div className='MainComponent-container'>
         <Routes>
-          
             <Route path="/" element={(<Home />)} />
+            {/* <Route path="/home" element={(<Home />)} /> */}
             <Route path="/charts" element={(<Charts />)} />
             <Route path="/orders" element={(<Orders />)} />
            

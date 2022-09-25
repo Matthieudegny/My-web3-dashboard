@@ -1,20 +1,57 @@
+@import '../../style/style.scss';
+
 .SideBar_container{
     height: 100vh;
     background-color: rgb(12, 12, 39);
     width: 10vw;
     color: white;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
 
+    h1{
+        margin-top: 5vh;
+    }
+
     a{
         color: white;
-        text-decoration: none;
+        text-decoration: none; 
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .SideBar_Links_Item{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: $primaryColor;
+    }
+
+    a:hover{
+        transition: all 0.3s ease;
+        box-shadow: rgba(111, 76, 255, 0.5) 0px 0px 20px 0px;
+    }
+
+    svg{
+        height: 35px;
+        width: 35px;        
+    }
+
+    .activeLink{
+        box-shadow: 0px 0px 50px 14px rgba(41, 41, 173, 0.722);
     }
 
 }
 
-.testIcon{
-    color: white;
-    background-color: red;
+.SideBar_Links_Container{
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
+

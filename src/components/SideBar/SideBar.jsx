@@ -1,66 +1,44 @@
-import React,{useState, useEffect, useContext} from 'react'
-import { NavLink } from 'react-router-dom';
+import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
 
 //import style
-import './SideBar.scss'
-
-//import icons
-import { ImLibrary } from "react-icons/im";
-import { AiOutlineAreaChart } from "react-icons/ai";
-import { CgPlayListSearch } from "react-icons/cg";
+import "./SideBar.scss";
 
 //import context
-import { DashBoardContext } from '../../Context/Context'
+import { DashBoardContext } from "../../Context/Context";
+
+//import data
+import { pages } from "../../data/data";
 
 const SideBar = () => {
-
-  const { mobileVersion } = useContext(DashBoardContext)
-
-  const pages = [
-    {name:"Home", link:"/",icon: <ImLibrary/>},
-    {name:"Charts", link:"/charts", icon: <AiOutlineAreaChart/>},
-    {name:"Orders", link:"/orders", icon: <CgPlayListSearch/>},
-  ]
+  const { mobileVersion } = useContext(DashBoardContext);
 
   return (
-
-    <div className='SideBar_container'>
-
-      {!mobileVersion &&
-       <h1>My dashboard</h1>
-      }
-
-       {pages.map((page) => (
-
-        <NavLink
-          to={page.link}
-          className={({ isActive }) => (isActive ? "activeLink" : "normalLink")}>
-            
+    <div className="SideBar_container">
+      {!mobileVersion && <h1>My dashboard</h1>}
+      <div className="SideBar_Links_Container">
+        {pages.map((page) => (
+          <NavLink
+            to={page.link} end
+            className={({ isActive }) =>
+              isActive ? "activeLink" : ""
+            }
+          >
             {!mobileVersion ? (
-
-              <>
-                { page.name }
-                { page.icon}
-              </>
-
+              <div className="SideBar_Links_Item">
+                {page.name}
+                {page.icon}
+              </div>
             ) : (
-              
-              <>
-                { page.icon}
-              </>
-        
-            )
-            } 
-
-        </NavLink>
-
-       ))}
-
-        
-      
-
+              <div className="SideBar_Links_Item">
+                {page.icon}
+              </div>
+            )}
+          </NavLink>
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;
