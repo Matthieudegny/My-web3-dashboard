@@ -15,7 +15,7 @@ const SideBar = () => {
 
   return (
     <div className="SideBar_container">
-      {!mobileVersion && <h1>My dashboard</h1>}
+     
       <div className="SideBar_Links_Container">
         {pages.map((page) => (
           <NavLink
