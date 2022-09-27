@@ -1,8 +1,13 @@
-
+@import './style/style.scss';
 .App{
     display: flex;
+    flex-direction: column;
     margin: 0;
     padding: 0;  
-    background-color: #100B16;
+    background-color: $firstColor;
     font-family: 'Roboto', sans-serif;
+
+    &-main-container{
+        display: flex;
+    }
 }

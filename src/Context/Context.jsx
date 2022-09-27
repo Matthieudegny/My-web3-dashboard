@@ -7,7 +7,7 @@ const DashBoardContextProvider = (props) => {
     const [width, setWidth] = useState(window.innerWidth);
     const [mobileVersion, setMobileVersion] = useState(false)
 
-    const breakpoint = 600;
+    const breakpoint = 800;
 
     //find the width of the window
     useEffect(()=> {

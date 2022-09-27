@@ -1,13 +1,14 @@
 @import '../../style/style.scss';
 
 .SideBar_container{
-    height: 100vh;
-    background-color: rgba(12, 12, 39, 0.275);
+    height: 90vh;
+    margin-top: 10vh;
+    background-color: $firstColor;
     width: 10vw;
     color: white;
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
-
+    position: fixed;
     display: flex;
     flex-direction: column;
 
@@ -24,31 +25,34 @@
 
     .SideBar_Links_Item{
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 5px;
+        font-size: 15px;
+        padding: 10px;
         border-radius: 10px;
-        background: linear-gradient(to left, #000046, #11576afa); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */;
+        background: linear-gradient(to right, #0d499e, #06b5e6fa); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */;
     }
 
     a:hover{
         transition: all 0.3s ease;
-        box-shadow: #11566a 0px 0px 20px 0px;
+        box-shadow: $positivColor 0px 0px 20px 0px;
     }
 
     svg{
+        margin-left: 5px;
         height: 35px;
         width: 35px;        
     }
 
+
     .activeLink{
-        box-shadow: 0px 0px 50px 14px rgba(26, 26, 211, 0.722);
+        box-shadow: 0px 0px 50px 14px $lightbuttoncolor;
     }
 
 }
 
 .SideBar_Links_Container{
+    margin-top: 5vh;
     height: 50%;
     display: flex;
     flex-direction: column;

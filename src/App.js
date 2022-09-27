@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import DashBoardContext from './Context/Context'
 
 //import components
+import Header from './components/Header/Header';
 import SideBar from './components/SideBar/SideBar'
 import MainComponent from './pages/MainComponent/MainComponent';
 
@@ -18,9 +19,12 @@ function App() {
       <BrowserRouter>
       <DashBoardContext>
 
-          <SideBar/>
+          <Header/>
 
-          <MainComponent/>
+          <div className='App-main-container'>
+            <SideBar/>
+            <MainComponent/>
+          </div>
 
       </DashBoardContext>
       </BrowserRouter>
