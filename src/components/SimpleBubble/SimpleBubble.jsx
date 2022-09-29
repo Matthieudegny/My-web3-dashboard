@@ -2,12 +2,14 @@ import React from 'react'
 
 import './SimpleBubble.scss'
 
-function SimpleBubble() {
+function SimpleBubble({props}) {
+
   return (
     <div className='container-simpleBubble'>
-        <h4>Valeur Portefeuille: 35600$</h4>
-        <h4>Performance annuelle: +35%</h4>
-        <h4>Performance mensuelle: +7%</h4>
+      <h2>{props.title}</h2>
+        <p>{props.firstRow} <span>{props.firstRowNumber}</span></p>
+        <p>{props.secondRow} <span>{props.secondRowNumber}</span></p>
+        <p>{props.thirdRow} <span>{props.thirdRowNumber}</span></p>
     </div>
   )
 }

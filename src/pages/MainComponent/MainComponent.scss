@@ -1,8 +1,8 @@
 @import '../../style/style.scss';
 
 .MainComponent-container{
-    height: 90vh;
     margin-top: 10vh;
+    min-height: calc(90vh - 200px);
     width: 90vw;
     margin-left: 10vw;
     // background: url("../../data/images/appBackground.jpg") no-repeat  ;

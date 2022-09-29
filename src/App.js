@@ -13,6 +13,7 @@ import MainComponent from './pages/MainComponent/MainComponent';
 import "./App.scss"
 
 function App() {
+
   return (
     <div className="App">
 

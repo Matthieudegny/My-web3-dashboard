@@ -6,6 +6,7 @@ const DashBoardContextProvider = (props) => {
 
     const [width, setWidth] = useState(window.innerWidth);
     const [mobileVersion, setMobileVersion] = useState(false)
+    const [page, setPage] = useState("Home")
 
     const breakpoint = 800;
 
@@ -22,14 +23,12 @@ const DashBoardContextProvider = (props) => {
 
     //version mobile is true or not
     useEffect(() => {
-        
         if (width>breakpoint) setMobileVersion(false)
         else setMobileVersion(true)
-    
     }, [width])
   
     return(
-        <DashBoardContext.Provider value={{mobileVersion}}>
+        <DashBoardContext.Provider value={{mobileVersion,setPage,page}}>
             { props.children }
         </DashBoardContext.Provider>
     )

@@ -9,3 +9,11 @@ export const pages = [
     {name:"Charts", link:"/charts", icon: <AiOutlineAreaChart/>},
     {name:"Orders", link:"/orders", icon: <CgPlayListSearch/>},
   ]
+
+export const homeFirstBubbleProps = {
+  title:"Performance",
+  firstRow:'Annuel',
+  firstRowNumber:"+20%",
+  secondRow:"Mensuel",
+  secondRowNumber:"+7%"
+}

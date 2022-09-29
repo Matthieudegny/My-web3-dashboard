@@ -11,7 +11,11 @@ import { DashBoardContext } from "../../Context/Context";
 import { pages } from "../../data/data";
 
 const SideBar = () => {
-  const { mobileVersion } = useContext(DashBoardContext);
+  const { mobileVersion,setPage } = useContext(DashBoardContext);
+
+  const savePageForHeader = (page) => {
+    setPage(page)
+  }
 
   return (
     <div className="SideBar_container">
@@ -23,6 +27,7 @@ const SideBar = () => {
             className={({ isActive }) =>
               isActive ? "activeLink" : ""
             }
+            onClick={() => savePageForHeader(page.name)}
           >
             {!mobileVersion ? (
               <div className="SideBar_Links_Item">
