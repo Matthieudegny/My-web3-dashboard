@@ -1,7 +1,37 @@
-.Home_container{
-    background-color: red;
-    height: 100%;
+@import "../../style/style.scss";
+.Home_container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: white;
+
+  &-textPart {
     display: flex;
-    justify-content: space-between;
-    color: white; 
+    justify-content: space-around;
+    width: 100%;
+    font-size: $textFontSize;
+
+    h2 {
+      position: relative;
+      font-size: $h2FontSize;
+      margin-bottom: 20px;
+    }
+
+    h2:before {
+      position: absolute;
+      bottom: -5px;
+      content: "";
+      width: 100%;
+      height: 5px;
+      background-color: $lightbuttoncolor;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+  }
+
+  &-chartPart {
+    width: 1000px;
+  }
 }

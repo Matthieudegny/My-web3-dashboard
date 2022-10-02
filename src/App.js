@@ -1,33 +1,29 @@
 //import dependecies
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 
 //import context
-import DashBoardContext from './Context/Context'
+import DashBoardContext from "./Context/Context";
 
 //import components
-import Header from './components/Header/Header';
-import SideBar from './components/SideBar/SideBar'
-import MainComponent from './pages/MainComponent/MainComponent';
+import Header from "./components/Header/Header";
+import SideBar from "./components/SideBar/SideBar";
+import MainComponent from "./pages/MainComponent/MainComponent";
 
 //import style
-import "./App.scss"
+import "./App.scss";
 
 function App() {
-
   return (
     <div className="App">
-
       <BrowserRouter>
-      <DashBoardContext>
+        <DashBoardContext>
+          <Header />
 
-          <Header/>
-
-          <div className='App-main-container'>
-            <SideBar/>
-            <MainComponent/>
+          <div className="App-main-container">
+            <SideBar />
+            <MainComponent />
           </div>
-
-      </DashBoardContext>
+        </DashBoardContext>
       </BrowserRouter>
     </div>
   );
