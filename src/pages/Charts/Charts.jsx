@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import LineChart from "../../components/Charts/Lines/Line";
 
 const Charts = () => {
   return (
-    <div>Charts</div>
-  )
-}
+    <>
+      <LineChart />
+      <LineChart />
+      <LineChart />
+    </>
+  );
+};
 
-export default Charts
+export default Charts;

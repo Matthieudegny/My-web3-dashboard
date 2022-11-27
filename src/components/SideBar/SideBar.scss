@@ -1,62 +1,63 @@
-@import '../../style/style.scss';
+@import "../../style/style.scss";
 
-.SideBar_container{
-    height: 90vh;
-    margin-top: 10vh;
-    background-color: $firstColor;
-    width: 10vw;
-    color: white;
-    overflow: hidden;
-    font-family: 'Roboto', sans-serif;
-    position: fixed;
-    display: flex;
-    flex-direction: column;
+.SideBar_container {
+  height: 90vh;
+  margin-top: 10vh;
+  background-color: $firstColor;
+  width: 10vw;
+  color: white;
+  overflow: hidden;
+  font-family: "Roboto", sans-serif;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
 
-    h1{
-        margin-top: 5vh;
-    }
-
-    a{
-        color: white;
-        text-decoration: none; 
-        transition: all 0.3s ease;
-        border-radius: 10px;
-    }
-
-    .SideBar_Links_Item{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 15px;
-        padding: 10px;
-        border-radius: 10px;
-        background: linear-gradient(to right, #0d499e, #06b5e6fa); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */;
-    }
-
-    a:hover{
-        transition: all 0.3s ease;
-        box-shadow: $positivColor 0px 0px 20px 0px;
-    }
-
-    svg{
-        margin-left: 5px;
-        height: 35px;
-        width: 35px;        
-    }
-
-
-    .activeLink{
-        box-shadow: 0px 0px 50px 14px $lightbuttoncolor;
-    }
-
-}
-
-.SideBar_Links_Container{
+  h1 {
     margin-top: 5vh;
-    height: 50%;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+    transition: all 0.5s ease-out;
+    border-radius: 10px;
+  }
+
+  .SideBar_Links_Item {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(
+      to right,
+      #0d499e,
+      #06b5e6fa
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+  a:hover {
+    transition: all 0.3s ease-in;
+    box-shadow: $positivColor 0px 0px 20px 0px;
+  }
+
+  svg {
+    margin-left: 5px;
+    height: 35px;
+    width: 35px;
+  }
+
+  .activeLink {
+    box-shadow: 0px 0px 50px 14px $lightbuttoncolor;
+  }
 }
 
+.SideBar_Links_Container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}

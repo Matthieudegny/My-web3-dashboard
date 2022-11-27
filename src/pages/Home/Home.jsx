@@ -5,29 +5,66 @@ import "./Home.scss";
 import LineChart from "../../components/Charts/Lines/Line";
 
 const Home = () => {
+  const titlesLignesArrayHome = [
+    "Total trades",
+    "Trades gagnés",
+    "Trades perdus",
+    "BE/en profit",
+    "Pertes rapides",
+    "Balance compte",
+    "Perf annuelle",
+    "Perf mensuelle",
+  ];
+
+  const numberLignesArayHome = [
+    "34",
+    "14",
+    "3",
+    "8",
+    "9",
+    "25000$",
+    "4200$/+10%",
+    "400$/+3%",
+  ];
+
+  //titile and number = type string
+  const displayLigneHome = (title, number) => {
+    return (
+      <div className="Home_container-sectionRight-array-item">
+        <div className="Home_container-sectionRight-array-item-category">
+          {title}
+        </div>
+        <div className="Home_container-sectionRight-array-item-value">
+          {number}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <section className="Home_container">
-      <header className="Home_container-textPart">
-        <div className="Home_container-textPart-Left">
-          <h2>Performances du Portefeuille:</h2>
-          <p>
-            Annuelle: <span>+32%</span>{" "}
-          </p>
-          <p>
-            Mensuelle: <span>+7%</span>{" "}
-          </p>
-        </div>
-        <div className="Home_container-textPart-right">
-          <h2>Résumé des ordres:</h2>
-          <p>Total trades :12</p>
-          <p>gagnant :12</p>
-          <p>perant: 4</p>
-        </div>
-      </header>
-      <main className="Home_container-chartPart">
-        <LineChart />
-      </main>
-    </section>
+    <div className="Home">
+      {/* <h2>Performances du Portefeuille:</h2> */}
+      <div className="Home_container">
+        <section className="Home_container-sectionLeft">
+          <LineChart />
+        </section>
+
+        <section className="Home_container-sectionRight">
+          <div className="Home_container-sectionRight-array">
+            {titlesLignesArrayHome?.map((ligne, index) => {
+              return (
+                <React.Fragment key={index}>
+                  {displayLigneHome(
+                    titlesLignesArrayHome[index],
+                    numberLignesArayHome[index]
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    </div>
   );
 };
 

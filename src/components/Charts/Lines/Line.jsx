@@ -42,9 +42,9 @@ export const options = {
       callbacks: {
         label: function (context) {
           let label = context.dataset.label || "";
-          console.log(context.dataset.label);
-          let value = parseInt(context.formattedValue, 10);
-          console.log(value);
+          // console.log(context.dataset.label);
+          // console.log(context);
+          let value = context.raw;
           if (value >= 1) {
             return `${label}: + ${value}%`;
           }
@@ -108,7 +108,7 @@ export const data = {
   datasets: [
     {
       label: "BTC",
-      data: [2, 2.5, 2.8, 2.3, 2.8, 3.5],
+      data: [2, 2.5, 2.8, -10, 20, 3.5],
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
       //courbe
@@ -116,7 +116,7 @@ export const data = {
     },
     {
       label: "NSQ",
-      data: [2, 2.1, 2.3, 2.3, 2.5, 2.7],
+      data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
       borderColor: "rgb(53, 162, 235)",
       backgroundColor: "rgba(53, 162, 235, 0.5)",
       tension: 0.5,
@@ -132,7 +132,13 @@ export const data = {
 };
 
 function LineChart() {
-  return <Line options={options} data={data} />;
+  return (
+    <Line
+      options={options}
+      data={data}
+      style={{ height: "400px", width: "100%" }}
+    />
+  );
 }
 
 export default LineChart;

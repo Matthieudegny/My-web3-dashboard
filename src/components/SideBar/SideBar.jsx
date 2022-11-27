@@ -11,35 +11,33 @@ import { DashBoardContext } from "../../Context/Context";
 import { pages } from "../../data/data";
 
 const SideBar = () => {
-  const { mobileVersion,setPage } = useContext(DashBoardContext);
+  const { mobileVersion, setPage } = useContext(DashBoardContext);
 
   const savePageForHeader = (page) => {
-    setPage(page)
-  }
+    setPage(page);
+  };
 
   return (
     <div className="SideBar_container">
-     
       <div className="SideBar_Links_Container">
-        {pages.map((page) => (
-          <NavLink
-            to={page.link} end
-            className={({ isActive }) =>
-              isActive ? "activeLink" : ""
-            }
-            onClick={() => savePageForHeader(page.name)}
-          >
-            {!mobileVersion ? (
-              <div className="SideBar_Links_Item">
-                {page.name}
-                {page.icon}
-              </div>
-            ) : (
-              <div className="SideBar_Links_Item">
-                {page.icon}
-              </div>
-            )}
-          </NavLink>
+        {pages.map((page, index) => (
+          <React.Fragment key={index}>
+            <NavLink
+              to={page.link}
+              end
+              className={({ isActive }) => (isActive ? "activeLink" : "")}
+              onClick={() => savePageForHeader(page.name)}
+            >
+              {!mobileVersion ? (
+                <div className="SideBar_Links_Item">
+                  {page.name}
+                  {page.icon}
+                </div>
+              ) : (
+                <div className="SideBar_Links_Item">{page.icon}</div>
+              )}
+            </NavLink>
+          </React.Fragment>
         ))}
       </div>
     </div>

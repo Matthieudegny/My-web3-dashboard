@@ -10,7 +10,12 @@ function Header() {
 
   return (
     <div className="Header-container">
-      <h2>{page}</h2>
+      <div className="Header-container-wrapper">
+        <h2>
+          {page}
+          <div className="Header-container-wrapper-borderLine"></div>
+        </h2>
+      </div>
     </div>
   );
 }
