@@ -1,13 +1,16 @@
 import React from "react";
-import LineChart from "../../components/Charts/Lines/Line";
+
+import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
+
+import "./Charts.scss";
 
 const Charts = () => {
   return (
-    <>
-      <LineChart />
-      <LineChart />
-      <LineChart />
-    </>
+    <div className="Charts">
+      <section className="Charts-chartEvolution">
+        <LineChartEvolution />
+      </section>
+    </div>
   );
 };
 

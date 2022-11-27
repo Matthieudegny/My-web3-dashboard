@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 // import faker from "faker";
@@ -20,8 +21,11 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
+
+let delayed;
 
 export const options = {
   //set up period circle size
@@ -34,6 +38,7 @@ export const options = {
   hoverBackgroundColor: "white",
   //follow his parent
   responsive: true,
+
   plugins: {
     tooltip: {
       bodyFont: {
@@ -41,32 +46,25 @@ export const options = {
       },
       callbacks: {
         label: function (context) {
-          console.log(context.dataset.label);
-          let label = context.dataset.label || "";
+          console.log(context);
           // console.log(context.dataset.label);
           // console.log(context);
           let value = context.raw;
-          if (value >= 1) {
-            return `${label}: + ${value}%`;
-          }
-          if (value < 0) {
-            return `${label}:- ${value}%`;
+          if (value) {
+            return `${value}$`;
           }
         },
       },
     },
     legend: {
-      position: "top",
-      labels: {
-        // This more specific font property overrides the global property
-        font: {
-          size: 20,
-        },
-      },
+      display: false,
     },
     title: {
       display: true,
-      text: "",
+      text: "Evolution du portefeuille",
+      font: {
+        size: 20,
+      },
     },
   },
   //afficher les elements => points
@@ -82,7 +80,7 @@ export const options = {
         color: "white",
         //allow to add description at y ticks, for these example -> $200m
         callback: function (value) {
-          return value + "%";
+          return value + "$";
         },
         font: {
           size: 20,
@@ -102,31 +100,24 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June"];
+const labels = ["1", "2", "3", "4", "5", "6"];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: "BTC",
-      data: [2, 2.5, 2.8, -10, 20, 3.5],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      label: "Portefeuille",
+      data: [20200, 23000, 25000, 23000, 22500, 28000],
+      borderColor: "rgb(22, 25, 60)",
+      backgroundColor: (context) => {
+        const ctx = context.chart.ctx;
+        const gradient = ctx.createLinearGradient(0, 100, 50, 800);
+        gradient.addColorStop(0, "rgb(6, 181, 230)");
+        gradient.addColorStop(1, "rgb(13, 73, 158)");
+        return gradient;
+      },
+      fill: "start",
       //courbe
-      tension: 0.5,
-    },
-    {
-      label: "NSQ",
-      data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      tension: 0.5,
-    },
-    {
-      label: "Portefolio",
-      data: [2, 2.7, 3, 2.8, 3.4, 3.8],
-      borderColor: "rgb(6, 181, 230)",
-      backgroundColor: "rgb(6, 181, 230)",
       tension: 0.5,
     },
   ],
@@ -136,7 +127,7 @@ function LineChart() {
   return (
     <Line
       onClick={() => {
-        console.log("llllll");
+        console.log("llmmmm");
       }}
       options={options}
       data={data}
