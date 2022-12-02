@@ -110,23 +110,49 @@ export const data = {
     {
       label: "BTC",
       data: [2, 2.5, 2.8, -10, 20, 3.5],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      // backgroundColor: (context, chartArea) => {
+      //   console.log(chartArea);
+      //   const ctx = context.chart.ctx;
+      //   const gradient = ctx.createLinearGradient(0, 500, 0, 0);
+      //   gradient.addColorStop(0, "rgb(6, 20, 230)");
+      //   gradient.addColorStop(1, "rgb(6, 181, 230)");
+      //   return gradient;
+      // },
+      borderColor: (context) => {
+        const ctx = context.chart.ctx;
+        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+        gradientStroke.addColorStop(0, "#31074E");
+        gradientStroke.addColorStop(1, "#7A16C1");
+        return gradientStroke;
+      },
+      backgroundColor: "#550F87",
       //courbe
       tension: 0.5,
     },
     {
       label: "NSQ",
       data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
+      borderColor: (context) => {
+        const ctx = context.chart.ctx;
+        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+        gradientStroke.addColorStop(0, "#150D71");
+        gradientStroke.addColorStop(1, "#1907E6");
+        return gradientStroke;
+      },
+      backgroundColor: "#170AAC",
       tension: 0.5,
     },
     {
       label: "Portefolio",
-      data: [2, 2.7, 3, 2.8, 3.4, 3.8],
-      borderColor: "rgb(6, 181, 230)",
-      backgroundColor: "rgb(6, 181, 230)",
+      data: [2, 2.7, 3, 2.8, 3.4, 20.8],
+      borderColor: (context) => {
+        const ctx = context.chart.ctx;
+        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+        gradientStroke.addColorStop(0, "#096680");
+        gradientStroke.addColorStop(1, "#06B5E6");
+        return gradientStroke;
+      },
+      backgroundColor: "#096680",
       tension: 0.5,
     },
   ],

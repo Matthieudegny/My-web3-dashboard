@@ -38,6 +38,18 @@ export const options = {
   hoverBackgroundColor: "white",
   //follow his parent
   responsive: true,
+  animation: {
+    onComplete: () => {
+      delayed = true;
+    },
+    delay: (context) => {
+      let delay = 0;
+      if (context.type === "data" && context.mode === "default") {
+        delay = context.dataIndex * 300 + context.datasetIndex * 100;
+      }
+      return delay;
+    },
+  },
 
   plugins: {
     tooltip: {
@@ -86,6 +98,7 @@ export const options = {
           size: 20,
         },
       },
+
       // suggestedMin: 2,
       // suggestedMax: 5,
     },
@@ -94,6 +107,13 @@ export const options = {
         color: "white",
         font: {
           size: 20,
+        },
+      },
+      title: {
+        display: true,
+        text: "Nombre de positions",
+        font: {
+          size: 15,
         },
       },
     },
@@ -109,14 +129,15 @@ export const data = {
       label: "Portefeuille",
       data: [20200, 23000, 25000, 23000, 22500, 28000],
       borderColor: "rgb(22, 25, 60)",
-      backgroundColor: (context) => {
+      fill: "start",
+      backgroundColor: (context, chartArea) => {
+        console.log(chartArea);
         const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 100, 50, 800);
-        gradient.addColorStop(0, "rgb(6, 181, 230)");
-        gradient.addColorStop(1, "rgb(13, 73, 158)");
+        const gradient = ctx.createLinearGradient(0, 500, 0, 0);
+        gradient.addColorStop(0, "rgb(6, 20, 230)");
+        gradient.addColorStop(1, "rgb(6, 181, 230)");
         return gradient;
       },
-      fill: "start",
       //courbe
       tension: 0.5,
     },
@@ -126,9 +147,6 @@ export const data = {
 function LineChart() {
   return (
     <Line
-      onClick={() => {
-        console.log("llmmmm");
-      }}
       options={options}
       data={data}
       style={{ height: "400px", width: "100%", zIndex: "50" }}

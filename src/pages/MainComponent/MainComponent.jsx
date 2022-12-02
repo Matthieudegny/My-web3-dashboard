@@ -10,11 +10,11 @@ import Orders from "../Orders/Orders";
 const MainComponent = () => {
   return (
     <div className="MainComponent-container">
-      <div class="animation-wrapper">
-        <div class="particle particle-1"></div>
-        <div class="particle particle-2"></div>
-        <div class="particle particle-3"></div>
-        <div class="particle particle-4"></div>
+      <div className="animation-wrapper">
+        <div className="particle particle-1"></div>
+        <div className="particle particle-2"></div>
+        <div className="particle particle-3"></div>
+        <div className="particle particle-4"></div>
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
