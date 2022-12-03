@@ -24,7 +24,10 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Chart.js Bar Chart - Stacked",
+      text: "Type de trade par mois",
+      font: {
+        size: 20,
+      },
     },
   },
   responsive: true,
@@ -48,26 +51,32 @@ export const data = {
   labels,
   datasets: [
     {
-      label: "Dataset 1",
-      data: [10, 20, 30, 50, 20, 60, 80],
-      backgroundColor: "rgb(255, 99, 132)",
+      label: "Total trades",
+      data: [4, 5, 6, 2, 2, 8, 8],
+      backgroundColor: "rgb(53, 162, 235)",
       stack: "Stack 0",
     },
     {
-      label: "Dataset 2",
-      data: [60, 20, 30, 90, 20, 60, 80],
+      label: "Trades gagnés",
+      data: [2, 2, 1, 0, 0, 4, 5],
       backgroundColor: "rgb(75, 192, 192)",
       stack: "Stack 1",
     },
     {
-      label: "Dataset 3",
-      data: [60, 20, 30, 90, 20, 60, 80],
-      backgroundColor: "rgb(53, 162, 235)",
+      label: "Trades perdus",
+      data: [0, 1, 2, 0, 1, 2, 2],
+      backgroundColor: "rgb(255, 99, 132)",
       stack: "Stack 2",
     },
     {
-      label: "Dataset 4",
-      data: [60, 20, 30, 90, 20, 60, 80],
+      label: "BE/en profit",
+      data: [1, 2, 2, 2, 0, 0, 1],
+      backgroundColor: "rgb(53, 162, 235)",
+      stack: "Stack 3",
+    },
+    {
+      label: "Pertes rapides",
+      data: [1, 0, 1, 0, 1, 2, 0],
       backgroundColor: "rgb(53, 162, 235)",
       stack: "Stack 3",
     },
@@ -75,13 +84,7 @@ export const data = {
 };
 
 function BarChart() {
-  return (
-    <Bar
-      options={options}
-      data={data}
-      style={{ height: "400px", width: "100%", zIndex: "50" }}
-    />
-  );
+  return <Bar options={options} data={data} style={{ zIndex: "50" }} />;
 }
 
 export default BarChart;

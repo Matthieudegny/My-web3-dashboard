@@ -58,9 +58,6 @@ export const options = {
       },
       callbacks: {
         label: function (context) {
-          console.log(context);
-          // console.log(context.dataset.label);
-          // console.log(context);
           let value = context.raw;
           if (value) {
             return `${value}$`;
@@ -115,6 +112,10 @@ export const options = {
         font: {
           size: 15,
         },
+        align: "end",
+        padding: {
+          left: "20px",
+        },
       },
     },
   },
@@ -131,7 +132,6 @@ export const data = {
       borderColor: "rgb(22, 25, 60)",
       fill: "start",
       backgroundColor: (context, chartArea) => {
-        console.log(chartArea);
         const ctx = context.chart.ctx;
         const gradient = ctx.createLinearGradient(0, 500, 0, 0);
         gradient.addColorStop(0, "rgb(6, 20, 230)");

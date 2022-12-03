@@ -5,15 +5,53 @@ import { CgPlayListSearch } from "react-icons/cg";
 
 //page -> links for sideBar
 export const pages = [
-    {name:"Home", link:"/",icon: <ImLibrary/>},
-    {name:"Charts", link:"/charts", icon: <AiOutlineAreaChart/>},
-    {name:"Orders", link:"/orders", icon: <CgPlayListSearch/>},
-  ]
+  { name: "Home", link: "/", icon: <ImLibrary /> },
+  { name: "Charts", link: "/charts", icon: <AiOutlineAreaChart /> },
+  { name: "Orders", link: "/orders", icon: <CgPlayListSearch /> },
+];
 
-export const homeFirstBubbleProps = {
-  title:"Performance",
-  firstRow:'Annuel',
-  firstRowNumber:"+20%",
-  secondRow:"Mensuel",
-  secondRowNumber:"+7%"
-}
+export const titlesLignesArrayHome = [
+  "Total trades",
+  "Trades gagnés",
+  "Trades perdus",
+  "BE/en profit",
+  "Pertes rapides",
+  "Balance compte",
+  "Perf annuelle",
+  "Perf mensuelle",
+];
+
+export const numberLignesArayHome = [
+  "34",
+  "14",
+  "3",
+  "8",
+  "9",
+  "25000$",
+  "4200$/+10%",
+  "400$/+3%",
+];
+
+export const titlesLignesArrayChartEvolution = [
+  "Total trades",
+  "Balance compte",
+  "Perf annuelle",
+  "Perf mensuelle",
+];
+
+export const numberLignesArayChartEvolution = [
+  "34",
+  "25000$",
+  "4200$/+10%",
+  "400$/+3%",
+];
+
+export const titlesLignesArrayStatesTrades = [
+  "Total trades",
+  "Trades gagnés",
+  "Trades perdus",
+  "BE/en profit",
+  "Pertes rapides",
+];
+
+export const numberLignesArayStatesTrades = ["34", "14", "3", "8", "9"];

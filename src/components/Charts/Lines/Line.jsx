@@ -41,10 +41,7 @@ export const options = {
       },
       callbacks: {
         label: function (context) {
-          console.log(context.dataset.label);
           let label = context.dataset.label || "";
-          // console.log(context.dataset.label);
-          // console.log(context);
           let value = context.raw;
           if (value >= 1) {
             return `${label}: + ${value}%`;
@@ -66,7 +63,10 @@ export const options = {
     },
     title: {
       display: true,
-      text: "",
+      text: "Performance NSQ, BTC, Portefeuille par semaine",
+      font: {
+        size: 20,
+      },
     },
   },
   //afficher les elements => points
@@ -110,14 +110,6 @@ export const data = {
     {
       label: "BTC",
       data: [2, 2.5, 2.8, -10, 20, 3.5],
-      // backgroundColor: (context, chartArea) => {
-      //   console.log(chartArea);
-      //   const ctx = context.chart.ctx;
-      //   const gradient = ctx.createLinearGradient(0, 500, 0, 0);
-      //   gradient.addColorStop(0, "rgb(6, 20, 230)");
-      //   gradient.addColorStop(1, "rgb(6, 181, 230)");
-      //   return gradient;
-      // },
       borderColor: (context) => {
         const ctx = context.chart.ctx;
         const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
@@ -159,16 +151,7 @@ export const data = {
 };
 
 function LineChart() {
-  return (
-    <Line
-      onClick={() => {
-        console.log("llllll");
-      }}
-      options={options}
-      data={data}
-      style={{ height: "400px", width: "100%", zIndex: "50" }}
-    />
-  );
+  return <Line options={options} data={data} style={{ zIndex: "50" }} />;
 }
 
 export default LineChart;

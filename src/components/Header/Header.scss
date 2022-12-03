@@ -1,59 +1,139 @@
 @import "../../style/style.scss";
 
-.Header-container {
+.Header {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
   height: 10vh;
   width: 100%;
   color: white;
   background-color: $firstColor;
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 100;
+}
 
-  &-wrapper {
+.Header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70vw;
+
+  &-user {
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
-    padding: 1px;
-    border-radius: 5px;
-    position: relative;
+    align-items: center;
+    height: 100%;
+    font-size: $textFontSize;
+    padding: 1%;
+    width: 15vw;
 
-    h2 {
-      padding: 10px;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 6px $positivColor;
-      background-color: $firstColor;
-      border-radius: 5px;
-      transition: all 1s ease-in-out;
+    svg {
+      margin-left: 1vw;
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
     }
+  }
 
-    h2:hover {
-      transition: all 0.3s ease-in-out;
-      box-shadow: $positivColor 2px 2px 20px 0px;
-    }
+  &-Page {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -8vw;
 
-    &-borderLine {
-      background-image: conic-gradient($firstColor, #06b5e669);
-      position: absolute;
-      z-index: -5;
-      top: -100%;
-      left: -100%;
-      height: 300%;
-      width: 300%;
-      animation: rotation linear 2s infinite;
-
+    &-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
-    }
+      padding: 1px;
+      border-radius: 5px;
+      position: relative;
 
-    @keyframes rotation {
-      0% {
-        transform: rotate(0turn);
+      h2 {
+        padding: 10px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 6px $positivColor;
+        background-color: $firstColor;
+        border-radius: 5px;
+        transition: all 1s ease-in-out;
       }
-      100% {
-        transform: rotate(1turn);
+
+      h2:hover {
+        transition: all 0.3s ease-in-out;
+        box-shadow: $positivColor 2px 2px 20px 0px;
+      }
+
+      &-borderLine {
+        background-image: conic-gradient($firstColor, #06b5e669);
+        position: absolute;
+        z-index: -5;
+        top: -100%;
+        left: -100%;
+        height: 300%;
+        width: 300%;
+        animation: rotation linear 2s infinite;
+
+        overflow: hidden;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0turn);
+        }
+        100% {
+          transform: rotate(1turn);
+        }
       }
     }
   }
+
+  &-slider {
+    width: 400px;
+    height: 40px;
+    margin-left: 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $secondColor;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    font-style: italic;
+  }
+  &-text1 {
+    font-size: 26px;
+    display: inline-block;
+    animation: 12s linear 0s infinite slide;
+  }
+
+  &-text2 {
+    font-size: 26px;
+    display: inline-block;
+    animation: 12s linear 6s infinite slide;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0%);
+    }
+
+    100% {
+      transform: translateX(200%);
+    }
+  }
+}
+
+.item {
+  position: absolute;
+  width: 120%;
+  left: -120%;
+}
+
+.Header-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;
+  font-size: 25px;
 }
