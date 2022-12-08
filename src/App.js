@@ -14,15 +14,6 @@ import MainComponent from "./pages/MainComponent/MainComponent";
 import "./App.scss";
 
 function App() {
-  useEffect(() => {
-    const getOrders = async () => {
-      const orders = await fetch("/api/dashboard");
-      const json = await orders.json();
-      console.log(json);
-    };
-    getOrders();
-  }, []);
-
   return (
     <div className="App">
       <BrowserRouter>

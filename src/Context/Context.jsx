@@ -42,6 +42,19 @@ const DashBoardContextProvider = (props) => {
     },
   ]);
 
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const orders = await fetch("/api/dashboard");
+        const json = await orders.json();
+        if (json) setOrders(json);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getOrders();
+  }, []);
+
   const breakpoint = 800;
 
   //find the width of the window
@@ -62,7 +75,9 @@ const DashBoardContextProvider = (props) => {
   }, [width]);
 
   return (
-    <DashBoardContext.Provider value={{ mobileVersion, setPage, page, Orders }}>
+    <DashBoardContext.Provider
+      value={{ mobileVersion, setPage, page, Orders, setOrders }}
+    >
       {props.children}
     </DashBoardContext.Provider>
   );

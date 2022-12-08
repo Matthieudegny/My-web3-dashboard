@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 
 //style
 import "./Orders.scss";
@@ -7,15 +7,15 @@ import "./Orders.scss";
 import { DashBoardContext } from "../../Context/Context";
 
 const Orders = () => {
-  const { Orders } = useContext(DashBoardContext);
+  const { Orders, setOrders } = useContext(DashBoardContext);
 
-  const [asset, setasset] = useState("ADA");
-  const [direction, setdirection] = useState("long");
-  const [taille, settaille] = useState(1);
-  const [risk, setrisk] = useState(2);
-  const [realise, setrealise] = useState(3);
-  const [profit, setprofit] = useState(500);
-  const [balance, setbalance] = useState(45000);
+  const assetInput = useRef();
+  const directionInput = useRef();
+  const tailleInput = useRef();
+  const riskInput = useRef();
+  const realiseInput = useRef();
+  const profitInput = useRef();
+  const balanceInput = useRef();
 
   const [orderObject, setorderObject] = useState({
     date: "",
@@ -28,10 +28,6 @@ const Orders = () => {
     balance: null,
   });
 
-  useEffect(() => {
-    console.log(orderObject);
-  }, [orderObject]);
-
   const handleChange = (e) => {
     let { name, value } = e.target;
     if (
@@ -42,7 +38,15 @@ const Orders = () => {
       name === "balance"
     ) {
       value = +value;
-      console.log(value);
+    }
+    if (name === "date") {
+      //changer ici et mettre le meme type de date
+      let day = value.slice(8, 10);
+      let month = value.slice(5, 7);
+      let year = value.slice(0, 4);
+      let hour = value.slice(11, 16);
+      value = `${day}/${month}/${year} ${hour} `;
+      console.log("day", value);
     }
     setorderObject((prevState) => ({
       ...prevState,
@@ -51,31 +55,96 @@ const Orders = () => {
   };
 
   const submit = async () => {
-    const orderToCreate = {
-      date,
-      asset,
-      direction,
-      taille,
-      risk,
-      realise,
-      profit,
-      balance,
-    };
-    console.log("orderTocreata", orderToCreate);
-    console.log("orderObject", orderObject);
-    const saveOrder = await fetch("/api/dashboard", {
-      method: "POST",
-      body: JSON.stringify(orderToCreate),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await saveOrder.json();
-    console.log(json);
+    //back
+    try {
+      const saveOrder = await fetch("/api/dashboard", {
+        method: "POST",
+        body: JSON.stringify(orderObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await saveOrder.json();
+      console.log(json);
+      //front
+      if (json) {
+        let newArray = [...Orders];
+        newArray.push(orderObject);
+        setOrders(newArray);
+
+        //reset
+        assetInput.current.value = "";
+        directionInput.current.value = "";
+        tailleInput.current.value = "";
+        riskInput.current.value = "";
+        realiseInput.current.value = "";
+        profitInput.current.value = "";
+        balanceInput.current.value = "";
+
+        setorderObject({
+          date: "",
+          asset: "",
+          direction: "",
+          taille: null,
+          risk: null,
+          realise: null,
+          profit: null,
+          balance: null,
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deleteOrder = async (order) => {
+    const id = order._id;
+    //delete from back
+    try {
+      const orderToDelete = await fetch(`/api/dashboard/${order._id}`, {
+        method: "DELETE",
+      });
+      const json = await orderToDelete.json();
+      console.log(json);
+      if (json) {
+        //delete from front
+        const newArray = Orders.filter((order) => order._id !== id);
+
+        setOrders(newArray);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const updateOrder = async (order) => {
+    const id = order._id;
+    //update from back
+    try {
+      const orderToUpdate = await fetch(`/api/dashboard/${order._id}`, {
+        method: "PATCH",
+        body: JSON.stringify(orderObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await orderToUpdate.json();
+      console.log(json);
+      if (json) {
+        //update from front
+        const newArray = [...Orders];
+        const indexOrderToUpdate = Orders.findIndex(
+          (element) => element._id === id
+        );
+        newArray.splice(indexOrderToUpdate, 1, orderObject);
+        setOrders(newArray);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   //Input date -> get the value of the day
-  const [date, setDate] = useState("12/02/20");
   const getDateToday = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -86,8 +155,16 @@ const Orders = () => {
     if (mm < 10) mm = "0" + mm;
 
     // const formattedToday = dd + '/' + mm + '/' + yyyy;
-    setDate(yyyy + "-" + mm + "-" + dd + "T" + "12:00");
+    // setDate(yyyy + "-" + mm + "-" + dd + "T" + "12:00");
+
+    return yyyy + "-" + mm + "-" + dd + "T" + "12:00";
+
+    // setorderObject((prevState) => ({
+    //   ...prevState,
+    //   date: date,
+    // }));
   };
+
   // useEffect(() => {
   //   getDateToday();
   // }, []);
@@ -114,11 +191,10 @@ const Orders = () => {
               <input
                 type="datetime-local"
                 name="date"
-                value={date}
                 className="Orders-date"
                 onChange={(e) => {
                   handleChange(e);
-                  setDate(e.target.value);
+                  // setDate(e.target.value);
                 }}
               />
             </td>
@@ -126,6 +202,7 @@ const Orders = () => {
               <input
                 type="text"
                 className="Orders-asset"
+                ref={assetInput}
                 name="asset"
                 onChange={handleChange}
               />
@@ -133,6 +210,7 @@ const Orders = () => {
             <td>
               <select
                 name="direction"
+                ref={directionInput}
                 className="Orders-direction"
                 onChange={handleChange}
               >
@@ -144,6 +222,7 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                ref={tailleInput}
                 className="Orders-taille"
                 name="taille"
                 onChange={handleChange}
@@ -152,6 +231,7 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                ref={riskInput}
                 className="Orders-risk"
                 name="risk"
                 onChange={handleChange}
@@ -160,6 +240,7 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                ref={realiseInput}
                 className="Orders-realise"
                 name="realise"
                 onChange={handleChange}
@@ -168,6 +249,7 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                ref={profitInput}
                 className="Orders-profit"
                 name="profit"
                 onChange={handleChange}
@@ -176,6 +258,7 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                ref={balanceInput}
                 className="Orders-balance"
                 name="balance"
                 onChange={handleChange}
@@ -199,6 +282,20 @@ const Orders = () => {
                   <td>{order.realise}</td>
                   <td>{order.profit}</td>
                   <td>{order.balance}</td>
+                  <td className="container-button-actions">
+                    <button
+                      onClick={() => updateOrder(order)}
+                      className="container-button-actions-update"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => deleteOrder(order)}
+                      className="container-button-actions-delete"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
                 </tr>
               </React.Fragment>
             );
