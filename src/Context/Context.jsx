@@ -6,42 +6,19 @@ const DashBoardContextProvider = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
   const [mobileVersion, setMobileVersion] = useState(false);
   const [page, setPage] = useState("Home");
-  const [Orders, setOrders] = useState([
-    {
-      id: 1,
-      date: "03/12/2022 12h00",
-      asset: "BTC",
-      direction: "long",
-      taille: "0.5",
-      risk: "2%",
-      realise: "6%",
-      profit: "800$",
-      balance: "26400$",
-    },
-    {
-      id: 2,
-      date: "03/12/2022 12h00",
-      asset: "BTC",
-      direction: "long",
-      taille: "0.5",
-      risk: "2%",
-      realise: "6%",
-      profit: "800$",
-      balance: "26400$",
-    },
-    {
-      id: 3,
-      date: "03/12/2022 12h00",
-      asset: "BTC",
-      direction: "long",
-      taille: "0.5",
-      risk: "2%",
-      realise: "6%",
-      profit: "800$",
-      balance: "26400$",
-    },
-  ]);
+  const [Orders, setOrders] = useState([]);
+  const [orderToUpdate, setOrderToUpdate] = useState({
+    asset: "",
+    date: "",
+    direction: "",
+    taille: undefined,
+    risk: undefined,
+    realise: undefined,
+    profit: undefined,
+    balance: undefined,
+  });
 
+  //Get all orders
   useEffect(() => {
     const getOrders = async () => {
       try {
@@ -55,8 +32,8 @@ const DashBoardContextProvider = (props) => {
     getOrders();
   }, []);
 
+  //RESPONSIVE
   const breakpoint = 800;
-
   //find the width of the window
   useEffect(() => {
     const handleResizeWindow = () => setWidth(window.innerWidth);
@@ -76,7 +53,15 @@ const DashBoardContextProvider = (props) => {
 
   return (
     <DashBoardContext.Provider
-      value={{ mobileVersion, setPage, page, Orders, setOrders }}
+      value={{
+        mobileVersion,
+        setPage,
+        page,
+        Orders,
+        setOrders,
+        orderToUpdate,
+        setOrderToUpdate,
+      }}
     >
       {props.children}
     </DashBoardContext.Provider>

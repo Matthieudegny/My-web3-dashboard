@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 
 //style
 import "./Orders.scss";
@@ -7,7 +7,7 @@ import "./Orders.scss";
 import { DashBoardContext } from "../../Context/Context";
 
 const Orders = () => {
-  const { Orders, setOrders } = useContext(DashBoardContext);
+  const { Orders, setOrders, setOrderToUpdate } = useContext(DashBoardContext);
 
   const assetInput = useRef();
   const directionInput = useRef();
@@ -54,6 +54,7 @@ const Orders = () => {
     }));
   };
 
+  //FAIRE LES VERIFS DES  INPUTS AVANT DE SUBMIT
   const submit = async () => {
     //back
     try {
@@ -117,31 +118,33 @@ const Orders = () => {
     }
   };
 
+  //POUR MODIFIER TOUVER UNE SOLUTION COTE FRONT CAR PROBLEME UX => OU SAISIR? POPUP
   const updateOrder = async (order) => {
-    const id = order._id;
-    //update from back
-    try {
-      const orderToUpdate = await fetch(`/api/dashboard/${order._id}`, {
-        method: "PATCH",
-        body: JSON.stringify(orderObject),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await orderToUpdate.json();
-      console.log(json);
-      if (json) {
-        //update from front
-        const newArray = [...Orders];
-        const indexOrderToUpdate = Orders.findIndex(
-          (element) => element._id === id
-        );
-        newArray.splice(indexOrderToUpdate, 1, orderObject);
-        setOrders(newArray);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+    // const id = order._id;
+    // //update from back
+    // try {
+    //   const orderToUpdate = await fetch(`/api/dashboard/${order._id}`, {
+    //     method: "PATCH",
+    //     body: JSON.stringify(orderObject),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
+    //   const json = await orderToUpdate.json();
+    //   console.log(json);
+    //   if (json) {
+    //     //update from front
+    //     const newArray = [...Orders];
+    //     const indexOrderToUpdate = Orders.findIndex(
+    //       (element) => element._id === id
+    //     );
+    //     newArray.splice(indexOrderToUpdate, 1, orderObject);
+    //     setOrders(newArray);
+    //   }
+    // } catch (error) {
+    //   console.log(error.message);
+    // }
+    setOrderToUpdate(order);
   };
 
   //Input date -> get the value of the day
