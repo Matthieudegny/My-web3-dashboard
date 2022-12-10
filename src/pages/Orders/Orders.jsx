@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 //style
 import "./Orders.scss";
@@ -9,92 +9,71 @@ import { DashBoardContext } from "../../Context/Context";
 const Orders = () => {
   const { Orders, setOrders, setOrderToUpdate } = useContext(DashBoardContext);
 
-  const assetInput = useRef();
-  const directionInput = useRef();
-  const tailleInput = useRef();
-  const riskInput = useRef();
-  const realiseInput = useRef();
-  const profitInput = useRef();
-  const balanceInput = useRef();
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [resetInputs, setResetInputs] = useState(false);
+  const [date, setDate] = useState("");
+  const [asset, setAsset] = useState("");
+  const [direction, setDirection] = useState("");
+  const [taille, setTaille] = useState(0);
+  const [risk, setRisk] = useState(0);
+  const [realise, setRealise] = useState(0);
+  const [profit, setProfit] = useState(0);
+  const [balance, setBalance] = useState(0);
 
-  const [orderObject, setorderObject] = useState({
-    date: "",
-    asset: "",
-    direction: "",
-    taille: null,
-    risk: null,
-    realise: null,
-    profit: null,
-    balance: null,
-  });
+  function GetDateFormatString(value) {
+    let day = value.slice(8, 10);
+    let month = value.slice(5, 7);
+    let year = value.slice(0, 4);
+    let hour = value.slice(11, 16);
+    return `${day}/${month}/${year} ${hour} `;
+  }
 
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-    if (
-      name === "taille" ||
-      name === "risk" ||
-      name === "realise" ||
-      name === "profit" ||
-      name === "balance"
-    ) {
-      value = +value;
-    }
-    if (name === "date") {
-      //changer ici et mettre le meme type de date
-      let day = value.slice(8, 10);
-      let month = value.slice(5, 7);
-      let year = value.slice(0, 4);
-      let hour = value.slice(11, 16);
-      value = `${day}/${month}/${year} ${hour} `;
-      console.log("day", value);
-    }
-    setorderObject((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  //FAIRE LES VERIFS DES  INPUTS AVANT DE SUBMIT
+  //AU LIEU DE METTRE A JOUR LE FRONT APRES SUBMIT? RAPPELER GETALLORDERS ET METTRE
+  //A JOUR AVEC setOrders
   const submit = async () => {
-    //back
-    try {
-      const saveOrder = await fetch("/api/dashboard", {
-        method: "POST",
-        body: JSON.stringify(orderObject),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await saveOrder.json();
-      console.log(json);
-      //front
-      if (json) {
-        let newArray = [...Orders];
-        newArray.push(orderObject);
-        setOrders(newArray);
-
-        //reset
-        assetInput.current.value = "";
-        directionInput.current.value = "";
-        tailleInput.current.value = "";
-        riskInput.current.value = "";
-        realiseInput.current.value = "";
-        profitInput.current.value = "";
-        balanceInput.current.value = "";
-
-        setorderObject({
-          date: "",
-          asset: "",
-          direction: "",
-          taille: null,
-          risk: null,
-          realise: null,
-          profit: null,
-          balance: null,
+    if (
+      date === "" ||
+      asset === "" ||
+      direction === "" ||
+      taille === null ||
+      risk === null ||
+      realise === null ||
+      profit === null ||
+      balance === null
+    )
+      setErrorMessage(true);
+    else {
+      //back
+      const orderObject = {
+        date: GetDateFormatString(date),
+        asset: asset,
+        direction: direction,
+        taille: taille,
+        risk: risk,
+        realise: realise,
+        profit: profit,
+        balance: balance,
+      };
+      try {
+        const saveOrder = await fetch("/api/dashboard", {
+          method: "POST",
+          body: JSON.stringify(orderObject),
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
+        const json = await saveOrder.json();
+        console.log(json);
+        //front
+        if (json) {
+          let newArray = [...Orders];
+          newArray.unshift(orderObject);
+          setOrders(newArray);
+          setResetInputs(true);
+        }
+      } catch (error) {
+        console.log(error.message);
       }
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -118,7 +97,6 @@ const Orders = () => {
     }
   };
 
-  //POUR MODIFIER TOUVER UNE SOLUTION COTE FRONT CAR PROBLEME UX => OU SAISIR? POPUP
   const updateOrder = async (order) => {
     // const id = order._id;
     // //update from back
@@ -147,33 +125,42 @@ const Orders = () => {
     setOrderToUpdate(order);
   };
 
-  //Input date -> get the value of the day
-  const getDateToday = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; // Months start at 0!
-    let dd = today.getDate();
+  //after 5 secondes (time of the animation) errorMessage is deleted
+  useEffect(() => {
+    if (errorMessage) {
+      let deleteErrorMessage = setTimeout(() => setErrorMessage(false), 5000);
+      return () => {
+        clearTimeout(deleteErrorMessage);
+      };
+    }
+  }, [errorMessage]);
 
-    if (dd < 10) dd = "0" + dd;
-    if (mm < 10) mm = "0" + mm;
-
-    // const formattedToday = dd + '/' + mm + '/' + yyyy;
-    // setDate(yyyy + "-" + mm + "-" + dd + "T" + "12:00");
-
-    return yyyy + "-" + mm + "-" + dd + "T" + "12:00";
-
-    // setorderObject((prevState) => ({
-    //   ...prevState,
-    //   date: date,
-    // }));
-  };
-
-  // useEffect(() => {
-  //   getDateToday();
-  // }, []);
+  //after submit reset all inputs
+  useEffect(() => {
+    if (resetInputs) {
+      //reset
+      setDate("");
+      setAsset("");
+      setDirection("");
+      setTaille(0);
+      setRisk(0);
+      setRealise(0);
+      setProfit(0);
+      setBalance(0);
+      setResetInputs(false);
+      console.log(direction, taille, risk);
+    }
+  }, [resetInputs]);
 
   return (
     <div className="Orders">
+      <div
+        className={`styled-table-errorMessage ${
+          errorMessage ? "ErrorActive" : ""
+        }`}
+      >
+        Vous devez remplir toutes les cases
+      </div>
       <table className="styled-table">
         <thead>
           <tr>
@@ -194,28 +181,28 @@ const Orders = () => {
               <input
                 type="datetime-local"
                 name="date"
-                className="Orders-date"
-                onChange={(e) => {
-                  handleChange(e);
-                  // setDate(e.target.value);
-                }}
+                className={`Orders-date ${date === "" ? "empty" : "checked"}`}
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
               />
             </td>
             <td>
               <input
                 type="text"
-                className="Orders-asset"
-                ref={assetInput}
+                className={`Orders-asset ${asset === "" ? "empty" : "checked"}`}
                 name="asset"
-                onChange={handleChange}
+                value={asset}
+                onChange={(event) => setAsset(event.target.value)}
               />
             </td>
             <td>
               <select
                 name="direction"
-                ref={directionInput}
-                className="Orders-direction"
-                onChange={handleChange}
+                className={`Orders-direction ${
+                  direction === "" ? "empty" : "checked"
+                }`}
+                onChange={(event) => setDirection(event.target.value)}
+                value={direction}
               >
                 <option value=""></option>
                 <option value="long">long</option>
@@ -225,46 +212,54 @@ const Orders = () => {
             <td>
               <input
                 type="number"
-                ref={tailleInput}
-                className="Orders-taille"
+                className={`Orders-taille ${
+                  taille === 0 ? "empty" : "checked"
+                }`}
+                value={taille}
                 name="taille"
-                onChange={handleChange}
+                onChange={(event) => setTaille(+event.target.value)}
               />
             </td>
             <td>
               <input
                 type="number"
-                ref={riskInput}
-                className="Orders-risk"
+                className={`Orders-risk ${risk === 0 ? "empty" : "checked"}`}
+                value={risk}
                 name="risk"
-                onChange={handleChange}
+                onChange={(event) => setRisk(+event.target.value)}
               />
             </td>
             <td>
               <input
                 type="number"
-                ref={realiseInput}
-                className="Orders-realise"
+                className={`Orders-realise ${
+                  realise === 0 ? "empty" : "checked"
+                }`}
+                value={realise}
                 name="realise"
-                onChange={handleChange}
+                onChange={(event) => setRealise(+event.target.value)}
               />
             </td>
             <td>
               <input
                 type="number"
-                ref={profitInput}
-                className="Orders-profit"
+                className={`Orders-profit ${
+                  profit === 0 ? "empty" : "checked"
+                }`}
+                value={profit}
                 name="profit"
-                onChange={handleChange}
+                onChange={(event) => setProfit(+event.target.value)}
               />
             </td>
             <td>
               <input
                 type="number"
-                ref={balanceInput}
-                className="Orders-balance"
+                className={`Orders-balance ${
+                  balance === 0 ? "empty" : "checked"
+                }`}
+                value={balance}
                 name="balance"
-                onChange={handleChange}
+                onChange={(event) => setBalance(+event.target.value)}
               />
             </td>
             <td>
@@ -273,9 +268,9 @@ const Orders = () => {
               </button>
             </td>
           </tr>
-          {Orders?.map((order) => {
+          {Orders?.map((order, index) => {
             return (
-              <React.Fragment key={order.id}>
+              <React.Fragment key={index + order.date}>
                 <tr>
                   <td>{order.date}</td>
                   <td>{order.asset}</td>

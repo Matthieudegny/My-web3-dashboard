@@ -7,16 +7,7 @@ const DashBoardContextProvider = (props) => {
   const [mobileVersion, setMobileVersion] = useState(false);
   const [page, setPage] = useState("Home");
   const [Orders, setOrders] = useState([]);
-  const [orderToUpdate, setOrderToUpdate] = useState({
-    asset: "",
-    date: "",
-    direction: "",
-    taille: undefined,
-    risk: undefined,
-    realise: undefined,
-    profit: undefined,
-    balance: undefined,
-  });
+  const [orderToUpdate, setOrderToUpdate] = useState("");
 
   //Get all orders
   useEffect(() => {

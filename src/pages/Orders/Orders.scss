@@ -37,11 +37,11 @@
   }
 
   &-direction {
-    width: 5vw;
+    width: 6vw;
   }
 
   &-taille {
-    width: 7vw;
+    width: 6vw;
   }
 
   &-risk {
@@ -67,12 +67,42 @@
 }
 
 .styled-table {
+  position: relative;
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 400px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+
+  &-errorMessage {
+    position: absolute;
+    color: white;
+    background-color: $NegativeColor;
+    padding: 0.5%;
+    border-radius: 10px;
+    top: -25px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.ErrorActive {
+  animation: 5s errorMessage forwards;
+}
+@keyframes errorMessage {
+  0% {
+    top: -25px;
+  }
+  25% {
+    top: 25px;
+  }
+  80% {
+    top: 25px;
+  }
+  100% {
+    top: -25px;
+  }
 }
 
 .styled-table thead tr {
@@ -85,6 +115,7 @@
   text-align: center;
   height: 3vh;
   padding: 5px;
+  margin: 4%;
 }
 
 .styled-table tbody tr {
@@ -115,4 +146,13 @@ table {
   &-delete {
     background-color: $NegativeColor;
   }
+}
+
+.empty {
+  box-shadow: -1px -1px 24px 1px $NegativeColor;
+  margin: 0px 10px;
+}
+.checked {
+  box-shadow: -1px -1px 24px 1px $positivColor;
+  margin: 0px 10px;
 }
