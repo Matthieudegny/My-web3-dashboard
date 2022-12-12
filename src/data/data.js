@@ -15,10 +15,9 @@ export const titlesLignesArrayHome = [
   "Trades gagnés",
   "Trades perdus",
   "BE/en profit",
-  "Pertes rapides",
   "Balance compte",
   "Perf annuelle",
-  "Perf mensuelle",
+  // "Perf mensuelle",
 ];
 
 export const numberLignesArayHome = [
@@ -51,7 +50,6 @@ export const titlesLignesArrayStatesTrades = [
   "Trades gagnés",
   "Trades perdus",
   "BE/en profit",
-  "Pertes rapides",
 ];
 
 export const numberLignesArayStatesTrades = ["34", "14", "3", "8", "9"];

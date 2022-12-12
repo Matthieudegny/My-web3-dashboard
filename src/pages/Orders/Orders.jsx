@@ -7,9 +7,17 @@ import "./Orders.scss";
 import { DashBoardContext } from "../../Context/Context";
 
 const Orders = () => {
-  const { Orders, setOrders, setOrderToUpdate } = useContext(DashBoardContext);
+  const {
+    Orders,
+    setOrders,
+    setOrderToUpdate,
+    message,
+    setMessage,
+    bckColor,
+    setbckColor,
+    balances,
+  } = useContext(DashBoardContext);
 
-  const [errorMessage, setErrorMessage] = useState(false);
   const [resetInputs, setResetInputs] = useState(false);
   const [date, setDate] = useState("");
   const [asset, setAsset] = useState("");
@@ -18,7 +26,6 @@ const Orders = () => {
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
   const [profit, setProfit] = useState(0);
-  const [balance, setBalance] = useState(0);
 
   function GetDateFormatString(value) {
     let day = value.slice(8, 10);
@@ -28,9 +35,7 @@ const Orders = () => {
     return `${day}/${month}/${year} ${hour} `;
   }
 
-  //AU LIEU DE METTRE A JOUR LE FRONT APRES SUBMIT? RAPPELER GETALLORDERS ET METTRE
-  //A JOUR AVEC setOrders
-  const submit = async () => {
+  const creationOrder = async () => {
     if (
       date === "" ||
       asset === "" ||
@@ -38,21 +43,20 @@ const Orders = () => {
       taille === null ||
       risk === null ||
       realise === null ||
-      profit === null ||
-      balance === null
-    )
-      setErrorMessage(true);
-    else {
+      profit === null
+    ) {
+      setMessage(" Vous devez remplir toutes les cases");
+      setbckColor("#550f87");
+    } else {
       //back
       const orderObject = {
-        date: GetDateFormatString(date),
+        date: date,
         asset: asset,
         direction: direction,
         taille: taille,
         risk: risk,
         realise: realise,
         profit: profit,
-        balance: balance,
       };
       try {
         const saveOrder = await fetch("/api/dashboard", {
@@ -63,13 +67,20 @@ const Orders = () => {
           },
         });
         const json = await saveOrder.json();
-        console.log(json);
+
         //front
         if (json) {
-          let newArray = [...Orders];
-          newArray.unshift(orderObject);
-          setOrders(newArray);
+          //Fetch the new array with all orders (and the last one created)
+          try {
+            const orders = await fetch("/api/dashboard");
+            const json = await orders.json();
+            if (json) setOrders(json);
+          } catch (error) {
+            console.log(error);
+          }
           setResetInputs(true);
+          setMessage("Votre ordre a été ajouté");
+          setbckColor("rgb(6, 181, 230)");
         }
       } catch (error) {
         console.log(error.message);
@@ -85,7 +96,7 @@ const Orders = () => {
         method: "DELETE",
       });
       const json = await orderToDelete.json();
-      console.log(json);
+
       if (json) {
         //delete from front
         const newArray = Orders.filter((order) => order._id !== id);
@@ -97,45 +108,20 @@ const Orders = () => {
     }
   };
 
-  const updateOrder = async (order) => {
-    // const id = order._id;
-    // //update from back
-    // try {
-    //   const orderToUpdate = await fetch(`/api/dashboard/${order._id}`, {
-    //     method: "PATCH",
-    //     body: JSON.stringify(orderObject),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    //   const json = await orderToUpdate.json();
-    //   console.log(json);
-    //   if (json) {
-    //     //update from front
-    //     const newArray = [...Orders];
-    //     const indexOrderToUpdate = Orders.findIndex(
-    //       (element) => element._id === id
-    //     );
-    //     newArray.splice(indexOrderToUpdate, 1, orderObject);
-    //     setOrders(newArray);
-    //   }
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
-    setOrderToUpdate(order);
-  };
-
   //after 5 secondes (time of the animation) errorMessage is deleted
   useEffect(() => {
-    if (errorMessage) {
-      let deleteErrorMessage = setTimeout(() => setErrorMessage(false), 5000);
+    if (message) {
+      let deleteErrorMessage = setTimeout(() => {
+        setMessage("");
+        setbckColor("");
+      }, 5000);
       return () => {
         clearTimeout(deleteErrorMessage);
       };
     }
-  }, [errorMessage]);
+  }, [message]);
 
-  //after submit reset all inputs
+  //after creationOrder reset all inputs
   useEffect(() => {
     if (resetInputs) {
       //reset
@@ -146,20 +132,36 @@ const Orders = () => {
       setRisk(0);
       setRealise(0);
       setProfit(0);
-      setBalance(0);
       setResetInputs(false);
-      console.log(direction, taille, risk);
     }
   }, [resetInputs]);
+
+  // useEffect(() => {
+  //   getBalance();
+  // }, [Orders]);
+
+  // let balancesArray = [];
+  // function getBalance() {
+  //   const ordersReversed = [...Orders].reverse();
+  //   ordersReversed.map((order, index) => {
+  //     if (balancesArray.length === 0) balancesArray.push(order.profit);
+  //     else {
+  //       let lastBalance = balancesArray[index - 1] + order.profit;
+  //       balancesArray.push(lastBalance);
+  //     }
+  //   });
+  //   setbalances(balancesArray.reverse());
+  // }
 
   return (
     <div className="Orders">
       <div
+        style={{ backgroundColor: bckColor }}
         className={`styled-table-errorMessage ${
-          errorMessage ? "ErrorActive" : ""
+          message !== "" && bckColor !== "" ? "ErrorActive" : ""
         }`}
       >
-        Vous devez remplir toutes les cases
+        {message}
       </div>
       <table className="styled-table">
         <thead>
@@ -215,8 +217,8 @@ const Orders = () => {
                 className={`Orders-taille ${
                   taille === 0 ? "empty" : "checked"
                 }`}
-                value={taille}
                 name="taille"
+                value={taille}
                 onChange={(event) => setTaille(+event.target.value)}
               />
             </td>
@@ -224,8 +226,8 @@ const Orders = () => {
               <input
                 type="number"
                 className={`Orders-risk ${risk === 0 ? "empty" : "checked"}`}
-                value={risk}
                 name="risk"
+                value={risk}
                 onChange={(event) => setRisk(+event.target.value)}
               />
             </td>
@@ -235,8 +237,8 @@ const Orders = () => {
                 className={`Orders-realise ${
                   realise === 0 ? "empty" : "checked"
                 }`}
-                value={realise}
                 name="realise"
+                value={realise}
                 onChange={(event) => setRealise(+event.target.value)}
               />
             </td>
@@ -246,25 +248,25 @@ const Orders = () => {
                 className={`Orders-profit ${
                   profit === 0 ? "empty" : "checked"
                 }`}
-                value={profit}
                 name="profit"
+                value={profit}
                 onChange={(event) => setProfit(+event.target.value)}
               />
             </td>
             <td>
-              <input
+              {/* <input
                 type="number"
                 className={`Orders-balance ${
                   balance === 0 ? "empty" : "checked"
                 }`}
-                value={balance}
                 name="balance"
+                value={balance}
                 onChange={(event) => setBalance(+event.target.value)}
-              />
+              /> */}
             </td>
             <td>
-              <button onClick={submit} className="Orders-actions">
-                Add
+              <button onClick={creationOrder} className="Orders-actions">
+                Ajouter
               </button>
             </td>
           </tr>
@@ -272,17 +274,17 @@ const Orders = () => {
             return (
               <React.Fragment key={index + order.date}>
                 <tr>
-                  <td>{order.date}</td>
+                  <td>{GetDateFormatString(order.date)}</td>
                   <td>{order.asset}</td>
                   <td>{order.direction}</td>
                   <td>{order.taille}</td>
                   <td>{order.risk}</td>
                   <td>{order.realise}</td>
                   <td>{order.profit}</td>
-                  <td>{order.balance}</td>
+                  <td>{balances[index]}</td>
                   <td className="container-button-actions">
                     <button
-                      onClick={() => updateOrder(order)}
+                      onClick={() => setOrderToUpdate(order)}
                       className="container-button-actions-update"
                     >
                       Modifier

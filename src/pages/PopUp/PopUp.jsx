@@ -7,94 +7,92 @@ import "./PopUp.scss";
 import { DashBoardContext } from "../../Context/Context";
 
 function PopUp() {
-  const { orderToUpdate, setOrderToUpdate } = useContext(DashBoardContext);
+  const {
+    orderToUpdate,
+    setOrderToUpdate,
+    setOrders,
+    message,
+    setMessage,
+    bckColor,
+    setbckColor,
+  } = useContext(DashBoardContext);
 
-  const [dateToDisplay, setdateToDisplay] = useState("");
+  const [idOrder, setIdOrder] = useState();
+  const [date, setDate] = useState("");
+  const [asset, setAsset] = useState("");
+  const [direction, setDirection] = useState("");
+  const [taille, setTaille] = useState(0);
+  const [risk, setRisk] = useState(0);
+  const [realise, setRealise] = useState(0);
+  const [profit, setProfit] = useState(0);
+  const [test, settest] = useState();
 
-  const [orderObject, setOrderObject] = useState({
-    asset: "m",
-    date: "m",
-    direction: "m",
-    taille: "m",
-    risk: "m",
-    realise: "m",
-    profit: "m",
-    balance: "m",
-  });
-
-  console.log(orderToUpdate.direction);
-
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-    if (
-      name === "taille" ||
-      name === "risk" ||
-      name === "realise" ||
-      name === "profit" ||
-      name === "balance"
-    ) {
-      value = +value;
-    }
-    if (name === "date") {
-      //transform ISOSTring date to date string
-      let day = value.slice(8, 10);
-      let month = value.slice(5, 7);
-      let year = value.slice(0, 4);
-      let hour = value.slice(11, 16);
-      value = `${day}/${month}/${year} ${hour} `;
-    }
-    setOrderToUpdate((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  //transform date string to ISOString for input date
+  //set orderToUpdate as local with all usestates
   useEffect(() => {
-    function dateFormatInput(date) {
-      if (date) {
-        let day = date.slice(0, 2);
-        let month = date.slice(3, 5);
-        let year = date.slice(6, 10);
-        let hour = date.slice(11, 16);
-        console.log("day", day);
-        let value = `${year}-${month}-${day}T${hour}:00`;
-        console.log("value", value);
-        console.log("2022-12-17T19:56:00");
-        console.log(value === "2022-12-17T19:56:00");
-
-        setdateToDisplay(value);
-      }
-    }
-    dateFormatInput(orderToUpdate.date);
+    const { asset, date, direction, profit, realise, risk, taille, _id } =
+      orderToUpdate;
+    setIdOrder(_id);
+    setDate(date);
+    setAsset(asset);
+    setDirection(direction);
+    setTaille(taille);
+    setRisk(risk);
+    setRealise(realise);
+    setProfit(profit);
   }, [orderToUpdate]);
 
-  const submit = async () => {
-    // const id = order._id;
+  useEffect(() => {
+    settest(orderToUpdate);
+  }, [orderToUpdate]);
+
+  const updateOrder = async () => {
+    const orderObject = {
+      date: date,
+      asset: asset,
+      direction: direction,
+      taille: taille,
+      risk: risk,
+      realise: realise,
+      profit: profit,
+    };
     // //update from back
-    // try {
-    //   const orderToUpdate = await fetch(`/api/dashboard/${order._id}`, {
-    //     method: "PATCH",
-    //     body: JSON.stringify(orderObject),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    //   const json = await orderToUpdate.json();
-    //   console.log(json);
-    //   if (json) {
-    //     //update from front
-    //     const newArray = [...Orders];
-    //     const indexOrderToUpdate = Orders.findIndex(
-    //       (element) => element._id === id
-    //     );
-    //     newArray.splice(indexOrderToUpdate, 1, orderObject);
-    //     setOrders(newArray);
-    //   }
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
-    // setOrderToUpdate("");
+    try {
+      const orderToUpdateBD = await fetch(`/api/dashboard/${idOrder}`, {
+        method: "PATCH",
+        body: JSON.stringify(orderObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await orderToUpdateBD.json();
+      if (
+        orderObject.asset === orderToUpdate.asset &&
+        orderObject.date === orderToUpdate.date &&
+        orderObject.direction === orderToUpdate.direction &&
+        orderObject.profit === orderToUpdate.profit &&
+        orderObject.realise === orderToUpdate.realise &&
+        orderObject.risk === orderToUpdate.risk &&
+        orderObject.taille === orderToUpdate.taille
+      ) {
+        setMessage(" Vous n'avez rien modifié");
+        setbckColor("rgb(13, 73, 158)");
+      } else {
+        setMessage(" Votre ordre a bien été modifié");
+        setbckColor("rgb(13, 73, 158)");
+      }
+
+      //Fetch the new array with all orders (and the last one created)
+      try {
+        const orders = await fetch("/api/dashboard");
+        const json = await orders.json();
+        if (json) setOrders(json);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+    setOrderToUpdate("");
   };
 
   return (
@@ -110,13 +108,9 @@ function PopUp() {
                 <input
                   type="datetime-local"
                   name="date"
-                  // placeholder={dateFormatInput(orderToUpdate.date)}
-                  value={dateToDisplay}
                   className="Orders-date PopUp-input"
-                  onChange={(e) => {
-                    handleChange(e);
-                    // setDate(e.target.value);
-                  }}
+                  value={date}
+                  onChange={(event) => setDate(event.target.value)}
                 />
               </div>
 
@@ -126,8 +120,8 @@ function PopUp() {
                   type="text"
                   className="Orders-asset PopUp-input"
                   name="asset"
-                  value={orderToUpdate.asset}
-                  onChange={handleChange}
+                  value={asset}
+                  onChange={(event) => setAsset(event.target.value)}
                 />
               </div>
 
@@ -136,8 +130,8 @@ function PopUp() {
                 <select
                   name="direction"
                   className="Orders-direction PopUp-input"
-                  value={orderToUpdate.direction}
-                  onChange={handleChange}
+                  onChange={(event) => setDirection(event.target.value)}
+                  value={direction}
                 >
                   <option value=""></option>
                   <option value="long">long</option>
@@ -149,10 +143,10 @@ function PopUp() {
                 <label> Taille:</label>
                 <input
                   type="number"
-                  value={orderToUpdate.taille}
                   className="Orders-taille PopUp-input"
                   name="taille"
-                  onChange={handleChange}
+                  value={taille}
+                  onChange={(event) => setTaille(+event.target.value)}
                 />
               </div>
 
@@ -160,10 +154,10 @@ function PopUp() {
                 <label> Risk:</label>
                 <input
                   type="number"
-                  value={orderToUpdate.risk}
                   className="Orders-risk PopUp-input"
                   name="risk"
-                  onChange={handleChange}
+                  value={risk}
+                  onChange={(event) => setRisk(+event.target.value)}
                 />
               </div>
 
@@ -171,10 +165,10 @@ function PopUp() {
                 <label> Realise:</label>
                 <input
                   type="number"
-                  value={orderToUpdate.realise}
                   className="Orders-realise PopUp-input"
                   name="realise"
-                  onChange={handleChange}
+                  value={realise}
+                  onChange={(event) => setRealise(+event.target.value)}
                 />
               </div>
 
@@ -182,25 +176,17 @@ function PopUp() {
                 <label> Profit:</label>
                 <input
                   type="number"
-                  value={orderToUpdate.profit}
                   className="Orders-profit PopUp-input"
                   name="profit"
-                  onChange={handleChange}
+                  value={profit}
+                  onChange={(event) => setProfit(+event.target.value)}
                 />
               </div>
 
-              <div className="PopUp-container-Input-Globalcontainer-containerInputLabel">
-                <label> Balance:</label>
-                <input
-                  type="number"
-                  value={orderToUpdate.balance}
-                  className="Orders-balance PopUp-input"
-                  name="balance"
-                  onChange={handleChange}
-                />
-              </div>
-
-              <button onClick={submit} className="Orders-actions PopUp-input">
+              <button
+                onClick={updateOrder}
+                className="Orders-actions PopUp-input"
+              >
                 Modifier
               </button>
             </div>

@@ -1,21 +1,46 @@
-import React from "react";
+import React, { useContext } from "react";
 
 //composants
 import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
 import Bar from "../../components/Charts/Bar/Bar";
 import Container from "../../components/Container/Container";
 
+//import context
+import { DashBoardContext } from "../../Context/Context";
+
 //data
 import {
   titlesLignesArrayChartEvolution,
-  numberLignesArayChartEvolution,
   titlesLignesArrayStatesTrades,
-  numberLignesArayStatesTrades,
 } from "../../data/data";
 
 import "./Charts.scss";
 
 const Charts = () => {
+  const {
+    numberOfTrades,
+    numberOfTradesWon,
+    numberOfTradesLost,
+    numberOfTradesBE,
+    accountBalance,
+    annualPerf,
+    monthlyPerf,
+  } = useContext(DashBoardContext);
+
+  const numberLignesArayChartEvolution = [
+    numberOfTrades,
+    accountBalance + "$",
+    annualPerf,
+    monthlyPerf,
+  ];
+
+  const numberLignesArayStatesTrades = [
+    numberOfTrades,
+    numberOfTradesWon,
+    numberOfTradesLost,
+    numberOfTradesBE,
+  ];
+
   return (
     <>
       <div>
