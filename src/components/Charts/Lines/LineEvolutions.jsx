@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+
+//import context
+import { DashBoardContext } from "../../../Context/Context";
 
 import {
   Chart as ChartJS,
@@ -26,7 +29,6 @@ ChartJS.register(
 );
 
 let delayed;
-
 export const options = {
   //set up period circle size
   radius: 5,
@@ -121,30 +123,42 @@ export const options = {
   },
 };
 
-const labels = ["1", "2", "3", "4", "5", "6"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Portefeuille",
-      data: [20200, 23000, 25000, 23000, 22500, 28000],
-      borderColor: "rgb(22, 25, 60)",
-      fill: "start",
-      backgroundColor: (context, chartArea) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 500, 0, 0);
-        gradient.addColorStop(0, "rgb(6, 20, 230)");
-        gradient.addColorStop(1, "rgb(6, 181, 230)");
-        return gradient;
-      },
-      //courbe
-      tension: 0.5,
-    },
-  ],
-};
-
 function LineChart() {
+  const { balances } = useContext(DashBoardContext);
+
+  const getLabelXChart = () => {
+    let result = [];
+    balances.map((balance, index) => {
+      result.push(index + 1);
+    });
+    return result;
+  };
+
+  const getPositions = () => {
+    let result = [...balances];
+    return result.reverse();
+  };
+
+  const data = {
+    labels: getLabelXChart(),
+    datasets: [
+      {
+        label: "Portefeuille",
+        data: getPositions(),
+        borderColor: "rgb(22, 25, 60)",
+        fill: "start",
+        backgroundColor: (context, chartArea) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 500, 0, 0);
+          gradient.addColorStop(0, "rgb(6, 20, 230)");
+          gradient.addColorStop(1, "rgb(6, 181, 230)");
+          return gradient;
+        },
+        //courbe
+        tension: 0.5,
+      },
+    ],
+  };
   return (
     <Line
       options={options}
