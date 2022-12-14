@@ -25,7 +25,7 @@ const Orders = () => {
   const [taille, setTaille] = useState(0);
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
-  const [profit, setProfit] = useState(0);
+  const [profit, setProfit] = useState("");
 
   function GetDateFormatString(value) {
     let day = value.slice(8, 10);
@@ -245,6 +245,8 @@ const Orders = () => {
             <td>
               <input
                 type="number"
+                min=""
+                max=""
                 className={`Orders-profit ${
                   profit === 0 ? "empty" : "checked"
                 }`}

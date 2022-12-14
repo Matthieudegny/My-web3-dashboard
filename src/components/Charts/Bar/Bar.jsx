@@ -51,6 +51,10 @@ export const options = {
 
 function BarChart() {
   let months = [];
+  let tradeWonByMonth = [];
+  let tradeLostByMonth = [];
+  let tradeBEByMonth = [];
+  let totalTradeByMonth = [];
   const {
     Orders,
     setOrders,
@@ -73,55 +77,67 @@ function BarChart() {
 
   //CONTINUER ICI
   const getResultSortedParMonth = () => {
-    let tradeWon = [];
-    let tradeLost = [];
-    let tradeBE = [];
+    //initailize arrays with the numbers of month
     getMonth()?.map((month) => {
-      tradeWon.push(0);
-      tradeLost.push(0);
-      tradeBE.push(0);
+      tradeWonByMonth.push(0);
+      tradeLostByMonth.push(0);
+      tradeBEByMonth.push(0);
+      totalTradeByMonth.push(0);
     });
     Orders?.map((order) => {
+      //dynamize each index of each arrays
       getMonth()?.map((month, index) => {
         const date = new Date(order.date); // 2009-11-10
         const monthToCompare = date.toLocaleString("default", {
           month: "long",
         });
         if (monthToCompare === month) {
-          console.log("A suivre");
-          //j'obtiens l'index du tableau ds le quel je dois changer la valeur
-          //maintenant analyser le order.resultat pour savoir quel tableau je dois modifier
+          totalTradeByMonth[index] += order.profit;
+          if (order.profit < -500) {
+            tradeLostByMonth[index] += order.profit;
+          } else if (order.profit >= -500 && order.profit <= 500) {
+            tradeBEByMonth[index] += order.profit;
+          } else if (order.profit > 500) {
+            tradeWonByMonth[index] += order.profit;
+          }
         }
+        console.log("tradeWon", tradeWonByMonth);
+        console.log("tradeLost", tradeLostByMonth);
+        console.log("tradeBE", tradeBEByMonth);
+        let result = [tradeWonByMonth, tradeLostByMonth, tradeBEByMonth];
+        return result;
       });
     });
   };
 
   getResultSortedParMonth();
 
+  // console.log("tesssssst", getResultSortedParMonth());
+
   const data = {
     labels: getMonth(),
     datasets: [
       {
         label: "Total trades",
-        data: [4, 5],
+        data: totalTradeByMonth,
         backgroundColor: "rgb(53, 162, 235)",
         stack: "Stack 0",
       },
       {
         label: "Trades gagnés",
-        data: [2, 2],
+        data: tradeWonByMonth,
         backgroundColor: "rgb(75, 192, 192)",
         stack: "Stack 1",
       },
       {
         label: "Trades perdus",
-        data: [0, 1],
+        data: tradeLostByMonth,
         backgroundColor: "rgb(255, 99, 132)",
         stack: "Stack 2",
       },
       {
         label: "BE/en profit",
-        data: [1, 2],
+        data: tradeBEByMonth,
         backgroundColor: "rgb(53, 162, 235)",
         stack: "Stack 3",
       },

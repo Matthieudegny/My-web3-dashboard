@@ -42,6 +42,7 @@ const DashBoardContextProvider = (props) => {
     getAnnualPerf(perf2021);
     getMonthlyPerf();
     getBalance();
+    fetchBTCPrice();
   }, [Orders]);
 
   let balancesArray = [];
@@ -92,6 +93,35 @@ const DashBoardContextProvider = (props) => {
         monthlyPerf += order.profit;
     });
     setMonthlyPerf(`${monthlyPerf}$`);
+  }
+
+  async function fetchBTCPrice() {
+    let pricesBTC = [];
+    const date = new Date();
+    const timestampInMs = date.getTime();
+    const timestampTodayInSeconds = Math.floor(date.getTime() / 1000);
+    const json = await fetch(
+      `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=1641053503&to=${timestampTodayInSeconds}`
+    );
+    const result = await json.json();
+    if (result) {
+      // console.log(result);
+      result.prices?.map((price) => {
+        const dateObject = new Date(price[0]);
+        const humanDateFormat = dateObject.toLocaleString();
+        const month = humanDateFormat.slice(3, 5);
+
+        if (pricesBTC.length === 0) {
+          pricesBTC.push(price[1], humanDateFormat);
+          console.log(pricesBTC);
+        } else {
+          let differentMonth = pricesBTC.filter(
+            (priceByMont) => priceByMont[1] == true
+          );
+          if (differentMonth) console.log("mois différent", month);
+        }
+      });
+    }
   }
 
   return (
