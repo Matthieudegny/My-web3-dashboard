@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 //import context
 import { DashBoardContext } from "../../../Context/Context";
@@ -55,27 +55,17 @@ function BarChart() {
   let tradeLostByMonth = [];
   let tradeBEByMonth = [];
   let totalTradeByMonth = [];
-  const {
-    Orders,
-    setOrders,
-    setOrderToUpdate,
-    message,
-    setMessage,
-    bckColor,
-    setbckColor,
-    balances,
-  } = useContext(DashBoardContext);
+  const { Orders } = useContext(DashBoardContext);
 
   const getMonth = () => {
     Orders.map((order) => {
-      const date = new Date(order.date); // 2009-11-10
+      const date = new Date(order.date);
       const month = date.toLocaleString("default", { month: "long" });
       if (!months.includes(month)) months.push(month);
     });
     return months;
   };
 
-  //CONTINUER ICI
   const getResultSortedParMonth = () => {
     //initailize arrays with the numbers of month
     getMonth()?.map((month) => {
@@ -87,7 +77,7 @@ function BarChart() {
     Orders?.map((order) => {
       //dynamize each index of each arrays
       getMonth()?.map((month, index) => {
-        const date = new Date(order.date); // 2009-11-10
+        const date = new Date(order.date);
         const monthToCompare = date.toLocaleString("default", {
           month: "long",
         });
@@ -101,9 +91,6 @@ function BarChart() {
             tradeWonByMonth[index] += order.profit;
           }
         }
-        console.log("tradeWon", tradeWonByMonth);
-        console.log("tradeLost", tradeLostByMonth);
-        console.log("tradeBE", tradeBEByMonth);
         let result = [tradeWonByMonth, tradeLostByMonth, tradeBEByMonth];
         return result;
       });
@@ -111,8 +98,6 @@ function BarChart() {
   };
 
   getResultSortedParMonth();
-
-  // console.log("tesssssst", getResultSortedParMonth());
 
   const data = {
     labels: getMonth(),

@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+
+//import context
+import { DashBoardContext } from "../../../Context/Context";
 
 import {
   Chart as ChartJS,
@@ -102,55 +105,79 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "BTC",
-      data: [2, 2.5, 2.8, -10, 20, 3.5],
-      borderColor: (context) => {
-        const ctx = context.chart.ctx;
-        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
-        gradientStroke.addColorStop(0, "#31074E");
-        gradientStroke.addColorStop(1, "#7A16C1");
-        return gradientStroke;
-      },
-      backgroundColor: "#550F87",
-      //courbe
-      tension: 0.5,
-    },
-    {
-      label: "NSQ",
-      data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
-      borderColor: (context) => {
-        const ctx = context.chart.ctx;
-        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
-        gradientStroke.addColorStop(0, "#150D71");
-        gradientStroke.addColorStop(1, "#1907E6");
-        return gradientStroke;
-      },
-      backgroundColor: "#170AAC",
-      tension: 0.5,
-    },
-    {
-      label: "Portefolio",
-      data: [2, 2.7, 3, 2.8, 3.4, 20.8],
-      borderColor: (context) => {
-        const ctx = context.chart.ctx;
-        const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
-        gradientStroke.addColorStop(0, "#096680");
-        gradientStroke.addColorStop(1, "#06B5E6");
-        return gradientStroke;
-      },
-      backgroundColor: "#096680",
-      tension: 0.5,
-    },
-  ],
-};
-
 function LineChart() {
+  const { percBTC } = useContext(DashBoardContext);
+
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let monthToDisplay = [];
+  let today = new Date();
+  let result;
+  let month;
+
+  for (let i = 6; i > 0; i -= 1) {
+    result = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    month = monthNames[result.getMonth()];
+    monthToDisplay.push(month);
+  }
+
+  const data = {
+    labels: monthToDisplay,
+    datasets: [
+      {
+        label: "BTC",
+        data: percBTC,
+        borderColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+          gradientStroke.addColorStop(0, "#31074E");
+          gradientStroke.addColorStop(1, "#7A16C1");
+          return gradientStroke;
+        },
+        backgroundColor: "#550F87",
+        //courbe
+        tension: 0.5,
+      },
+      {
+        label: "NSQ",
+        data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
+        borderColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+          gradientStroke.addColorStop(0, "#150D71");
+          gradientStroke.addColorStop(1, "#1907E6");
+          return gradientStroke;
+        },
+        backgroundColor: "#170AAC",
+        tension: 0.5,
+      },
+      {
+        label: "Portefolio",
+        data: [2, 2.7, 3, 2.8, 3.4, 20.8],
+        borderColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+          gradientStroke.addColorStop(0, "#096680");
+          gradientStroke.addColorStop(1, "#06B5E6");
+          return gradientStroke;
+        },
+        backgroundColor: "#096680",
+        tension: 0.5,
+      },
+    ],
+  };
   return <Line options={options} data={data} style={{ zIndex: "50" }} />;
 }
 
