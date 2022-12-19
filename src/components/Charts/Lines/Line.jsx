@@ -47,10 +47,10 @@ export const options = {
           let label = context.dataset.label || "";
           let value = context.raw;
           if (value >= 1) {
-            return `${label}: + ${value}%`;
+            return `${label}: +${value}%`;
           }
           if (value < 0) {
-            return `${label}:- ${value}%`;
+            return `${label}: ${value}%`;
           }
         },
       },
@@ -106,7 +106,7 @@ export const options = {
 };
 
 function LineChart() {
-  const { percBTC } = useContext(DashBoardContext);
+  const { percBTC, percNSQ } = useContext(DashBoardContext);
 
   let monthNames = [
     "January",
@@ -141,9 +141,9 @@ function LineChart() {
         data: percBTC,
         borderColor: (context) => {
           const ctx = context.chart.ctx;
-          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
-          gradientStroke.addColorStop(0, "#31074E");
-          gradientStroke.addColorStop(1, "#7A16C1");
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
+          gradientStroke.addColorStop(1, "red");
+          gradientStroke.addColorStop(0, "yellow");
           return gradientStroke;
         },
         backgroundColor: "#550F87",
@@ -152,7 +152,7 @@ function LineChart() {
       },
       {
         label: "NSQ",
-        data: [2, 2.1, 2.3, -2.3, -2.5, 2.7],
+        data: percNSQ,
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
@@ -165,7 +165,7 @@ function LineChart() {
       },
       {
         label: "Portefolio",
-        data: [2, 2.7, 3, 2.8, 3.4, 20.8],
+        data: [2, 2.7, 3, "2.8", "-3.4", 20.8],
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);

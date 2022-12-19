@@ -18,6 +18,7 @@ const DashBoardContextProvider = (props) => {
   const [monthlyPerf, setMonthlyPerf] = useState(0);
   const [balances, setbalances] = useState([]);
   const [percBTC, setPercBTC] = useState([]);
+  const [percNSQ, setPercNSQ] = useState([]);
 
   const perf2021 = 10;
 
@@ -44,6 +45,7 @@ const DashBoardContextProvider = (props) => {
     getMonthlyPerf();
     getBalance();
     fetchBTCPrice();
+    fetchNasdaqPrice();
   }, [Orders]);
 
   let balancesArray = [];
@@ -96,72 +98,67 @@ const DashBoardContextProvider = (props) => {
     setMonthlyPerf(`${monthlyPerf}$`);
   }
 
-  let pricesBTCPrep = [];
   let pricesBTC = [];
   let percentagesBTC = [];
   async function fetchBTCPrice() {
-    const date = new Date();
-    const timestampTodayInSeconds = Math.floor(date.getTime() / 1000);
     const json = await fetch(
-      `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=1641053503&to=${timestampTodayInSeconds}`
+      "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=BTC/USD&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
     );
     const result = await json.json();
     if (result) {
-      result.prices?.map((price) => {
-        //month at this price
-        const dateObject = new Date(price[0]);
-        const humanDateFormat = dateObject.toLocaleString();
-        const month = humanDateFormat.slice(3, 5);
-
-        if (pricesBTCPrep.length === 0) {
-          pricesBTCPrep.push([price[1], humanDateFormat]);
-        } else {
-          if (pricesBTCPrep.length > 0) {
-            //check if the month of price(result.map) is already in pricesBTC[]
-            let monthAlreadyInpricesBTC = false;
-            pricesBTCPrep.map((price) => {
-              let valueToCompare = price[1].slice(3, 5);
-              if (valueToCompare == month) monthAlreadyInpricesBTC = true;
-            });
-            if (!monthAlreadyInpricesBTC)
-              pricesBTCPrep.push([price[1], humanDateFormat]);
-          }
-        }
-      });
-      console.log("pricesBTCPrep", pricesBTCPrep);
-      // take the last 7 prices of the BTC
-      if (pricesBTCPrep.length > 8) {
-        let arrayCopy = JSON.parse(JSON.stringify(pricesBTCPrep));
-        arrayCopy = arrayCopy.slice(-7);
-        arrayCopy.map((result) => {
-          result.splice(1, 1);
-          let resultToSplit = result[0].toString();
-          let resultToPush = resultToSplit.split(".");
-          pricesBTC.push(resultToPush[0]);
-        });
-      }
-
-      //transform price to %
-      const tranformPricetoPerc = (x, y) => {
-        console.log(x, y);
-        let difference = y - x;
-        let result = (difference * 100) / x;
-        result = Math.round(result);
-        percentagesBTC.push(result);
-      };
-      pricesBTC?.map((price, index) => {
-        if (index === 0) return;
-        tranformPricetoPerc(pricesBTC[index - 1], pricesBTC[index]);
-      });
+      getPricesAndTransformToPerc(
+        pricesBTC,
+        percentagesBTC,
+        setPercBTC,
+        result
+      );
     }
-    console.log("percentagesBTC", percentagesBTC);
-    console.log("pricesBTCPrep", pricesBTCPrep);
-    setPercBTC(percentagesBTC);
   }
 
-  //NASDAQ PRICE
-  //https://api.polygon.io/v2/aggs/ticker/NDAQ/range/1/day/2021-07-22/2021-07-22?adjusted=true&sort=asc&limit=120&apiKey=lDmxp2Pbpp53MpXwSy8le5oowEPCKijm
-  // https://polygon.io/docs/stocks/getting-started
+  let nasdaqPrices = [];
+  let nasdaqPerc = [];
+  async function fetchNasdaqPrice() {
+    const json = await fetch(
+      "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=NDX&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
+    );
+    const result = await json.json();
+    if (result) {
+      getPricesAndTransformToPerc(nasdaqPrices, nasdaqPerc, setPercNSQ, result);
+    }
+  }
+
+  const getPricesAndTransformToPerc = (
+    arrayPrices,
+    arrayPerc,
+    setFunction,
+    result
+  ) => {
+    result.values?.map((resultOneMonth, index) => {
+      if (arrayPrices.length < 7) {
+        console.log(resultOneMonth);
+        arrayPrices.push(Math.round(resultOneMonth.open));
+      }
+    });
+    if (arrayPrices.length > 0) {
+      //transform price to %
+      const tranformPricetoPerc = (x, y) => {
+        let difference = x - y;
+        let result = (difference * 100) / y;
+        // result = Math.round(result);
+        result = result.toFixed(2);
+        arrayPerc.push(result);
+      };
+      arrayPrices?.map((price, index) => {
+        if (index === 0) return;
+        tranformPricetoPerc(arrayPrices[index - 1], arrayPrices[index]);
+      });
+      const resultTodisplay = arrayPerc.reverse();
+      console.log("resultTodisplay", resultTodisplay);
+      setFunction(resultTodisplay);
+      console.log("percBTC", percBTC);
+    }
+  };
+
   return (
     <DashBoardContext.Provider
       value={{
@@ -186,6 +183,7 @@ const DashBoardContextProvider = (props) => {
         balances,
         setbalances,
         percBTC,
+        percNSQ,
       }}
     >
       {props.children}
