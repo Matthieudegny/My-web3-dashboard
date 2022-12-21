@@ -6,6 +6,9 @@ import "./Orders.scss";
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
+import { useSaveOrder } from "../../CustomHooks/useCustomeHook";
+import { GetDateFormatString } from "../../utils/utils";
+
 const Orders = () => {
   const {
     Orders,
@@ -25,15 +28,34 @@ const Orders = () => {
   const [taille, setTaille] = useState(0);
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
-  const [profit, setProfit] = useState("");
+  const [profit, setProfit] = useState(0);
 
-  function GetDateFormatString(value) {
-    let day = value.slice(8, 10);
-    let month = value.slice(5, 7);
-    let year = value.slice(0, 4);
-    let hour = value.slice(11, 16);
-    return `${day}/${month}/${year} ${hour} `;
-  }
+  const onSuccessSaveOrder = (data) => {
+    console.log("SaveOrder réussi", data);
+  };
+  //AJOUTER RELOAD ORDER APRES SUCCE DU SAVE
+  //   // if (json) {
+  //   //   //Fetch the new array with all orders (and the last one created)
+  //   //   try {
+  //   //     const orders = await fetch("/api/dashboard");
+  //   //     const json = await orders.json();
+  //   //     if (json) setOrders(json);
+  //   //   } catch (error) {
+  //   //     console.log(error);
+  //   //   }
+  //   //   setResetInputs(true);
+  //   //   setMessage("Votre ordre a été ajouté");
+  //   //   setbckColor("rgb(6, 181, 230)");
+  //   // }
+
+  const onErrorSaveOrder = (error) => {
+    console.log("SaveOrder echec", error);
+  };
+
+  const { mutate: addorderObject } = useSaveOrder(
+    onSuccessSaveOrder,
+    onErrorSaveOrder
+  );
 
   const creationOrder = async () => {
     if (
@@ -58,33 +80,34 @@ const Orders = () => {
         realise: realise,
         profit: profit,
       };
-      try {
-        const saveOrder = await fetch("/api/dashboard", {
-          method: "POST",
-          body: JSON.stringify(orderObject),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const json = await saveOrder.json();
+      addorderObject(orderObject);
+      // try {
+      //   const saveOrder = await fetch("/api/dashboard", {
+      //     method: "POST",
+      //     body: JSON.stringify(orderObject),
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   });
+      //   const json = await saveOrder.json();
 
-        //front
-        if (json) {
-          //Fetch the new array with all orders (and the last one created)
-          try {
-            const orders = await fetch("/api/dashboard");
-            const json = await orders.json();
-            if (json) setOrders(json);
-          } catch (error) {
-            console.log(error);
-          }
-          setResetInputs(true);
-          setMessage("Votre ordre a été ajouté");
-          setbckColor("rgb(6, 181, 230)");
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
+      //   //front
+      //   // if (json) {
+      //   //   //Fetch the new array with all orders (and the last one created)
+      //   //   try {
+      //   //     const orders = await fetch("/api/dashboard");
+      //   //     const json = await orders.json();
+      //   //     if (json) setOrders(json);
+      //   //   } catch (error) {
+      //   //     console.log(error);
+      //   //   }
+      //   //   setResetInputs(true);
+      //   //   setMessage("Votre ordre a été ajouté");
+      //   //   setbckColor("rgb(6, 181, 230)");
+      //   // }
+      // } catch (error) {
+      //   console.log(error.message);
+      // }
     }
   };
 
@@ -135,23 +158,6 @@ const Orders = () => {
       setResetInputs(false);
     }
   }, [resetInputs]);
-
-  // useEffect(() => {
-  //   getBalance();
-  // }, [Orders]);
-
-  // let balancesArray = [];
-  // function getBalance() {
-  //   const ordersReversed = [...Orders].reverse();
-  //   ordersReversed.map((order, index) => {
-  //     if (balancesArray.length === 0) balancesArray.push(order.profit);
-  //     else {
-  //       let lastBalance = balancesArray[index - 1] + order.profit;
-  //       balancesArray.push(lastBalance);
-  //     }
-  //   });
-  //   setbalances(balancesArray.reverse());
-  // }
 
   return (
     <div className="Orders">

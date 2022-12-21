@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 //import dependecies
 import { BrowserRouter } from "react-router-dom";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 //import context
 import DashBoardContext from "./Context/Context";
@@ -14,20 +16,25 @@ import PopUp from "./pages/PopUp/PopUp";
 //import style
 import "./App.scss";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <div className="App" style={{ position: "relative" }}>
-      <BrowserRouter>
-        <DashBoardContext>
-          <PopUp />
-          <Header />
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <DashBoardContext>
+            <PopUp />
+            <Header />
 
-          <div className="App-main-container">
-            <SideBar />
-            <MainComponent />
-          </div>
-        </DashBoardContext>
-      </BrowserRouter>
+            <div className="App-main-container">
+              <SideBar />
+              <MainComponent />
+            </div>
+          </DashBoardContext>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      </QueryClientProvider>
     </div>
   );
 }

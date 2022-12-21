@@ -1,4 +1,16 @@
 import { createContext, useState, useEffect } from "react";
+import {
+  getAnnualPerf,
+  getMonthlyPerf,
+  getPricesAndTransformToPerc,
+  sortTradeWonOrLostOrBE,
+  getBalance,
+} from "../utils/utils";
+import {
+  useFetchOrders,
+  useFetchBTCPrices,
+  useFetchNSQPrices,
+} from "../CustomHooks/useCustomeHook";
 
 export const DashBoardContext = createContext();
 
@@ -20,144 +32,71 @@ const DashBoardContextProvider = (props) => {
   const [percBTC, setPercBTC] = useState([]);
   const [percNSQ, setPercNSQ] = useState([]);
 
-  const perf2021 = 10;
-
-  //Get all orders
-  useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const orders = await fetch("/api/dashboard");
-        const json = await orders.json();
-        if (json) {
-          setOrders(json);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getOrders();
-  }, []);
-
-  useEffect(() => {
-    setnumberOfTrades(Orders.length);
-    sortTradeWonOrLostOrBE();
-    getAnnualPerf(perf2021);
-    getMonthlyPerf();
-    getBalance();
-    fetchBTCPrice();
-    fetchNasdaqPrice();
-  }, [Orders]);
-
-  let balancesArray = [];
-  function getBalance() {
-    const ordersReversed = [...Orders].reverse();
-    ordersReversed.map((order, index) => {
-      if (balancesArray.length === 0) balancesArray.push(order.profit);
-      else {
-        let lastBalance = balancesArray[index - 1] + order.profit;
-        balancesArray.push(lastBalance);
-      }
-    });
-    setbalances(balancesArray.reverse());
-    setAccountBalance(balancesArray[0]);
-  }
-
-  function sortTradeWonOrLostOrBE() {
-    let totalTradesWon = 0;
-    let totalTradesLost = 0;
-    let totalTradesBE = 0;
-    Orders.map((order) => {
-      if (order.profit < -500) {
-        totalTradesLost++;
-      } else if (order.profit >= -500 && order.profit <= 500) {
-        totalTradesBE++;
-      } else if (order.profit > 500) {
-        totalTradesWon++;
-      }
-    });
-
-    setnumberOfTradesWon(totalTradesWon);
-    setnumberOfTradesLost(totalTradesLost);
-    setnumberOfTradesBE(totalTradesBE);
-  }
-
-  function getAnnualPerf(lastYear) {
-    let perfThisYear = accountBalance - lastYear;
-    let perfThisYearPercent = (perfThisYear * 100) / lastYear;
-    setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
-  }
-
-  function getMonthlyPerf() {
-    let month = new Date();
-    month = month.getMonth() + 1;
-    let monthlyPerf = 0;
-    Orders?.map((order) => {
-      if (order.date.slice(5, 7) == month.toString())
-        monthlyPerf += order.profit;
-    });
-    setMonthlyPerf(`${monthlyPerf}$`);
-  }
+  const onSuccessOrdersRequest = (allOrders) => {
+    console.log("succes", allOrders);
+    setOrders(allOrders);
+  };
 
   let pricesBTC = [];
   let percentagesBTC = [];
-  async function fetchBTCPrice() {
-    const json = await fetch(
-      "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=BTC/USD&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
+  const onSuccessBTCrequest = (pricesBtc) => {
+    console.log("btcprices reussi", pricesBtc);
+    getPricesAndTransformToPerc(
+      pricesBTC,
+      percentagesBTC,
+      setPercBTC,
+      pricesBtc
     );
-    const result = await json.json();
-    if (result) {
-      getPricesAndTransformToPerc(
-        pricesBTC,
-        percentagesBTC,
-        setPercBTC,
-        result
-      );
-    }
-  }
+  };
 
   let nasdaqPrices = [];
   let nasdaqPerc = [];
-  async function fetchNasdaqPrice() {
-    const json = await fetch(
-      "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=NDX&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
+  const onSuccessNSQrequest = (pricesNSQ) => {
+    console.log("NSQprices reussi", pricesNSQ);
+    getPricesAndTransformToPerc(
+      nasdaqPrices,
+      nasdaqPerc,
+      setPercNSQ,
+      pricesNSQ
     );
-    const result = await json.json();
-    if (result) {
-      getPricesAndTransformToPerc(nasdaqPrices, nasdaqPerc, setPercNSQ, result);
-    }
-  }
-
-  const getPricesAndTransformToPerc = (
-    arrayPrices,
-    arrayPerc,
-    setFunction,
-    result
-  ) => {
-    result.values?.map((resultOneMonth, index) => {
-      if (arrayPrices.length < 7) {
-        console.log(resultOneMonth);
-        arrayPrices.push(Math.round(resultOneMonth.open));
-      }
-    });
-    if (arrayPrices.length > 0) {
-      //transform price to %
-      const tranformPricetoPerc = (x, y) => {
-        let difference = x - y;
-        let result = (difference * 100) / y;
-        // result = Math.round(result);
-        result = result.toFixed(2);
-        arrayPerc.push(result);
-      };
-      arrayPrices?.map((price, index) => {
-        if (index === 0) return;
-        tranformPricetoPerc(arrayPrices[index - 1], arrayPrices[index]);
-      });
-      const resultTodisplay = arrayPerc.reverse();
-      console.log("resultTodisplay", resultTodisplay);
-      setFunction(resultTodisplay);
-      console.log("percBTC", percBTC);
-    }
   };
+
+  const onErrorBTCrequest = (error) => {
+    console.log("btcprices echec", error);
+  };
+  const onErrorOrdersRequest = (error) => {
+    console.log("error", error);
+  };
+  const onErrorNSQrequest = (error) => {
+    console.log("NSQprices echec", error);
+  };
+
+  const { allOrders } = useFetchOrders(
+    onSuccessOrdersRequest,
+    onErrorOrdersRequest
+  );
+  const { pricesBtc } = useFetchBTCPrices(
+    onSuccessBTCrequest,
+    onErrorBTCrequest
+  );
+  const { pricesNSQ } = useFetchNSQPrices(
+    onSuccessNSQrequest,
+    onErrorNSQrequest
+  );
+
+  //synchronization at every changes for Orders variable
+  useEffect(() => {
+    setnumberOfTrades(Orders.length);
+    sortTradeWonOrLostOrBE(
+      Orders,
+      setnumberOfTradesWon,
+      setnumberOfTradesLost,
+      setnumberOfTradesBE
+    );
+    getAnnualPerf(setannualPerf, accountBalance);
+    getMonthlyPerf(Orders, setMonthlyPerf);
+    getBalance(Orders, setbalances, setAccountBalance);
+  }, [Orders]);
 
   return (
     <DashBoardContext.Provider
