@@ -1,10 +1,3 @@
-const perf2021 = 10;
-export const getAnnualPerf = (setannualPerf, accountBalance) => {
-  let perfThisYear = accountBalance - perf2021;
-  let perfThisYearPercent = (perfThisYear * 100) / perf2021;
-  setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
-};
-
 export const getMonthlyPerf = (Orders, setMonthlyPerf) => {
   let month = new Date();
   month = month.getMonth() + 1;
@@ -70,7 +63,12 @@ export const sortTradeWonOrLostOrBE = (
 };
 
 let balancesArray = [];
-export const getBalance = (Orders, setbalances, setAccountBalance) => {
+export const getBalance = (
+  Orders,
+  setbalances,
+  setAccountBalance,
+  setannualPerf
+) => {
   const ordersReversed = [...Orders].reverse();
   ordersReversed.map((order, index) => {
     if (balancesArray.length === 0) balancesArray.push(order.profit);
@@ -81,6 +79,8 @@ export const getBalance = (Orders, setbalances, setAccountBalance) => {
   });
   setbalances(balancesArray.reverse());
   setAccountBalance(balancesArray[0]);
+  getAnnualPerf(setannualPerf, balancesArray[0]);
+  balancesArray = [];
 };
 
 export const GetDateFormatString = (value) => {
@@ -89,4 +89,11 @@ export const GetDateFormatString = (value) => {
   let year = value.slice(0, 4);
   let hour = value.slice(11, 16);
   return `${day}/${month}/${year} ${hour} `;
+};
+
+const perf2021 = 10;
+const getAnnualPerf = (setannualPerf, accountBalance) => {
+  let perfThisYear = accountBalance - perf2021;
+  let perfThisYearPercent = (perfThisYear * 100) / perf2021;
+  setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
 };

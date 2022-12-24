@@ -55,10 +55,39 @@ const saveOrder = (orderObject) => {
     },
   });
 };
-
 export const useSaveOrder = (onSuccessSaveOrder, onErrorSaveOrder) => {
   return useMutation(saveOrder, {
     onSuccess: onSuccessSaveOrder,
     onError: onErrorSaveOrder,
+  });
+};
+
+const deleteOrder = (id) => {
+  return fetch(`/api/dashboard/${id}`, {
+    method: "DELETE",
+  });
+};
+export const useDeleteOrder = (onSuccessDeleteOrder, onErrorDeleteOrder) => {
+  return useMutation(deleteOrder, {
+    onSuccess: onSuccessDeleteOrder,
+    onError: onErrorDeleteOrder,
+  });
+};
+
+const updateOrder = (objetIdANdOrder) => {
+  console.log("id in request", objetIdANdOrder[0]);
+  console.log("order in request", objetIdANdOrder[1]);
+  return fetch(`/api/dashboard/${objetIdANdOrder[0]}`, {
+    method: "PATCH",
+    body: JSON.stringify(objetIdANdOrder[1]),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+export const useUpdateOrder = (onSuccessUpdateOrder, onErrorUpdateOrder) => {
+  return useMutation(updateOrder, {
+    onSuccess: onSuccessUpdateOrder,
+    onError: onErrorUpdateOrder,
   });
 };

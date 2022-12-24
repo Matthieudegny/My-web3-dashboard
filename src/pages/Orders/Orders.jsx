@@ -6,13 +6,16 @@ import "./Orders.scss";
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
-import { useSaveOrder } from "../../CustomHooks/useCustomeHook";
+import {
+  useFetchOrders,
+  useSaveOrder,
+  useDeleteOrder,
+} from "../../CustomHooks/useCustomeHook";
 import { GetDateFormatString } from "../../utils/utils";
 
 const Orders = () => {
   const {
     Orders,
-    setOrders,
     setOrderToUpdate,
     message,
     setMessage,
@@ -28,34 +31,28 @@ const Orders = () => {
   const [taille, setTaille] = useState(0);
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
-  const [profit, setProfit] = useState(0);
+  const [profit, setProfit] = useState("");
 
   const onSuccessSaveOrder = (data) => {
     console.log("SaveOrder réussi", data);
-  };
-  //AJOUTER RELOAD ORDER APRES SUCCE DU SAVE
-  //   // if (json) {
-  //   //   //Fetch the new array with all orders (and the last one created)
-  //   //   try {
-  //   //     const orders = await fetch("/api/dashboard");
-  //   //     const json = await orders.json();
-  //   //     if (json) setOrders(json);
-  //   //   } catch (error) {
-  //   //     console.log(error);
-  //   //   }
-  //   //   setResetInputs(true);
-  //   //   setMessage("Votre ordre a été ajouté");
-  //   //   setbckColor("rgb(6, 181, 230)");
-  //   // }
-
-  const onErrorSaveOrder = (error) => {
-    console.log("SaveOrder echec", error);
+    refetch();
+    setResetInputs(true);
+    setMessage("Votre ordre a été ajouté");
+    setbckColor("rgb(6, 181, 230)");
   };
 
-  const { mutate: addorderObject } = useSaveOrder(
-    onSuccessSaveOrder,
-    onErrorSaveOrder
-  );
+  const onSuccessDeleteOrder = (data) => {
+    console.log("delete order resussi", data);
+    refetch();
+    setMessage(" Vous ordre a été supprimé");
+    setbckColor("#550f87");
+  };
+
+  const { refetch } = useFetchOrders();
+
+  const { mutate: addorderObject } = useSaveOrder(onSuccessSaveOrder);
+
+  const { mutate: deleteorderObject } = useDeleteOrder(onSuccessDeleteOrder);
 
   const creationOrder = async () => {
     if (
@@ -81,54 +78,12 @@ const Orders = () => {
         profit: profit,
       };
       addorderObject(orderObject);
-      // try {
-      //   const saveOrder = await fetch("/api/dashboard", {
-      //     method: "POST",
-      //     body: JSON.stringify(orderObject),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   });
-      //   const json = await saveOrder.json();
-
-      //   //front
-      //   // if (json) {
-      //   //   //Fetch the new array with all orders (and the last one created)
-      //   //   try {
-      //   //     const orders = await fetch("/api/dashboard");
-      //   //     const json = await orders.json();
-      //   //     if (json) setOrders(json);
-      //   //   } catch (error) {
-      //   //     console.log(error);
-      //   //   }
-      //   //   setResetInputs(true);
-      //   //   setMessage("Votre ordre a été ajouté");
-      //   //   setbckColor("rgb(6, 181, 230)");
-      //   // }
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     }
   };
 
   const deleteOrder = async (order) => {
     const id = order._id;
-    //delete from back
-    try {
-      const orderToDelete = await fetch(`/api/dashboard/${order._id}`, {
-        method: "DELETE",
-      });
-      const json = await orderToDelete.json();
-
-      if (json) {
-        //delete from front
-        const newArray = Orders.filter((order) => order._id !== id);
-
-        setOrders(newArray);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+    deleteorderObject(id);
   };
 
   //after 5 secondes (time of the animation) errorMessage is deleted
@@ -154,7 +109,7 @@ const Orders = () => {
       setTaille(0);
       setRisk(0);
       setRealise(0);
-      setProfit(0);
+      setProfit("");
       setResetInputs(false);
     }
   }, [resetInputs]);
@@ -254,7 +209,7 @@ const Orders = () => {
                 min=""
                 max=""
                 className={`Orders-profit ${
-                  profit === 0 ? "empty" : "checked"
+                  profit === "" || profit === 0 ? "empty" : "checked"
                 }`}
                 name="profit"
                 value={profit}

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 //import context
 import { DashBoardContext } from "../../../Context/Context";
@@ -28,7 +28,7 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Type de trade par mois",
+      text: "Trades triés par mois",
       font: {
         size: 20,
       },
@@ -49,40 +49,48 @@ export const options = {
   },
 };
 
-function BarChart() {
+function BarChart({ numberOfTrades, setAverageTradesByMonth }) {
   let months = [];
   let tradeWonByMonth = [];
   let tradeLostByMonth = [];
   let tradeBEByMonth = [];
-  let totalTradeByMonth = [];
   const { Orders } = useContext(DashBoardContext);
 
-  const getMonth = () => {
+  const createArrayMonths = () => {
+    let arrayMonths = [];
     Orders.map((order) => {
       const date = new Date(order.date);
       const month = date.toLocaleString("default", { month: "long" });
-      if (!months.includes(month)) months.push(month);
+      if (!arrayMonths.includes(month)) arrayMonths.push(month);
     });
-    return months;
+    months = arrayMonths.reverse();
   };
+  createArrayMonths();
+
+  const getAverageTradesByMonth = () => {
+    let result = numberOfTrades / months.length;
+    setAverageTradesByMonth(result.toFixed(1));
+  };
+
+  useEffect(() => {
+    if (numberOfTrades > 0) getAverageTradesByMonth();
+  }, [months]);
 
   const getResultSortedParMonth = () => {
     //initailize arrays with the numbers of month
-    getMonth()?.map((month) => {
+    months?.map((month) => {
       tradeWonByMonth.push(0);
       tradeLostByMonth.push(0);
       tradeBEByMonth.push(0);
-      totalTradeByMonth.push(0);
     });
     Orders?.map((order) => {
       //dynamize each index of each arrays
-      getMonth()?.map((month, index) => {
+      months?.map((month, index) => {
         const date = new Date(order.date);
         const monthToCompare = date.toLocaleString("default", {
           month: "long",
         });
         if (monthToCompare === month) {
-          totalTradeByMonth[index] += order.profit;
           if (order.profit < -500) {
             tradeLostByMonth[index] += order.profit;
           } else if (order.profit >= -500 && order.profit <= 500) {
@@ -91,8 +99,6 @@ function BarChart() {
             tradeWonByMonth[index] += order.profit;
           }
         }
-        let result = [tradeWonByMonth, tradeLostByMonth, tradeBEByMonth];
-        return result;
       });
     });
   };
@@ -100,30 +106,24 @@ function BarChart() {
   getResultSortedParMonth();
 
   const data = {
-    labels: getMonth(),
+    labels: months,
     datasets: [
-      {
-        label: "Total trades",
-        data: totalTradeByMonth,
-        backgroundColor: "rgb(53, 162, 235)",
-        stack: "Stack 0",
-      },
       {
         label: "Trades gagnés",
         data: tradeWonByMonth,
-        backgroundColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgb(6, 181, 230)",
         stack: "Stack 1",
       },
       {
         label: "Trades perdus",
         data: tradeLostByMonth,
-        backgroundColor: "rgb(255, 99, 132)",
+        backgroundColor: "#550f87",
         stack: "Stack 2",
       },
       {
         label: "BE/en profit",
         data: tradeBEByMonth,
-        backgroundColor: "rgb(53, 162, 235)",
+        backgroundColor: "#0f3780",
         stack: "Stack 3",
       },
     ],

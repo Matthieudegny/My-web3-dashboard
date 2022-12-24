@@ -1,22 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 //composants
 import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
-import Bar from "../../components/Charts/Bar/Bar";
+import BarByMonth from "../../components/Charts/Bar/BarByMonth";
 import Container from "../../components/Container/Container";
+import BarByResult from "../../components/Charts/Bar/BarByResult";
 
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
 //data
-import {
-  titlesLignesArrayChartEvolution,
-  titlesLignesArrayStatesTrades,
-} from "../../data/data";
+import { labelsLineEvolution, labelsBarByMonths } from "../../data/data";
 
 import "./Charts.scss";
 
 const Charts = () => {
+  const [averageTradesByMonth, setAverageTradesByMonth] = useState(0);
+
   const {
     numberOfTrades,
     numberOfTradesWon,
@@ -27,34 +27,41 @@ const Charts = () => {
     monthlyPerf,
   } = useContext(DashBoardContext);
 
-  const numberLignesArayChartEvolution = [
+  const valuesLineEvolution = [
     numberOfTrades,
     accountBalance + "$",
     annualPerf,
     monthlyPerf,
   ];
 
-  const numberLignesArayStatesTrades = [
-    numberOfTrades,
-    numberOfTradesWon,
-    numberOfTradesLost,
-    numberOfTradesBE,
-  ];
+  const valuesBarByMonth = [numberOfTrades, averageTradesByMonth];
 
   return (
     <>
       <div>
         <Container
-          titlesLignes={titlesLignesArrayChartEvolution}
-          numberLignes={numberLignesArayChartEvolution}
+          titlesLignes={labelsLineEvolution}
+          numberLignes={valuesLineEvolution}
           graph={<LineChartEvolution />}
         />
       </div>
       <div style={{ marginTop: "50px" }}>
         <Container
-          titlesLignes={titlesLignesArrayStatesTrades}
-          numberLignes={numberLignesArayStatesTrades}
-          graph={<Bar />}
+          titlesLignes={labelsBarByMonths}
+          numberLignes={valuesBarByMonth}
+          graph={
+            <BarByMonth
+              numberOfTrades={numberOfTrades}
+              setAverageTradesByMonth={setAverageTradesByMonth}
+            />
+          }
+        />
+      </div>
+      <div style={{ marginTop: "50px" }}>
+        <Container
+          titlesLignes={labelsBarByMonths}
+          numberLignes={valuesBarByMonth}
+          graph={<BarByResult />}
         />
       </div>
     </>

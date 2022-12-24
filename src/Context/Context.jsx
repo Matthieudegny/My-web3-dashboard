@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect } from "react";
 import {
-  getAnnualPerf,
   getMonthlyPerf,
   getPricesAndTransformToPerc,
   sortTradeWonOrLostOrBE,
@@ -61,30 +60,11 @@ const DashBoardContextProvider = (props) => {
     );
   };
 
-  const onErrorBTCrequest = (error) => {
-    console.log("btcprices echec", error);
-  };
-  const onErrorOrdersRequest = (error) => {
-    console.log("error", error);
-  };
-  const onErrorNSQrequest = (error) => {
-    console.log("NSQprices echec", error);
-  };
+  const { allOrders } = useFetchOrders(onSuccessOrdersRequest);
+  const { pricesBtc } = useFetchBTCPrices(onSuccessBTCrequest);
+  const { pricesNSQ } = useFetchNSQPrices(onSuccessNSQrequest);
 
-  const { allOrders } = useFetchOrders(
-    onSuccessOrdersRequest,
-    onErrorOrdersRequest
-  );
-  const { pricesBtc } = useFetchBTCPrices(
-    onSuccessBTCrequest,
-    onErrorBTCrequest
-  );
-  const { pricesNSQ } = useFetchNSQPrices(
-    onSuccessNSQrequest,
-    onErrorNSQrequest
-  );
-
-  //synchronization at every changes for Orders variable
+  //synchronization at every changes for Orders
   useEffect(() => {
     setnumberOfTrades(Orders.length);
     sortTradeWonOrLostOrBE(
@@ -93,9 +73,8 @@ const DashBoardContextProvider = (props) => {
       setnumberOfTradesLost,
       setnumberOfTradesBE
     );
-    getAnnualPerf(setannualPerf, accountBalance);
     getMonthlyPerf(Orders, setMonthlyPerf);
-    getBalance(Orders, setbalances, setAccountBalance);
+    getBalance(Orders, setbalances, setAccountBalance, setannualPerf);
   }, [Orders]);
 
   return (
