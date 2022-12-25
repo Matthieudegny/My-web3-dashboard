@@ -20,17 +20,6 @@ export const titlesLignesArrayHome = [
   // "Perf mensuelle",
 ];
 
-export const numberLignesArayHome = [
-  "34",
-  "14",
-  "3",
-  "8",
-  "9",
-  "25000$",
-  "4200$/+10%",
-  "400$/+3%",
-];
-
 export const labelsLineEvolution = [
   "Total trades",
   "Balance compte",
@@ -38,13 +27,10 @@ export const labelsLineEvolution = [
   "Perf mensuelle",
 ];
 
-export const numberLignesArayChartEvolution = [
-  "34",
-  "25000$",
-  "4200$/+10%",
-  "400$/+3%",
-];
-
 export const labelsBarByMonths = ["Total trades", "Moyenne trade/mois"];
 
-export const numberLignesArayStatesTrades = ["34", "14", "3", "8", "9"];
+export const labelsBarByResult = [
+  "% trades gagnés",
+  "% trades BE",
+  "% trades perdus",
+];

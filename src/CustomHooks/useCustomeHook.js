@@ -14,9 +14,20 @@ export const useFetchOrders = (onSuccessOrders, onErrorOrder) => {
   });
 };
 
+//i need Month -7 for my request
+function subtract7Months(date) {
+  date.setMonth(date.getMonth() - 7);
+  let monthTarget = date.getMonth() + 1;
+  if (monthTarget < 10) monthTarget = "0" + monthTarget;
+  monthTarget = monthTarget.toString();
+  return monthTarget;
+}
+const date = new Date();
+const monthToFetch = subtract7Months(date);
+
 const fetchBTCprices = async () => {
   const BTCprices = await fetch(
-    "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=BTC/USD&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
+    `https://api.twelvedata.com/time_series?start_date=2022-${monthToFetch}-01&symbol=BTC/USD&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e`
   );
   const result = await BTCprices.json();
   return result;
@@ -32,7 +43,7 @@ export const useFetchBTCPrices = (onSuccessOrders, onErrorOrder) => {
 
 const fetchNSQPrices = async () => {
   const NSQPrices = await fetch(
-    "https://api.twelvedata.com/time_series?start_date=2022-05-01&symbol=NDX&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e"
+    `https://api.twelvedata.com/time_series?start_date=2022-${monthToFetch}-01&symbol=NDX&interval=1month&apikey=43f166af4d42424fb77e7988214e7c7e`
   );
   const result = await NSQPrices.json();
   return result;

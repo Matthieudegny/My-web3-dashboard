@@ -4,6 +4,7 @@ import {
   getPricesAndTransformToPerc,
   sortTradeWonOrLostOrBE,
   getBalance,
+  getPFLastSevenMonthsResults,
 } from "../utils/utils";
 import {
   useFetchOrders,
@@ -30,6 +31,7 @@ const DashBoardContextProvider = (props) => {
   const [balances, setbalances] = useState([]);
   const [percBTC, setPercBTC] = useState([]);
   const [percNSQ, setPercNSQ] = useState([]);
+  const [percPF, setPercPF] = useState([]);
 
   const onSuccessOrdersRequest = (allOrders) => {
     console.log("succes", allOrders);
@@ -63,6 +65,8 @@ const DashBoardContextProvider = (props) => {
   const { allOrders } = useFetchOrders(onSuccessOrdersRequest);
   const { pricesBtc } = useFetchBTCPrices(onSuccessBTCrequest);
   const { pricesNSQ } = useFetchNSQPrices(onSuccessNSQrequest);
+
+  console.log(getPFLastSevenMonthsResults(Orders, setPercPF));
 
   //synchronization at every changes for Orders
   useEffect(() => {

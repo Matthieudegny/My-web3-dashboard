@@ -96,14 +96,14 @@ function BarChart() {
       {
         data: valuesTodisplay,
         backgroundColor: (context) => {
-          if (context.dataIndex === 0) return "#800f57";
-          if (context.dataIndex === 1) return "#550f80";
-          if (context.dataIndex === 2) return "#3c0f80";
-          if (context.dataIndex === 3) return "#250f80";
+          if (context.dataIndex === 0) return "#550f87";
+          if (context.dataIndex === 1) return "#550f87";
+          if (context.dataIndex === 2) return "#550f87";
+          if (context.dataIndex === 3) return "#0f3780";
           if (context.dataIndex === 4) return "#0f3780";
-          if (context.dataIndex === 5) return "#067be6";
-          if (context.dataIndex === 6) return "#06b5e6";
-          if (context.dataIndex === 7) return "#06e6b3";
+          if (context.dataIndex === 5) return "rgb(6, 181, 230)";
+          if (context.dataIndex === 6) return "rgb(6, 181, 230)";
+          if (context.dataIndex === 7) return "rgb(6, 181, 230)";
         },
         stack: "Stack 1",
       },

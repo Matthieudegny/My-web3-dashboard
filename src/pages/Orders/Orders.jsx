@@ -114,6 +114,24 @@ const Orders = () => {
     }
   }, [resetInputs]);
 
+  let monthsToDisplay = [];
+  let monthToDisplay = "";
+
+  const checkIfMonthhasToBeDisplayed = (dateOrder) => {
+    const date = new Date(dateOrder);
+    const monthToCompare = date.toLocaleString("default", {
+      month: "long",
+    });
+    monthToDisplay =
+      monthToCompare.charAt(0).toUpperCase() + monthToCompare.slice(1);
+    if (!monthsToDisplay.includes(monthToCompare)) {
+      monthsToDisplay.push(monthToCompare);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div className="Orders">
       <div
@@ -236,7 +254,21 @@ const Orders = () => {
           {Orders?.map((order, index) => {
             return (
               <React.Fragment key={index + order.date}>
-                <tr>
+                {checkIfMonthhasToBeDisplayed(order.date) && (
+                  <tr
+                    style={{
+                      borderBottom: "none",
+                      height: "15px",
+                    }}
+                  >
+                    <td
+                      style={{ textAlign: "start", color: "rgb(6, 181, 230)" }}
+                    >
+                      {monthToDisplay}:
+                    </td>
+                  </tr>
+                )}
+                <tr style={{ borderBottom: "0.2px solid #3d3e3e" }}>
                   <td>{GetDateFormatString(order.date)}</td>
                   <td>{order.asset}</td>
                   <td>{order.direction}</td>

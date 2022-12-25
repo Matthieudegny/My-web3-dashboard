@@ -10,7 +10,11 @@ import BarByResult from "../../components/Charts/Bar/BarByResult";
 import { DashBoardContext } from "../../Context/Context";
 
 //data
-import { labelsLineEvolution, labelsBarByMonths } from "../../data/data";
+import {
+  labelsLineEvolution,
+  labelsBarByMonths,
+  labelsBarByResult,
+} from "../../data/data";
 
 import "./Charts.scss";
 
@@ -36,6 +40,19 @@ const Charts = () => {
 
   const valuesBarByMonth = [numberOfTrades, averageTradesByMonth];
 
+  const valuesBarByResult = [];
+
+  const getPercTradesTypes = () => {
+    let percTradesWon = (numberOfTradesWon * 100) / numberOfTrades;
+    valuesBarByResult.push(percTradesWon.toFixed(1));
+    let percTradesBE = (numberOfTradesBE * 100) / numberOfTrades;
+    valuesBarByResult.push(percTradesBE.toFixed(1));
+    let percTradesLost = (numberOfTradesLost * 100) / numberOfTrades;
+    valuesBarByResult.push(percTradesLost.toFixed(1));
+  };
+
+  getPercTradesTypes();
+
   return (
     <>
       <div>
@@ -59,8 +76,8 @@ const Charts = () => {
       </div>
       <div style={{ marginTop: "50px" }}>
         <Container
-          titlesLignes={labelsBarByMonths}
-          numberLignes={valuesBarByMonth}
+          titlesLignes={labelsBarByResult}
+          numberLignes={valuesBarByResult}
           graph={<BarByResult />}
         />
       </div>
