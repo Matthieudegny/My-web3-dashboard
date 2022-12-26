@@ -33,8 +33,9 @@ const Orders = () => {
   const [realise, setRealise] = useState(0);
   const [profit, setProfit] = useState("");
 
+  useEffect(() => {}, [Orders]);
+
   const onSuccessSaveOrder = (data) => {
-    console.log("SaveOrder réussi", data);
     refetch();
     setResetInputs(true);
     setMessage("Votre ordre a été ajouté");
@@ -42,7 +43,6 @@ const Orders = () => {
   };
 
   const onSuccessDeleteOrder = (data) => {
-    console.log("delete order resussi", data);
     refetch();
     setMessage(" Vous ordre a été supprimé");
     setbckColor("#550f87");

@@ -68,97 +68,154 @@ export const getBalance = (
   Orders,
   setbalances,
   setAccountBalance,
-  setannualPerf
+  setannualPerf,
+  setPercPF
 ) => {
-  let lastSevenMonthBalancesPF = [];
+  let allMonthsTraded = [];
 
-  //creation of an array with all the month traded and a value set initaly to 0
+  //creation of an array with all the months traded and a value set initaly to 0
   const creationArrayFromtheFirstTrade = () => {
-    let date1 = new Date(Orders.at(-1).date);
-    let date2 = new Date();
+    if (Orders.length > 0) {
+      let date1 = new Date(Orders.at(-1).date);
+      let date2 = new Date();
 
-    const difference =
-      date2.getMonth() -
-      date1.getMonth() +
-      12 * (date2.getFullYear() - date1.getFullYear());
+      const difference =
+        date2.getMonth() -
+        date1.getMonth() +
+        12 * (date2.getFullYear() - date1.getFullYear());
 
-    for (let i = 0; i < difference; i++) {
-      const newDate = new Date();
-      newDate.setMonth(newDate.getMonth() - i);
-      const monthToPush = newDate.toLocaleString("default", { month: "long" });
-      const objectToPush = [monthToPush, 0];
-      lastSevenMonthBalancesPF.push(objectToPush);
-    }
-  };
-  console.log("lastSevenMonthBalancesPF", lastSevenMonthBalancesPF);
-
-  const ordersReversed = [...Orders].reverse();
-  //for every order i nneed to add each profit to obtain the total balance
-  ordersReversed.map((order, index) => {
-    if (index === 0) {
-      const firstTradeDate = order.createdAt;
-      creationArrayFromtheFirstTrade(firstTradeDate);
-    }
-    if (balancesArray.length === 0) balancesArray.push(order.profit);
-    else {
-      let lastBalance = balancesArray[index - 1] + order.profit;
-      balancesArray.push(lastBalance);
-
-      //for each month i save the balance
-      lastSevenMonthBalancesPF?.map((monthArray, index) => {
-        let monthOrder = new Date(order.date);
-        monthOrder = monthOrder.toLocaleString("default", {
+      //+1 to difference
+      for (let i = 0; i < difference + 1; i++) {
+        const newDate = new Date();
+        newDate.setMonth(newDate.getMonth() - i);
+        const monthToPush = newDate.toLocaleString("default", {
           month: "long",
         });
-        if (monthOrder === monthArray[0]) {
-          lastSevenMonthBalancesPF[index][1] = lastBalance;
+        const yearToPush = newDate.getFullYear();
+        const objectToPush = [monthToPush, yearToPush, 0];
+        allMonthsTraded.push(objectToPush);
+      }
+
+      //i need to check that the lenght of the array is min 7 without the actual month
+      //i check if the actual month is inside
+      let actualMonthisTrading = false;
+      if (allMonthsTraded.length > 0) {
+        allMonthsTraded?.map((month) => {
+          const monthToCheck = date2.toLocaleString("default", {
+            month: "long",
+          });
+          const yearToCheck = date2.getFullYear();
+          if (month.includes(monthToCheck) && month.includes(yearToCheck))
+            actualMonthisTrading = true;
+        });
+        if (actualMonthisTrading) {
+          if (allMonthsTraded.length < 8) {
+            while (allMonthsTraded.length < 8) {
+              allMonthsTraded.push([0, 0, 0]);
+            }
+          }
+        } else {
+          if (allMonthsTraded.length < 7) {
+            while (allMonthsTraded.length < 7) {
+              allMonthsTraded.push([0, 0, 0]);
+            }
+          }
+        }
+      }
+    }
+  };
+  creationArrayFromtheFirstTrade();
+
+  if (Orders.length > 0) {
+    const ordersReversed = [...Orders].reverse();
+    //for every order i nneed to add each profit to obtain the total balance
+    ordersReversed?.map((order, index) => {
+      let lastBalance;
+      if (balancesArray.length === 0) {
+        balancesArray.push(order.profit);
+        lastBalance = order.profit;
+      } else {
+        lastBalance = balancesArray[index - 1] + order.profit;
+        balancesArray.push(lastBalance);
+      }
+      //for each month i save the balance (i use lastBalance)
+      allMonthsTraded?.map((oneMonth, index) => {
+        let newDate = new Date(order.date);
+        let monthOrder = newDate.toLocaleString("default", {
+          month: "long",
+        });
+        let yearOrder = newDate.getFullYear();
+        if (monthOrder === oneMonth[0] && yearOrder === oneMonth[1]) {
+          allMonthsTraded[index][2] = lastBalance;
         }
       });
-    }
-  });
-
-  //i need the last 7 months for LineEvolution
-  const lastSevenMonth = lastSevenMonthBalancesPF.slice(0, 7);
-
-  //i abolutly need to have a value for my last index in lastSevenMonthBalancesPF, so i gonna manage it
-  //to looking for the nearest monst and get a value
-  if (lastSevenMonth.at(-1)[1] != 0) {
-    console.log("lllllllllll");
+    });
   }
 
+  //function set for the balance part
   setbalances(balancesArray.reverse());
   setAccountBalance(balancesArray[0]);
   getAnnualPerf(setannualPerf, balancesArray[0]);
   balancesArray = [];
 
-  //i dont need anymore the value month in my object
-  let result = [];
-  lastSevenMonthBalancesPF?.map((month) => {
-    result.push(month[1]);
-  });
+  //i need the last 6 months + 1 for Line
+  const lastSevenMonth = allMonthsTraded.slice(1, 8);
+
+  //in case the last month of lastSevenMonth has a value of 0, i take back the last balance from
+  // the previous months
+  if (lastSevenMonth.length > 0) {
+    if (lastSevenMonth.at(-1)[2] === 0) {
+      let restMonthsTraded = allMonthsTraded.slice(7);
+      let valueToSet = 0;
+      for (let i = 0; i < restMonthsTraded.length; i++) {
+        if (valueToSet === 0) {
+          if (restMonthsTraded[i][2] !== 0) valueToSet = restMonthsTraded[i][2];
+        }
+      }
+      lastSevenMonth.at(-1)[2] = valueToSet;
+    }
+  }
+
+  //in lastSevenMonth i need every month with a balance !== 0
+  //the last month has already been managed previously
+  //if lastSevenMonth[i][2] === 0 it is some month add manualy because month no traded and
+  //lastSevenMonth.length wasn't enought long -> so no change the balance
+  if (lastSevenMonth.length === 7) {
+    for (let i = 6; i > -1; i--) {
+      if (lastSevenMonth[i][0] != 0 && lastSevenMonth[i][2] === 0) {
+        lastSevenMonth[i][2] = lastSevenMonth[i + 1][2];
+      }
+    }
+  }
+
+  //i dont need anymore the value month and year in my array lastSevenMonth
+  let resultArray = [];
+  if (lastSevenMonth.length > 0) {
+    lastSevenMonth?.map((month) => {
+      resultArray.push(month[2]);
+    });
+  }
 
   let resultWithPercToPush = [];
-  //i push the value of the balance for the month traded, so some month are with a value of 0 (month no traded)
-  //i need to loop and correct it
-  result?.map((trade, index) => {
-    if (trade === 0) console.log("0a modif");
-  });
-
-  // const tranformPricetoPerc = (x, y) => {
-  //   console.log(x, y);
-  //   let difference = x - y;
-  //   let result = (difference * 100) / y;
-  //   // result = Math.round(result);
-  //   result = result.toFixed(2);
-  //   resultWithPercToPush.push(result);
-  // };
-  // lastSevenMonthBalancesPF?.map((price, index) => {
-  //   if (index === 0) return;
-  //   tranformPricetoPerc(
-  //     lastSevenMonthBalancesPF[index - 1][1],
-  //     lastSevenMonthBalancesPF[index][1]
-  //   );
-  // });
+  if (resultArray.length > 0) {
+    const tranformPricetoPerc = (x, y) => {
+      let difference = x - y;
+      let result;
+      if (x === 0) result = y;
+      else if (y === 0) result = x;
+      else {
+        result = (difference * 100) / y;
+        result = result.toFixed(2);
+      }
+      resultWithPercToPush.push(result);
+    };
+    resultArray?.map((price, index) => {
+      if (index === 0) return;
+      tranformPricetoPerc(resultArray[index - 1], resultArray[index]);
+    });
+  }
+  const resultTodisplay = resultWithPercToPush.reverse();
+  setPercPF(resultTodisplay);
 };
 
 export const GetDateFormatString = (value) => {
@@ -174,58 +231,4 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   let perfThisYear = accountBalance - perf2021;
   let perfThisYearPercent = (perfThisYear * 100) / perf2021;
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
-};
-
-export const getPFLastSevenMonthsResults = (Orders, setPercPF) => {
-  // let lastSevenMonthBalancesPF = [];
-  // //i obtain an array with 7 objects, one object is one month, and an initial value to 0
-  // for (let i = 0; i < 7; i++) {
-  //   const newDate = new Date();
-  //   newDate.setMonth(newDate.getMonth() - i);
-  //   const monthToPush = newDate.toLocaleString("default", { month: "long" });
-  //   const objectToPush = [monthToPush, 0];
-  //   lastSevenMonthBalancesPF.push(objectToPush);
-  // }
-  // //i fill lastSevenMonthBalancesPF depends on the orders.profits
-  // Orders?.map((order) => {
-  //   lastSevenMonthBalancesPF?.map((monthArray, index) => {
-  //     let monthOrder = new Date(order.date);
-  //     monthOrder = monthOrder.toLocaleString("default", {
-  //       month: "long",
-  //     });
-  //     if (monthOrder === monthArray[0]) {
-  //       lastSevenMonthBalancesPF[index][1] += order.profit;
-  //     }
-  //   });
-  // });
-  // //i return only an array with the values, not month in letter
-  // let result = [];
-  // let resultWithPercToPush = [];
-  // lastSevenMonthBalancesPF?.map((month) => {
-  //   result.push(month[1]);
-  // });
-  // console.log("result", result);
-  // let balanceAccount = lastBalance;
-  // let lastSevenMonthBalances = [];
-  // result?.map((month, index) => {
-  //   if (index === 0) lastSevenMonthBalances.push(balanceAccount);
-  //   console.log("balanceAccount", lastBalance);
-  //   let valueToPush = month - balanceAccount;
-  //   lastSevenMonthBalances.push(valueToPush);
-  //   balanceAccount = balanceAccount - month;
-  // });
-  // console.log("lastSevenMonthBalances", lastSevenMonthBalances);
-  // const tranformPricetoPerc = (x, y) => {
-  //   console.log(x, y);
-  //   let difference = x - y;
-  //   let result = (difference * 100) / y;
-  //   // result = Math.round(result);
-  //   result = result.toFixed(2);
-  //   resultWithPercToPush.push(result);
-  // };
-  // result?.map((price, index) => {
-  //   if (index === 0) return;
-  //   tranformPricetoPerc(result[index - 1], result[index]);
-  // });
-  // getPricesAndTransformToPerc(pricesPf, percentagesPF, setPercPF, result);
 };

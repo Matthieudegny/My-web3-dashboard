@@ -42,7 +42,6 @@ function PopUp() {
   }, [orderToUpdate]);
 
   const onSuccessUpdateOrder = (data) => {
-    console.log("order update", data);
     setMessage(" Votre ordre a bien été modifié");
     setbckColor("rgb(13, 73, 158)");
     setOpenPopUp(false);

@@ -34,14 +34,12 @@ const DashBoardContextProvider = (props) => {
   const [percPF, setPercPF] = useState([]);
 
   const onSuccessOrdersRequest = (allOrders) => {
-    console.log("succes", allOrders);
     setOrders(allOrders);
   };
 
   let pricesBTC = [];
   let percentagesBTC = [];
   const onSuccessBTCrequest = (pricesBtc) => {
-    console.log("btcprices reussi", pricesBtc);
     getPricesAndTransformToPerc(
       pricesBTC,
       percentagesBTC,
@@ -53,7 +51,6 @@ const DashBoardContextProvider = (props) => {
   let nasdaqPrices = [];
   let nasdaqPerc = [];
   const onSuccessNSQrequest = (pricesNSQ) => {
-    console.log("NSQprices reussi", pricesNSQ);
     getPricesAndTransformToPerc(
       nasdaqPrices,
       nasdaqPerc,
@@ -66,8 +63,6 @@ const DashBoardContextProvider = (props) => {
   const { pricesBtc } = useFetchBTCPrices(onSuccessBTCrequest);
   const { pricesNSQ } = useFetchNSQPrices(onSuccessNSQrequest);
 
-  console.log(getPFLastSevenMonthsResults(Orders, setPercPF));
-
   //synchronization at every changes for Orders
   useEffect(() => {
     setnumberOfTrades(Orders.length);
@@ -78,7 +73,13 @@ const DashBoardContextProvider = (props) => {
       setnumberOfTradesBE
     );
     getMonthlyPerf(Orders, setMonthlyPerf);
-    getBalance(Orders, setbalances, setAccountBalance, setannualPerf);
+    getBalance(
+      Orders,
+      setbalances,
+      setAccountBalance,
+      setannualPerf,
+      setPercPF
+    );
   }, [Orders]);
 
   return (
@@ -106,6 +107,7 @@ const DashBoardContextProvider = (props) => {
         setbalances,
         percBTC,
         percNSQ,
+        percPF,
       }}
     >
       {props.children}

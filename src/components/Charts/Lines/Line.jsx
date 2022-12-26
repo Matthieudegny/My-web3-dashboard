@@ -46,11 +46,14 @@ export const options = {
         label: function (context) {
           let label = context.dataset.label || "";
           let value = context.raw;
-          if (value >= 1) {
+          if (value > 0) {
             return `${label}: +${value}%`;
           }
           if (value < 0) {
             return `${label}: ${value}%`;
+          }
+          if (value == 0) {
+            return "0%";
           }
         },
       },
@@ -85,7 +88,10 @@ export const options = {
         color: "white",
         //allow to add description at y ticks, for these example -> $200m
         callback: function (value) {
-          return value + "%";
+          if (value === 0) return "0%";
+          else {
+            return value + "%";
+          }
         },
         font: {
           size: 20,
@@ -106,7 +112,7 @@ export const options = {
 };
 
 function LineChart() {
-  const { percBTC, percNSQ } = useContext(DashBoardContext);
+  const { percBTC, percNSQ, percPF } = useContext(DashBoardContext);
 
   let monthNames = [
     "January",
@@ -148,7 +154,7 @@ function LineChart() {
         },
         backgroundColor: "#550F87",
         //courbe
-        tension: 0.5,
+        tension: 0.1,
       },
       {
         label: "NSQ",
@@ -161,11 +167,11 @@ function LineChart() {
           return gradientStroke;
         },
         backgroundColor: "#170AAC",
-        tension: 0.5,
+        tension: 0.1,
       },
       {
         label: "Portefolio",
-        data: [2, 2.7, 3, "2.8", "-3.4", 20.8],
+        data: percPF,
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
@@ -174,7 +180,7 @@ function LineChart() {
           return gradientStroke;
         },
         backgroundColor: "#096680",
-        tension: 0.5,
+        tension: 0.1,
       },
     ],
   };

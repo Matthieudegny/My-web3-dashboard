@@ -86,8 +86,6 @@ export const useDeleteOrder = (onSuccessDeleteOrder, onErrorDeleteOrder) => {
 };
 
 const updateOrder = (objetIdANdOrder) => {
-  console.log("id in request", objetIdANdOrder[0]);
-  console.log("order in request", objetIdANdOrder[1]);
   return fetch(`/api/dashboard/${objetIdANdOrder[0]}`, {
     method: "PATCH",
     body: JSON.stringify(objetIdANdOrder[1]),
