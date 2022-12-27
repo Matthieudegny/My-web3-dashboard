@@ -14,6 +14,7 @@
 .Header-container {
   display: flex;
   justify-content: space-between;
+  background-color: $firstColor;
   align-items: center;
   width: 70vw;
 
@@ -136,4 +137,32 @@
   align-items: center;
   width: 10vw;
   font-size: 25px;
+}
+
+.errorMessage {
+  position: absolute;
+  color: white;
+  padding: 0.5%;
+  z-index: -50;
+  border-radius: 10px;
+  top: 70px;
+  left: 51%;
+  transform: translate(-50%, -50%);
+}
+.ErrorActive {
+  animation: 5s errorMessage forwards;
+}
+@keyframes errorMessage {
+  0% {
+    top: 70px;
+  }
+  25% {
+    top: 123px;
+  }
+  80% {
+    top: 123px;
+  }
+  100% {
+    top: 70px;
+  }
 }

@@ -148,11 +148,11 @@ function LineChart() {
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
-          gradientStroke.addColorStop(1, "red");
-          gradientStroke.addColorStop(0, "yellow");
+          gradientStroke.addColorStop(1, "#f29d22");
+          gradientStroke.addColorStop(0, "#835410");
           return gradientStroke;
         },
-        backgroundColor: "#550F87",
+        backgroundColor: "#f29d22",
         //courbe
         tension: 0.1,
       },
@@ -161,12 +161,12 @@ function LineChart() {
         data: percNSQ,
         borderColor: (context) => {
           const ctx = context.chart.ctx;
-          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
-          gradientStroke.addColorStop(0, "#150D71");
-          gradientStroke.addColorStop(1, "#1907E6");
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
+          gradientStroke.addColorStop(0, "#330852");
+          gradientStroke.addColorStop(1, "#820cd6");
           return gradientStroke;
         },
-        backgroundColor: "#170AAC",
+        backgroundColor: "#820cd6",
         tension: 0.1,
       },
       {
@@ -174,12 +174,12 @@ function LineChart() {
         data: percPF,
         borderColor: (context) => {
           const ctx = context.chart.ctx;
-          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 0);
+          const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
           gradientStroke.addColorStop(0, "#096680");
           gradientStroke.addColorStop(1, "#06B5E6");
           return gradientStroke;
         },
-        backgroundColor: "#096680",
+        backgroundColor: "#06B5E6",
         tension: 0.1,
       },
     ],

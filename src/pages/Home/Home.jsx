@@ -2,13 +2,14 @@ import React, { useContext } from "react";
 
 //composants
 import LineChart from "../../components/Charts/Lines/Line";
+import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
 import Container from "../../components/Container/Container";
 
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
 //data
-import { titlesLignesArrayHome, numberLignesArayHome } from "../../data/data";
+import { labelsLineEvolution } from "../../data/data";
 
 const Home = () => {
   const {
@@ -20,13 +21,13 @@ const Home = () => {
     annualPerf,
   } = useContext(DashBoardContext);
 
-  const numberLignesArayHome = [
+  const valuesLineEvolution = [
     numberOfTrades,
+    accountBalance + "$",
+    annualPerf,
     numberOfTradesWon,
     numberOfTradesLost,
     numberOfTradesBE,
-    accountBalance + "$",
-    annualPerf,
   ];
 
   return (
@@ -40,9 +41,9 @@ const Home = () => {
       }}
     >
       <Container
-        titlesLignes={titlesLignesArrayHome}
-        numberLignes={numberLignesArayHome}
-        graph={<LineChart />}
+        titlesLignes={labelsLineEvolution}
+        numberLignes={valuesLineEvolution}
+        graph={<LineChartEvolution />}
       />
     </div>
   );

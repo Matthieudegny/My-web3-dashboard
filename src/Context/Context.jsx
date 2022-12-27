@@ -82,6 +82,19 @@ const DashBoardContextProvider = (props) => {
     );
   }, [Orders]);
 
+  //after 5 secondes (time of the animation) errorMessage is deleted
+  useEffect(() => {
+    if (message) {
+      let deleteErrorMessage = setTimeout(() => {
+        setMessage("");
+        setbckColor("");
+      }, 5000);
+      return () => {
+        clearTimeout(deleteErrorMessage);
+      };
+    }
+  }, [message]);
+
   return (
     <DashBoardContext.Provider
       value={{

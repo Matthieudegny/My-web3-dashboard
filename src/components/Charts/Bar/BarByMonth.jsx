@@ -92,11 +92,11 @@ function BarChart({ numberOfTrades, setAverageTradesByMonth }) {
         });
         if (monthToCompare === month) {
           if (order.profit < -500) {
-            tradeLostByMonth[index] += order.profit;
+            tradeLostByMonth[index]++;
           } else if (order.profit >= -500 && order.profit <= 500) {
-            tradeBEByMonth[index] += order.profit;
+            tradeBEByMonth[index]++;
           } else if (order.profit > 500) {
-            tradeWonByMonth[index] += order.profit;
+            tradeWonByMonth[index]++;
           }
         }
       });

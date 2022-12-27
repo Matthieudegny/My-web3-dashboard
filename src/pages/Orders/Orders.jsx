@@ -86,19 +86,6 @@ const Orders = () => {
     deleteorderObject(id);
   };
 
-  //after 5 secondes (time of the animation) errorMessage is deleted
-  useEffect(() => {
-    if (message) {
-      let deleteErrorMessage = setTimeout(() => {
-        setMessage("");
-        setbckColor("");
-      }, 5000);
-      return () => {
-        clearTimeout(deleteErrorMessage);
-      };
-    }
-  }, [message]);
-
   //after creationOrder reset all inputs
   useEffect(() => {
     if (resetInputs) {
@@ -134,14 +121,14 @@ const Orders = () => {
 
   return (
     <div className="Orders">
-      <div
+      {/* <div
         style={{ backgroundColor: bckColor }}
         className={`styled-table-errorMessage ${
           message !== "" && bckColor !== "" ? "ErrorActive" : ""
         }`}
       >
         {message}
-      </div>
+      </div> */}
       <table className="styled-table">
         <thead>
           <tr>

@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 //composants
 import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
+import LineChart from "../../components/Charts/Lines/Line";
 import BarByMonth from "../../components/Charts/Bar/BarByMonth";
 import Container from "../../components/Container/Container";
 import BarByResult from "../../components/Charts/Bar/BarByResult";
@@ -11,9 +12,9 @@ import { DashBoardContext } from "../../Context/Context";
 
 //data
 import {
-  labelsLineEvolution,
   labelsBarByMonths,
   labelsBarByResult,
+  labelsLineMarket,
 } from "../../data/data";
 
 import "./Charts.scss";
@@ -31,12 +32,7 @@ const Charts = () => {
     monthlyPerf,
   } = useContext(DashBoardContext);
 
-  const valuesLineEvolution = [
-    numberOfTrades,
-    accountBalance + "$",
-    annualPerf,
-    monthlyPerf,
-  ];
+  const valuesLineMarket = [annualPerf, accountBalance + "$"];
 
   const valuesBarByMonth = [numberOfTrades, averageTradesByMonth];
 
@@ -55,14 +51,14 @@ const Charts = () => {
 
   return (
     <>
-      <div>
+      <div style={{ marginTop: "55px" }}>
         <Container
-          titlesLignes={labelsLineEvolution}
-          numberLignes={valuesLineEvolution}
-          graph={<LineChartEvolution />}
+          titlesLignes={labelsLineMarket}
+          numberLignes={valuesLineMarket}
+          graph={<LineChart />}
         />
       </div>
-      <div style={{ marginTop: "50px" }}>
+      <div style={{ marginTop: "20px" }}>
         <Container
           titlesLignes={labelsBarByMonths}
           numberLignes={valuesBarByMonth}
@@ -74,7 +70,7 @@ const Charts = () => {
           }
         />
       </div>
-      <div style={{ marginTop: "50px" }}>
+      <div style={{ marginTop: "20px" }}>
         <Container
           titlesLignes={labelsBarByResult}
           numberLignes={valuesBarByResult}

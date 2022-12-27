@@ -9,7 +9,8 @@ import { DashBoardContext } from "../../Context/Context";
 import { FaPowerOff } from "react-icons/fa";
 
 function Header() {
-  const { page } = useContext(DashBoardContext);
+  const { page, message, setMessage, bckColor, setbckColor } =
+    useContext(DashBoardContext);
 
   const [date, setDate] = useState();
 
@@ -53,6 +54,14 @@ function Header() {
           <div className="Header-container-text2 item">
             ...NSQ +3%...BTC +6%...Portefeuille +4%...
           </div>
+        </div>
+        <div
+          style={{ backgroundColor: bckColor }}
+          className={`errorMessage ${
+            message !== "" && bckColor !== "" ? "ErrorActive" : ""
+          }`}
+        >
+          {message}
         </div>
       </div>
       <div className="Header-date">{date}</div>

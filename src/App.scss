@@ -1,13 +1,33 @@
-@import './style/style.scss';
-.App{
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;  
-    background-color: $firstColor;
-    font-family: 'Roboto', sans-serif;
+@import "./style/style.scss";
+.App {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  background-color: $firstColor;
+  font-family: "Roboto", sans-serif;
 
-    &-main-container{
-        display: flex;
-    }
+  &-main-container {
+    display: flex;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(22, 25, 60);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
