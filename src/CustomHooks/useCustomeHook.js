@@ -86,6 +86,7 @@ export const useDeleteOrder = (onSuccessDeleteOrder, onErrorDeleteOrder) => {
 };
 
 const updateOrder = (objetIdANdOrder) => {
+  console.log(objetIdANdOrder[1]);
   return fetch(`/api/dashboard/${objetIdANdOrder[0]}`, {
     method: "PATCH",
     body: JSON.stringify(objetIdANdOrder[1]),
@@ -100,3 +101,18 @@ export const useUpdateOrder = (onSuccessUpdateOrder, onErrorUpdateOrder) => {
     onError: onErrorUpdateOrder,
   });
 };
+// const login = (object) => {
+//   return fetch("/api/dashboard/login", {
+//     method: "POST",
+//     body: JSON.stringify(object),
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
+// };
+// export const useLogin = (onSuccessLogin, onErrorLogin) => {
+//   return useMutation(login, {
+//     onSuccess: onSuccessLogin,
+//     onError: onErrorLogin,
+//   });
+// };

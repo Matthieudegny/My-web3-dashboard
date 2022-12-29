@@ -6,7 +6,6 @@ import { QueryClientProvider, QueryClient } from "react-query";
 
 //import context
 import DashBoardContext from "./Context/Context";
-import AuthContextProvider from "./Context/AuthContext";
 
 //import components
 import Header from "./components/Header/Header";
@@ -24,17 +23,15 @@ function App() {
     <div className="App" style={{ position: "relative" }}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <AuthContextProvider>
-            <DashBoardContext>
-              <PopUp />
-              <Header />
+          <DashBoardContext>
+            <PopUp />
+            <Header />
 
-              <div className="App-main-container">
-                <SideBar />
-                <MainComponent />
-              </div>
-            </DashBoardContext>
-          </AuthContextProvider>
+            <div className="App-main-container">
+              <SideBar />
+              <MainComponent />
+            </div>
+          </DashBoardContext>
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>

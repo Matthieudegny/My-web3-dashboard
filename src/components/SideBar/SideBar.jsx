@@ -7,6 +7,9 @@ import "./SideBar.scss";
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
+//import component
+import Login from "../Login/Login";
+
 //import data
 import { pages } from "../../data/data";
 
@@ -19,6 +22,7 @@ const SideBar = () => {
 
   return (
     <div className="SideBar_container">
+      <Login />
       <div className="SideBar_Links_Container">
         {pages.map((page, index) => (
           <React.Fragment key={index}>
