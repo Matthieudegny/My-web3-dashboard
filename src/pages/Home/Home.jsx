@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 
 //composants
-import LineChart from "../../components/Charts/Lines/Line";
 import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
 import Container from "../../components/Container/Container";
 
@@ -37,7 +36,7 @@ const Home = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100%",
-        marginTop: "1%",
+        marginLeft: "-1px",
       }}
     >
       <Container

@@ -88,6 +88,9 @@ export const getBalance = (
       for (let i = 0; i < difference + 1; i++) {
         const newDate = new Date();
         newDate.setMonth(newDate.getMonth() - i);
+        //take of one day more, because only one month is 31 days, do with the month of 31 days, the month number don't change
+        newDate.setDate(newDate.getDate() - 1);
+        console.log("newDate", newDate);
         const monthToPush = newDate.toLocaleString("default", {
           month: "long",
         });
@@ -158,11 +161,11 @@ export const getBalance = (
   getAnnualPerf(setannualPerf, balancesArray[0]);
   balancesArray = [];
 
-  //i need the last 6 months + 1 for Line
+  // //i need the last 6 months + 1 for Line
   const lastSevenMonth = allMonthsTraded.slice(1, 8);
 
-  //in case the last month of lastSevenMonth has a value of 0, i take back the last balance from
-  // the previous months
+  // //in case the last month of lastSevenMonth has a value of 0, i take back the last balance from
+  // // the previous months
   if (lastSevenMonth.length > 0) {
     if (lastSevenMonth.at(-1)[2] === 0) {
       let restMonthsTraded = allMonthsTraded.slice(7);

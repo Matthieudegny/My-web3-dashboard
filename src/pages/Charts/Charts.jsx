@@ -51,7 +51,7 @@ const Charts = () => {
 
   return (
     <>
-      <div style={{ marginTop: "55px" }}>
+      <div style={{ marginTop: "139px" }}>
         <Container
           titlesLignes={labelsLineMarket}
           numberLignes={valuesLineMarket}

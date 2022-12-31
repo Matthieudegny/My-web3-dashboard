@@ -25,7 +25,7 @@ function App() {
         <BrowserRouter>
           <DashBoardContext>
             <PopUp />
-            <Header />
+            {/* <Header /> */}
 
             <div className="App-main-container">
               <SideBar />

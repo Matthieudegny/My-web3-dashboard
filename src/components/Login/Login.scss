@@ -1,0 +1,45 @@
+.formVisible {
+  visibility: visible;
+}
+
+.formNotVisible {
+  visibility: hidden;
+}
+.container-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 20px;
+}
+
+.container-login {
+  padding: 10px;
+
+  label {
+    margin-top: 5px;
+  }
+
+  input {
+    margin: 5px 0;
+  }
+
+  &-containerButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      padding: 10px;
+      border-radius: 10px;
+      background: linear-gradient(to right, #0d499e, #06b5e6fa);
+      color: white;
+      font-size: 20px;
+      border: none;
+    }
+  }
+}

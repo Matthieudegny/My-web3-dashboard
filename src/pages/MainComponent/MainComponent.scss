@@ -1,15 +1,14 @@
 @import "../../style/style.scss";
 
 .MainComponent-container {
-  margin-top: 10vh;
   //100% pour 50px padding *2
-  min-height: calc(90vh - 100px);
+  // min-height: calc(90vh - 100px);
   width: 90vw;
+  min-height: 100vh;
   margin-left: 10vw;
   color: white;
+  padding: 0 50px;
   background-color: $secondColor;
-  border-radius: 20px 0px 0px 0px;
-  padding: 50px;
   position: relative;
 }
 

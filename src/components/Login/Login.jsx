@@ -1,58 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
+//import style
+import "./Login.scss";
+
+//import composant
 import { useLogin } from "../../CustomHooks/useCustomeHook";
 
-function Login() {
-  const [email, setemail] = useState("dfgdf");
-  const [password, setpassword] = useState("dfgdfg");
+//import context
+import { DashBoardContext } from "../../Context/Context";
 
-  // const onSuccessLogin = (data) => {
-  //   console.log("succes", data);
-  // };
+function Login({ FormVisibility, setFormVisibility }) {
+  const { setMessage, setbckColor } = useContext(DashBoardContext);
 
-  // const onErrorLogin = (error) => {
-  //   console.log("error", error);
-  // };
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
 
-  // const { mutate: login } = useLogin(onSuccessLogin, onErrorLogin);
+  const onSuccessLogin = (data) => {
+    if (data.ok === true) {
+      console.log("bien connecté");
+      setMessage("Vous êtes bien connecté");
+      setbckColor("rgb(6, 181, 230)");
+    } else {
+      setMessage("Veuillez vérider votre adresse mail et mot de passe");
+      setbckColor("#550f87");
+    }
+  };
 
-  async function fetchLogin(object) {
-    console.log(object);
-    const loginRequest = await fetch("/api/dashboard/login", {
-      method: "POST",
-      body: JSON.stringify(object),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
+  const { mutate: login } = useLogin(onSuccessLogin);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const objectToSent = { email, password };
-    console.log(JSON.stringify(objectToSent));
-    fetchLogin(objectToSent);
-
-    // login(objectToSent);
+    login(objectToSent);
   };
-  return (
-    <form action="" onSubmit={handleSubmit}>
-      <h3>Login</h3>
-      <label>Email:</label>
-      <input
-        type="email"
-        onChange={(e) => setemail(e.target.value)}
-        value={email}
-      />
-      <label>Password:</label>
-      <input
-        type="password"
-        onChange={(e) => setpassword(e.target.value)}
-        value={password}
-      />
 
-      <button type="submit">Sign up</button>
-    </form>
+  return (
+    <div style={{ height: "150px" }}>
+      {!FormVisibility ? (
+        <div className="container-user">Compte visiteur</div>
+      ) : (
+        <div className="container-login">
+          <form action="" onSubmit={handleSubmit}>
+            <label>Email:</label>
+            <input
+              type="email"
+              onChange={(e) => setemail(e.target.value)}
+              value={email}
+            />
+            <label>Password:</label>
+            <input
+              type="password"
+              onChange={(e) => setpassword(e.target.value)}
+              value={password}
+            />
+            <div className="container-login-containerButton">
+              <button type="submit">Login</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }
 
