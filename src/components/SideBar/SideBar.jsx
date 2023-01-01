@@ -17,24 +17,45 @@ import Login from "../Login/Login";
 import { pages } from "../../data/data";
 
 const SideBar = () => {
-  const { mobileVersion, setPage } = useContext(DashBoardContext);
+  const { mobileVersion, setToken } = useContext(DashBoardContext);
 
   const [FormVisibility, setFormVisibility] = useState(false);
+  const [topAndBottomSideBarVisibility, settopAndBottomSideBarVisibility] =
+    useState(false);
 
-  const savePageForHeader = (page) => {
-    setPage(page);
+  const getColorButtonFaPowerOff = () => {
+    if (FormVisibility) return "rgb(6, 181, 230)";
+    else {
+      return "rgb(13, 73, 158)";
+    }
   };
 
+  useEffect(() => {
+    let token = localStorage.getItem("user");
+    token = JSON.parse(token);
+    if (token) setToken(token.token);
+  }, []);
+
   return (
-    <div className="SideBar_container">
-      <div className="SideBar_container_Login">
+    <div
+      className="SideBar_container"
+      onMouseEnter={() => settopAndBottomSideBarVisibility(true)}
+      onMouseLeave={() => settopAndBottomSideBarVisibility(false)}
+    >
+      <div
+        className={`SideBar_container_Login ${
+          topAndBottomSideBarVisibility
+            ? "topAndBottomSideBarVisibilityTrue"
+            : "topAndBottomSideBarVisibilityFalse"
+        }`}
+      >
         <button
           className="SideBar_container_Login_buttonLogin"
           style={{ cursor: "pointer" }}
           onClick={() => setFormVisibility(!FormVisibility)}
         >
           <FaPowerOff
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", color: getColorButtonFaPowerOff() }}
             onClick={() => setFormVisibility(!FormVisibility)}
           />
         </button>
@@ -50,7 +71,6 @@ const SideBar = () => {
               to={page.link}
               end
               className={({ isActive }) => (isActive ? "activeLink" : "")}
-              onClick={() => savePageForHeader(page.name)}
             >
               {!mobileVersion ? (
                 <div className="SideBar_Links_Item">
@@ -64,7 +84,15 @@ const SideBar = () => {
           </React.Fragment>
         ))}
       </div>
-      <div className="SideBar_developer">Matthieu Degny Développement</div>
+      <div
+        className={`SideBar_developer ${
+          topAndBottomSideBarVisibility
+            ? "topAndBottomSideBarVisibilityTrue"
+            : "topAndBottomSideBarVisibilityFalse"
+        }`}
+      >
+        Matthieu Degny Développement
+      </div>
     </div>
   );
 };

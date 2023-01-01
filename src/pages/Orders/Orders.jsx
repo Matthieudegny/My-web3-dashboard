@@ -11,7 +11,7 @@ import {
   useSaveOrder,
   useDeleteOrder,
 } from "../../CustomHooks/useCustomeHook";
-import { GetDateFormatString } from "../../utils/utils";
+import { GetDateFormatString, getToken } from "../../utils/utils";
 
 const Orders = () => {
   const {
@@ -22,6 +22,7 @@ const Orders = () => {
     bckColor,
     setbckColor,
     balances,
+    token,
   } = useContext(DashBoardContext);
 
   const [resetInputs, setResetInputs] = useState(false);
@@ -32,8 +33,6 @@ const Orders = () => {
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
   const [profit, setProfit] = useState("");
-
-  useEffect(() => {}, [Orders]);
 
   const onSuccessSaveOrder = (data) => {
     refetch();
@@ -77,7 +76,14 @@ const Orders = () => {
         realise: realise,
         profit: profit,
       };
-      addorderObject(orderObject);
+
+      const token = getToken();
+      if (token) {
+        console.log("token Order", token);
+        const objectToReturn = [orderObject, token];
+        addorderObject(objectToReturn);
+      } else {
+      }
     }
   };
 
@@ -121,14 +127,6 @@ const Orders = () => {
 
   return (
     <div className="Orders">
-      {/* <div
-        style={{ backgroundColor: bckColor }}
-        className={`styled-table-errorMessage ${
-          message !== "" && bckColor !== "" ? "ErrorActive" : ""
-        }`}
-      >
-        {message}
-      </div> */}
       <table className="styled-table">
         <thead>
           <tr>

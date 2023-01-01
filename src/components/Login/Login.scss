@@ -1,3 +1,4 @@
+@import "../../style/style.scss";
 .formVisible {
   visibility: visible;
 }
@@ -14,14 +15,30 @@
 }
 
 .container-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  margin: auto;
   padding: 10px;
 
-  label {
-    margin-top: 5px;
-  }
+  &-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 80%;
+    margin: auto;
 
-  input {
-    margin: 5px 0;
+    label {
+      margin-top: 5px;
+      text-align: start;
+    }
+
+    input {
+      margin: 5px 0;
+      width: 90%;
+    }
   }
 
   &-containerButton {
@@ -31,15 +48,19 @@
 
     button {
       display: flex;
+      width: 80px;
+      margin: 2px;
       align-items: center;
       justify-content: center;
       font-size: 15px;
       padding: 10px;
       border-radius: 10px;
-      background: linear-gradient(to right, #0d499e, #06b5e6fa);
+      border: 1px solid white;
+      background-color: $firstColor;
       color: white;
       font-size: 20px;
-      border: none;
+      cursor: pointer;
+      margin-top: 5px;
     }
   }
 }

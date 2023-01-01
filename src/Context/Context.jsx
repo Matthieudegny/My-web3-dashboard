@@ -16,7 +16,7 @@ export const DashBoardContext = createContext();
 
 const DashBoardContextProvider = (props) => {
   const [page, setPage] = useState("Home");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("gggggggggg");
   const [bckColor, setbckColor] = useState("");
   const [Orders, setOrders] = useState([]);
   const [orderToUpdate, setOrderToUpdate] = useState("");
@@ -32,6 +32,7 @@ const DashBoardContextProvider = (props) => {
   const [percBTC, setPercBTC] = useState([]);
   const [percNSQ, setPercNSQ] = useState([]);
   const [percPF, setPercPF] = useState([]);
+  const [token, setToken] = useState("");
 
   const onSuccessOrdersRequest = (allOrders) => {
     setOrders(allOrders);
@@ -88,7 +89,7 @@ const DashBoardContextProvider = (props) => {
       let deleteErrorMessage = setTimeout(() => {
         setMessage("");
         setbckColor("");
-      }, 5000);
+      }, 3500);
       return () => {
         clearTimeout(deleteErrorMessage);
       };
@@ -121,6 +122,8 @@ const DashBoardContextProvider = (props) => {
         percBTC,
         percNSQ,
         percPF,
+        token,
+        setToken,
       }}
     >
       {props.children}

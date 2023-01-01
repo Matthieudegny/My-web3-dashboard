@@ -3,10 +3,13 @@ export const getMonthlyPerf = (Orders, setMonthlyPerf) => {
   month = month.getMonth() + 1;
   let monthlyPerf = 0;
   let allMonths = [];
-  Orders?.map((order) => {
-    if (order.date.slice(5, 7) == month.toString()) monthlyPerf += order.profit;
-  });
-  setMonthlyPerf(`${monthlyPerf}$`);
+  if (Orders.length > 0) {
+    Orders?.map((order) => {
+      if (order.date.slice(5, 7) == month.toString())
+        monthlyPerf += order.profit;
+    });
+    setMonthlyPerf(`${monthlyPerf}$`);
+  }
 };
 
 export const getPricesAndTransformToPerc = (
@@ -48,19 +51,21 @@ export const sortTradeWonOrLostOrBE = (
   let totalTradesWon = 0;
   let totalTradesLost = 0;
   let totalTradesBE = 0;
-  Orders.map((order) => {
-    if (order.profit < -500) {
-      totalTradesLost++;
-    } else if (order.profit >= -500 && order.profit <= 500) {
-      totalTradesBE++;
-    } else if (order.profit > 500) {
-      totalTradesWon++;
-    }
-  });
+  if (Orders.length > 0) {
+    Orders?.map((order) => {
+      if (order.profit < -500) {
+        totalTradesLost++;
+      } else if (order.profit >= -500 && order.profit <= 500) {
+        totalTradesBE++;
+      } else if (order.profit > 500) {
+        totalTradesWon++;
+      }
+    });
 
-  setnumberOfTradesWon(totalTradesWon);
-  setnumberOfTradesLost(totalTradesLost);
-  setnumberOfTradesBE(totalTradesBE);
+    setnumberOfTradesWon(totalTradesWon);
+    setnumberOfTradesLost(totalTradesLost);
+    setnumberOfTradesBE(totalTradesBE);
+  }
 };
 
 let balancesArray = [];
@@ -90,7 +95,6 @@ export const getBalance = (
         newDate.setMonth(newDate.getMonth() - i);
         //take of one day more, because only one month is 31 days, do with the month of 31 days, the month number don't change
         newDate.setDate(newDate.getDate() - 1);
-        console.log("newDate", newDate);
         const monthToPush = newDate.toLocaleString("default", {
           month: "long",
         });
@@ -162,7 +166,7 @@ export const getBalance = (
   balancesArray = [];
 
   // //i need the last 6 months + 1 for Line
-  const lastSevenMonth = allMonthsTraded.slice(1, 8);
+  const lastSevenMonth = allMonthsTraded.slice(0, 7);
 
   // //in case the last month of lastSevenMonth has a value of 0, i take back the last balance from
   // // the previous months
@@ -181,8 +185,7 @@ export const getBalance = (
 
   //in lastSevenMonth i need every month with a balance !== 0
   //the last month has already been managed previously
-  //if lastSevenMonth[i][2] === 0 it is some month add manualy because month no traded and
-  //lastSevenMonth.length wasn't enought long -> so no change the balance
+  //BUT if lastSevenMonth[i][2] === 0 it is some month add manualy because the activity of trading is < 7months
   if (lastSevenMonth.length === 7) {
     for (let i = 6; i > -1; i--) {
       if (lastSevenMonth[i][0] != 0 && lastSevenMonth[i][2] === 0) {
@@ -234,4 +237,12 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   let perfThisYear = accountBalance - perf2021;
   let perfThisYearPercent = (perfThisYear * 100) / perf2021;
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
+};
+
+export const getToken = () => {
+  let token = localStorage.getItem("user");
+  token = JSON.parse(token);
+  const objectToReturn = token.token;
+  console.log("token utils", objectToReturn);
+  return objectToReturn;
 };

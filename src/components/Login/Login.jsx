@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 //import style
 import "./Login.scss";
@@ -14,19 +14,26 @@ function Login({ FormVisibility, setFormVisibility }) {
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [userPseudo, setuserPseudo] = useState("Compte Visiteur");
 
-  const onSuccessLogin = (data) => {
-    if (data.ok === true) {
-      console.log("bien connecté");
+  const onSuccessLogin = (user) => {
+    if (user) {
+      console.log("bien connecté", user);
+      localStorage.setItem("user", JSON.stringify(user));
+      setuserPseudo(user.user[1]);
       setMessage("Vous êtes bien connecté");
+      setpassword("");
+      setemail("");
+      setFormVisibility(false);
       setbckColor("rgb(6, 181, 230)");
     } else {
       setMessage("Veuillez vérider votre adresse mail et mot de passe");
       setbckColor("#550f87");
     }
+    console.log("user", user);
   };
 
-  const { mutate: login } = useLogin(onSuccessLogin);
+  const { mutate: login, data } = useLogin(onSuccessLogin);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,27 +41,48 @@ function Login({ FormVisibility, setFormVisibility }) {
     login(objectToSent);
   };
 
+  const setLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("user");
+    setuserPseudo("Compte visiteur");
+    setMessage("Vous êtes déconnecté");
+    setbckColor("#550f87");
+    setFormVisibility(false);
+  };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setuserPseudo(user.user[1]);
+    }
+  }, []);
+
   return (
     <div style={{ height: "150px" }}>
       {!FormVisibility ? (
-        <div className="container-user">Compte visiteur</div>
+        <div className="container-user">{userPseudo}</div>
       ) : (
         <div className="container-login">
-          <form action="" onSubmit={handleSubmit}>
-            <label>Email:</label>
-            <input
-              type="email"
-              onChange={(e) => setemail(e.target.value)}
-              value={email}
-            />
-            <label>Password:</label>
-            <input
-              type="password"
-              onChange={(e) => setpassword(e.target.value)}
-              value={password}
-            />
+          <form>
+            <div className="container-login-input">
+              <label>Email:</label>
+              <input
+                type="email"
+                onChange={(e) => setemail(e.target.value)}
+                value={email}
+              />
+            </div>
+            <div className="container-login-input">
+              <label>Password:</label>
+              <input
+                type="password"
+                onChange={(e) => setpassword(e.target.value)}
+                value={password}
+              />
+            </div>
             <div className="container-login-containerButton">
-              <button type="submit">Login</button>
+              <button onClick={handleSubmit}>Login</button>
+              <button onClick={setLogout}>Logout</button>
             </div>
           </form>
         </div>

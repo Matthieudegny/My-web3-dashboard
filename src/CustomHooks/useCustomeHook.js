@@ -58,11 +58,14 @@ export const useFetchNSQPrices = (onSuccessOrders, onErrorOrder) => {
 };
 
 const saveOrder = (orderObject) => {
+  console.log("orderObject", orderObject[1]);
   return fetch("/api/dashboard", {
     method: "POST",
-    body: JSON.stringify(orderObject),
+    body: JSON.stringify(orderObject[0]),
     headers: {
       "Content-Type": "application/json",
+      // prettier-ignore
+      'Authorization': `Bearer ${orderObject[1]}`,
     },
   });
 };
@@ -101,14 +104,16 @@ export const useUpdateOrder = (onSuccessUpdateOrder, onErrorUpdateOrder) => {
     onError: onErrorUpdateOrder,
   });
 };
-const login = (object) => {
-  return fetch("/api/dashboard/login", {
+const login = async (object) => {
+  const user = await fetch("/api/user/login", {
     method: "POST",
     body: JSON.stringify(object),
     headers: {
       "Content-Type": "application/json",
     },
   });
+  const result = await user.json();
+  return result;
 };
 export const useLogin = (onSuccessLogin, onErrorLogin) => {
   return useMutation(login, {
@@ -116,3 +121,17 @@ export const useLogin = (onSuccessLogin, onErrorLogin) => {
     onError: onErrorLogin,
   });
 };
+
+// const fetchOrders = async () => {
+//   const orders = await fetch("/api/dashboard");
+//   const result = await orders.json();
+//   return result;
+// };
+// export const useFetchOrders = (onSuccessOrders, onErrorOrder) => {
+//   return useQuery("getOrders", fetchOrders, {
+//     onSuccess: onSuccessOrders,
+//     onError: onErrorOrder,
+//     refetchOnMount: false,
+//     refetchOnWindowFocus: false,
+//   });
+// };

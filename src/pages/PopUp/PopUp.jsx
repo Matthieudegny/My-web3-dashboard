@@ -12,7 +12,7 @@ import {
 } from "../../CustomHooks/useCustomeHook";
 
 function PopUp() {
-  const { orderToUpdate, setMessage, setbckColor } =
+  const { orderToUpdate, setOrderToUpdate, setMessage, setbckColor } =
     useContext(DashBoardContext);
 
   const [idOrder, setIdOrder] = useState(0);
@@ -46,6 +46,7 @@ function PopUp() {
     setbckColor("rgb(13, 73, 158)");
     setOpenPopUp(false);
     refetch();
+    setOrderToUpdate("");
   };
 
   const { refetch } = useFetchOrders();
@@ -74,6 +75,7 @@ function PopUp() {
       setMessage(" Vous n'avez rien modifié");
       setbckColor("rgb(13, 73, 158)");
       setOpenPopUp(false);
+      setOrderToUpdate("");
     } else {
       const objetIdANdOrder = [idOrder, orderObject];
       updateOneOrder(objetIdANdOrder);
