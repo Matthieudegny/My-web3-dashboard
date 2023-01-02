@@ -10,7 +10,8 @@ import { useLogin } from "../../CustomHooks/useCustomeHook";
 import { DashBoardContext } from "../../Context/Context";
 
 function Login({ FormVisibility, setFormVisibility }) {
-  const { setMessage, setbckColor } = useContext(DashBoardContext);
+  const { setMessage, setbckColor, setToken, token } =
+    useContext(DashBoardContext);
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -20,7 +21,10 @@ function Login({ FormVisibility, setFormVisibility }) {
     if (user) {
       console.log("bien connecté", user);
       localStorage.setItem("user", JSON.stringify(user));
-      setuserPseudo(user.user[1]);
+      setToken(user.token);
+      user.user[1] !== null
+        ? setuserPseudo(`Compte de ${user.user[1]}`)
+        : setuserPseudo(`Compte de utilisateur`);
       setMessage("Vous êtes bien connecté");
       setpassword("");
       setemail("");
@@ -44,23 +48,28 @@ function Login({ FormVisibility, setFormVisibility }) {
   const setLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("user");
+    setToken("");
     setuserPseudo("Compte visiteur");
     setMessage("Vous êtes déconnecté");
     setbckColor("#550f87");
     setFormVisibility(false);
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setuserPseudo(user.user[1]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   if (user) {
+  //     setuserPseudo(user.user[1]);
+  //   }
+  // }, []);
 
   return (
     <div style={{ height: "150px" }}>
       {!FormVisibility ? (
         <div className="container-user">{userPseudo}</div>
+      ) : token !== "" ? (
+        <div className="container-login-containerButton">
+          <button onClick={setLogout}>Logout</button>
+        </div>
       ) : (
         <div className="container-login">
           <form>
@@ -82,7 +91,6 @@ function Login({ FormVisibility, setFormVisibility }) {
             </div>
             <div className="container-login-containerButton">
               <button onClick={handleSubmit}>Login</button>
-              <button onClick={setLogout}>Logout</button>
             </div>
           </form>
         </div>

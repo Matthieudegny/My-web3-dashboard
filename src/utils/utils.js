@@ -166,9 +166,9 @@ export const getBalance = (
   balancesArray = [];
 
   // //i need the last 6 months + 1 for Line
-  const lastSevenMonth = allMonthsTraded.slice(0, 7);
+  const lastSevenMonth = allMonthsTraded.slice(1, 8);
 
-  // //in case the last month of lastSevenMonth has a value of 0, i take back the last balance from
+  // //in case the last month of lastSevenMonth has a value of 0, i take back the last balance !==0 from
   // // the previous months
   if (lastSevenMonth.length > 0) {
     if (lastSevenMonth.at(-1)[2] === 0) {
@@ -185,10 +185,10 @@ export const getBalance = (
 
   //in lastSevenMonth i need every month with a balance !== 0
   //the last month has already been managed previously
-  //BUT if lastSevenMonth[i][2] === 0 it is some month add manualy because the activity of trading is < 7months
-  if (lastSevenMonth.length === 7) {
-    for (let i = 6; i > -1; i--) {
-      if (lastSevenMonth[i][0] != 0 && lastSevenMonth[i][2] === 0) {
+  //BUT if lastSevenMonth[i][0] === 0 it is some month add manualy because the activity of trading is < 7months
+  if (lastSevenMonth.length > 0 && lastSevenMonth.length < 8) {
+    for (let i = lastSevenMonth.length - 1; i > -1; i--) {
+      if (lastSevenMonth[i][2] === 0 && lastSevenMonth[i][0] != 0) {
         lastSevenMonth[i][2] = lastSevenMonth[i + 1][2];
       }
     }
@@ -237,12 +237,4 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   let perfThisYear = accountBalance - perf2021;
   let perfThisYearPercent = (perfThisYear * 100) / perf2021;
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
-};
-
-export const getToken = () => {
-  let token = localStorage.getItem("user");
-  token = JSON.parse(token);
-  const objectToReturn = token.token;
-  console.log("token utils", objectToReturn);
-  return objectToReturn;
 };

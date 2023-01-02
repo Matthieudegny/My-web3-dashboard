@@ -11,7 +11,7 @@ import {
   useSaveOrder,
   useDeleteOrder,
 } from "../../CustomHooks/useCustomeHook";
-import { GetDateFormatString, getToken } from "../../utils/utils";
+import { GetDateFormatString } from "../../utils/utils";
 
 const Orders = () => {
   const {
@@ -77,19 +77,25 @@ const Orders = () => {
         profit: profit,
       };
 
-      const token = getToken();
-      if (token) {
-        console.log("token Order", token);
+      if (token !== "") {
         const objectToReturn = [orderObject, token];
         addorderObject(objectToReturn);
       } else {
+        setMessage(" Vous devez vous connecter avant de passer un ordre");
+        setbckColor("#550f87");
       }
     }
   };
 
   const deleteOrder = async (order) => {
     const id = order._id;
-    deleteorderObject(id);
+    if (token !== "") {
+      const objectToReturn = [id, token];
+      deleteorderObject(objectToReturn);
+    } else {
+      setMessage(" Vous devez vous connecter avant de passer un ordre");
+      setbckColor("#550f87");
+    }
   };
 
   //after creationOrder reset all inputs
@@ -219,17 +225,8 @@ const Orders = () => {
                 onChange={(event) => setProfit(+event.target.value)}
               />
             </td>
-            <td>
-              {/* <input
-                type="number"
-                className={`Orders-balance ${
-                  balance === 0 ? "empty" : "checked"
-                }`}
-                name="balance"
-                value={balance}
-                onChange={(event) => setBalance(+event.target.value)}
-              /> */}
-            </td>
+            {/* Let empty here for the Balance column */}
+            <td></td>
             <td>
               <button onClick={creationOrder} className="Orders-actions">
                 Ajouter

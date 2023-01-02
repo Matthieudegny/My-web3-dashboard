@@ -64,7 +64,7 @@ const SideBar = () => {
           setFormVisibility={setFormVisibility}
         />
       </div>
-      <div className="SideBar_Links_Container">
+      <div className="SideBar_container_Links_Container">
         {pages.map((page, index) => (
           <React.Fragment key={index}>
             <NavLink
@@ -73,18 +73,20 @@ const SideBar = () => {
               className={({ isActive }) => (isActive ? "activeLink" : "")}
             >
               {!mobileVersion ? (
-                <div className="SideBar_Links_Item">
+                <div className="SideBar_container_Links_Container_Links_Item">
                   {page.name}
                   {page.icon}
                 </div>
               ) : (
-                <div className="SideBar_Links_Item">{page.icon}</div>
+                <div className="SideBar_container_Links_Container_Links_Item">
+                  {page.icon}
+                </div>
               )}
             </NavLink>
           </React.Fragment>
         ))}
       </div>
-      <div
+      {/* <div
         className={`SideBar_developer ${
           topAndBottomSideBarVisibility
             ? "topAndBottomSideBarVisibilityTrue"
@@ -92,7 +94,7 @@ const SideBar = () => {
         }`}
       >
         Matthieu Degny Développement
-      </div>
+      </div> */}
     </div>
   );
 };

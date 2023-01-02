@@ -12,7 +12,7 @@ import {
 } from "../../CustomHooks/useCustomeHook";
 
 function PopUp() {
-  const { orderToUpdate, setOrderToUpdate, setMessage, setbckColor } =
+  const { orderToUpdate, setOrderToUpdate, setMessage, setbckColor, token } =
     useContext(DashBoardContext);
 
   const [idOrder, setIdOrder] = useState(0);
@@ -77,8 +77,16 @@ function PopUp() {
       setOpenPopUp(false);
       setOrderToUpdate("");
     } else {
-      const objetIdANdOrder = [idOrder, orderObject];
-      updateOneOrder(objetIdANdOrder);
+      if (token !== "") {
+        const objetIdANdOrder = [idOrder, orderObject, token];
+        updateOneOrder(objetIdANdOrder);
+      } else {
+        setMessage(" Vous devez vous connecter avant de passer un ordre");
+        setbckColor("#550f87");
+        setOpenPopUp(false);
+        setOrderToUpdate("");
+      }
+
       setOpenPopUp(false);
     }
   };

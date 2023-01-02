@@ -8,19 +8,22 @@
 }
 .container-user {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: 100%;
   font-size: 20px;
 }
 
 .container-login {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   width: 75%;
+  height: 90%;
   margin: auto;
   padding: 10px;
+  padding-top: 0px;
+  margin-top: -15px;
 
   &-input {
     display: flex;
@@ -48,19 +51,23 @@
 
     button {
       display: flex;
-      width: 80px;
+      width: 70px;
       margin: 2px;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
-      padding: 10px;
+      padding: 5px;
       border-radius: 10px;
       border: 1px solid white;
       background-color: $firstColor;
       color: white;
-      font-size: 20px;
+      font-size: 16px;
       cursor: pointer;
       margin-top: 5px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #0d499e, #06b5e6fa);
+      border: none;
     }
   }
 }

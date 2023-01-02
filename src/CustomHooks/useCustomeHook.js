@@ -58,7 +58,6 @@ export const useFetchNSQPrices = (onSuccessOrders, onErrorOrder) => {
 };
 
 const saveOrder = (orderObject) => {
-  console.log("orderObject", orderObject[1]);
   return fetch("/api/dashboard", {
     method: "POST",
     body: JSON.stringify(orderObject[0]),
@@ -76,9 +75,14 @@ export const useSaveOrder = (onSuccessSaveOrder, onErrorSaveOrder) => {
   });
 };
 
-const deleteOrder = (id) => {
-  return fetch(`/api/dashboard/${id}`, {
+const deleteOrder = (objectToReturn) => {
+  return fetch(`/api/dashboard/${objectToReturn[0]}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      // prettier-ignore
+      'Authorization': `Bearer ${objectToReturn[1]}`,
+    },
   });
 };
 export const useDeleteOrder = (onSuccessDeleteOrder, onErrorDeleteOrder) => {
@@ -88,13 +92,14 @@ export const useDeleteOrder = (onSuccessDeleteOrder, onErrorDeleteOrder) => {
   });
 };
 
-const updateOrder = (objetIdANdOrder) => {
-  console.log(objetIdANdOrder[1]);
-  return fetch(`/api/dashboard/${objetIdANdOrder[0]}`, {
+const updateOrder = (objectToReturn) => {
+  return fetch(`/api/dashboard/${objectToReturn[0]}`, {
     method: "PATCH",
-    body: JSON.stringify(objetIdANdOrder[1]),
+    body: JSON.stringify(objectToReturn[1]),
     headers: {
       "Content-Type": "application/json",
+      // prettier-ignore
+      'Authorization': `Bearer ${objectToReturn[2]}`,
     },
   });
 };
@@ -121,17 +126,3 @@ export const useLogin = (onSuccessLogin, onErrorLogin) => {
     onError: onErrorLogin,
   });
 };
-
-// const fetchOrders = async () => {
-//   const orders = await fetch("/api/dashboard");
-//   const result = await orders.json();
-//   return result;
-// };
-// export const useFetchOrders = (onSuccessOrders, onErrorOrder) => {
-//   return useQuery("getOrders", fetchOrders, {
-//     onSuccess: onSuccessOrders,
-//     onError: onErrorOrder,
-//     refetchOnMount: false,
-//     refetchOnWindowFocus: false,
-//   });
-// };
