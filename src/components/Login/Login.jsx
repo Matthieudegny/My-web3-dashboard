@@ -9,13 +9,17 @@ import { useLogin } from "../../CustomHooks/useCustomeHook";
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
-function Login({ FormVisibility, setFormVisibility }) {
+function Login({
+  FormVisibility,
+  setFormVisibility,
+  userPseudo,
+  setuserPseudo,
+}) {
   const { setMessage, setbckColor, setToken, token } =
     useContext(DashBoardContext);
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [userPseudo, setuserPseudo] = useState("Compte Visiteur");
 
   const onSuccessLogin = (user) => {
     if (user) {
@@ -23,8 +27,8 @@ function Login({ FormVisibility, setFormVisibility }) {
       localStorage.setItem("user", JSON.stringify(user));
       setToken(user.token);
       user.user[1] !== null
-        ? setuserPseudo(`Compte de ${user.user[1]}`)
-        : setuserPseudo(`Compte de utilisateur`);
+        ? setuserPseudo(`Dashboard de ${user.user[1]}`)
+        : setuserPseudo(`Dashboard de utilisateur`);
       setMessage("Vous êtes bien connecté");
       setpassword("");
       setemail("");
@@ -54,13 +58,6 @@ function Login({ FormVisibility, setFormVisibility }) {
     setbckColor("#550f87");
     setFormVisibility(false);
   };
-
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("user"));
-  //   if (user) {
-  //     setuserPseudo(user.user[1]);
-  //   }
-  // }, []);
 
   return (
     <div style={{ height: "150px" }}>

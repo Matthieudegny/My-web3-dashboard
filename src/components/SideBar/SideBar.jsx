@@ -20,8 +20,8 @@ const SideBar = () => {
   const { mobileVersion, setToken } = useContext(DashBoardContext);
 
   const [FormVisibility, setFormVisibility] = useState(false);
-  const [topAndBottomSideBarVisibility, settopAndBottomSideBarVisibility] =
-    useState(false);
+  const [userPseudo, setuserPseudo] = useState("Compte Visiteur");
+  const [LoginSideBarVisibility, setLoginSideBarVisibility] = useState(false);
 
   const getColorButtonFaPowerOff = () => {
     if (FormVisibility) return "rgb(6, 181, 230)";
@@ -30,21 +30,27 @@ const SideBar = () => {
     }
   };
 
+  //check if a token is available, if yes do the necessary
   useEffect(() => {
     let token = localStorage.getItem("user");
     token = JSON.parse(token);
-    if (token) setToken(token.token);
+    if (token) {
+      setToken(token.token);
+      token.user[1] !== null
+        ? setuserPseudo(`Dashboard de ${token.user[1]}`)
+        : setuserPseudo(`Dashboard utilisateur`);
+    }
   }, []);
 
   return (
     <div
       className="SideBar_container"
-      onMouseEnter={() => settopAndBottomSideBarVisibility(true)}
-      onMouseLeave={() => settopAndBottomSideBarVisibility(false)}
+      onMouseEnter={() => setLoginSideBarVisibility(true)}
+      onMouseLeave={() => setLoginSideBarVisibility(false)}
     >
       <div
         className={`SideBar_container_Login ${
-          topAndBottomSideBarVisibility
+          LoginSideBarVisibility
             ? "topAndBottomSideBarVisibilityTrue"
             : "topAndBottomSideBarVisibilityFalse"
         }`}
@@ -62,6 +68,8 @@ const SideBar = () => {
         <Login
           FormVisibility={FormVisibility}
           setFormVisibility={setFormVisibility}
+          userPseudo={userPseudo}
+          setuserPseudo={setuserPseudo}
         />
       </div>
       <div className="SideBar_container_Links_Container">
@@ -86,15 +94,6 @@ const SideBar = () => {
           </React.Fragment>
         ))}
       </div>
-      {/* <div
-        className={`SideBar_developer ${
-          topAndBottomSideBarVisibility
-            ? "topAndBottomSideBarVisibilityTrue"
-            : "topAndBottomSideBarVisibilityFalse"
-        }`}
-      >
-        Matthieu Degny Développement
-      </div> */}
     </div>
   );
 };

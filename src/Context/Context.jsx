@@ -89,7 +89,7 @@ const DashBoardContextProvider = (props) => {
       let deleteErrorMessage = setTimeout(() => {
         setMessage("");
         setbckColor("");
-      }, 3500);
+      }, 4500);
       return () => {
         clearTimeout(deleteErrorMessage);
       };
