@@ -1,7 +1,4 @@
-import React, { useContext, useEffect } from "react";
-
-//import context
-import { DashBoardContext } from "../../../Context/Context";
+import React from "react";
 
 import {
   Chart as ChartJS,
@@ -52,35 +49,7 @@ export const options = {
   },
 };
 
-function BarChart() {
-  const { Orders } = useContext(DashBoardContext);
-
-  let tradesInfMinus5000 = 0;
-  let tradesBetween5000And2500 = 0;
-  let tradesBetween2500and500 = 0;
-  let tradesBetween500and0 = 0;
-  let tradesBetween0and500 = 0;
-  let tradesBetween500and2500 = 0;
-  let tradesBetween2500and5000 = 0;
-  let tradesSup5000 = 0;
-
-  let valuesTodisplay = [0, 0, 0, 0, 0, 0, 0, 0];
-
-  const getTradesSortedByResult = () => {
-    Orders?.map((order) => {
-      if (order.profit < -5000) valuesTodisplay[0] += 1;
-      if (order.profit > -5000 && order.profit < -2500) valuesTodisplay[1] += 1;
-      if (order.profit > -2500 && order.profit < -500) valuesTodisplay[2] += 1;
-      if (order.profit > -500 && order.profit < 0) valuesTodisplay[3] += 1;
-      if (order.profit > 0 && order.profit < 500) valuesTodisplay[4] += 1;
-      if (order.profit > 500 && order.profit < 2500) valuesTodisplay[5] += 1;
-      if (order.profit > 2500 && order.profit < 5000) valuesTodisplay[6] += 1;
-      if (order.profit > 5000) valuesTodisplay[7] += 1;
-    });
-  };
-
-  getTradesSortedByResult();
-
+function BarChart({ datas }) {
   const data = {
     labels: [
       "<-5000$",
@@ -94,7 +63,7 @@ function BarChart() {
     ],
     datasets: [
       {
-        data: valuesTodisplay,
+        data: datas,
         backgroundColor: (context) => {
           if (context.dataIndex === 0) return "#550f87";
           if (context.dataIndex === 1) return "#550f87";

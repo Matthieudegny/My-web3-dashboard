@@ -238,3 +238,44 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   let perfThisYearPercent = (perfThisYear * 100) / perf2021;
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
 };
+
+export const getDatasChart2 = (
+  valuesBarByMonth,
+  numberOfTradesWon,
+  numberOfTradesLost,
+  numberOfTradesBE,
+  numberOfTrades
+) => {
+  let percTradesWon = (numberOfTradesWon * 100) / numberOfTrades;
+  valuesBarByMonth.push(percTradesWon.toFixed(1));
+  let percTradesBE = (numberOfTradesBE * 100) / numberOfTrades;
+  valuesBarByMonth.push(percTradesBE.toFixed(1));
+  let percTradesLost = (numberOfTradesLost * 100) / numberOfTrades;
+  valuesBarByMonth.push(percTradesLost.toFixed(1));
+};
+
+export const getDatasChart3 = (Orders, numberOfTrades) => {
+  let datasToDisplay = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  Orders?.map((order) => {
+    if (order.profit < -5000) datasToDisplay[0] += 1;
+    if (order.profit > -5000 && order.profit < -2500) datasToDisplay[1] += 1;
+    if (order.profit > -2500 && order.profit < -500) datasToDisplay[2] += 1;
+    if (order.profit > -500 && order.profit < 0) datasToDisplay[3] += 1;
+    if (order.profit > 0 && order.profit < 500) datasToDisplay[4] += 1;
+    if (order.profit > 500 && order.profit < 2500) datasToDisplay[5] += 1;
+    if (order.profit > 2500 && order.profit < 5000) datasToDisplay[6] += 1;
+    if (order.profit > 5000) datasToDisplay[7] += 1;
+  });
+
+  let percsResultByRange = [];
+  datasToDisplay?.map((numberOfTradesByRange, index) => {
+    percsResultByRange[index] = `${Math.round(
+      (numberOfTradesByRange * 100) / numberOfTrades
+    )}%`;
+  });
+
+  const objectToreturn = [datasToDisplay, percsResultByRange];
+
+  return objectToreturn;
+};

@@ -21,10 +21,21 @@ export const labelsLineEvolution = [
   "BE/en profit",
 ];
 
-export const labelsBarByMonths = ["Total trades", "Moyenne trade/mois"];
-
-export const labelsBarByResult = [
+export const labelsBarByMonths = [
+  "Total trades",
+  "Moyenne trade/mois",
   "% trades gagnés",
   "% trades BE",
   "% trades perdus",
+];
+
+export const labelsBarByResult = [
+  "% trades < -5000$",
+  "% trades -5000/ -2500$",
+  "% trades -2500/ -500$",
+  "% trades -500/ -0$",
+  "% trades 0/ 500$",
+  "% trades 500/ 2500$",
+  "% trades 2500/ 5000$",
+  "% trades > 5000$",
 ];

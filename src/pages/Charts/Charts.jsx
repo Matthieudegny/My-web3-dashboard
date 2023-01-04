@@ -10,6 +10,9 @@ import BarByResult from "../../components/Charts/Bar/BarByResult";
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
+//import fonctions
+import { getDatasChart3, getDatasChart2 } from "../../utils/utils";
+
 //data
 import {
   labelsBarByMonths,
@@ -23,6 +26,7 @@ const Charts = () => {
   const [averageTradesByMonth, setAverageTradesByMonth] = useState(0);
 
   const {
+    Orders,
     numberOfTrades,
     numberOfTradesWon,
     numberOfTradesLost,
@@ -32,22 +36,22 @@ const Charts = () => {
     monthlyPerf,
   } = useContext(DashBoardContext);
 
+  //graph n°1
   const valuesLineMarket = [annualPerf, accountBalance + "$"];
 
+  //graph n°2
   const valuesBarByMonth = [numberOfTrades, averageTradesByMonth];
+  getDatasChart2(
+    valuesBarByMonth,
+    numberOfTradesWon,
+    numberOfTradesLost,
+    numberOfTradesBE,
+    numberOfTrades
+  );
 
-  const valuesBarByResult = [];
-
-  const getPercTradesTypes = () => {
-    let percTradesWon = (numberOfTradesWon * 100) / numberOfTrades;
-    valuesBarByResult.push(percTradesWon.toFixed(1));
-    let percTradesBE = (numberOfTradesBE * 100) / numberOfTrades;
-    valuesBarByResult.push(percTradesBE.toFixed(1));
-    let percTradesLost = (numberOfTradesLost * 100) / numberOfTrades;
-    valuesBarByResult.push(percTradesLost.toFixed(1));
-  };
-
-  getPercTradesTypes();
+  //graph n°3
+  const dataChart3 = getDatasChart3(Orders, numberOfTrades)[0];
+  const valuesToDisplayChart3 = getDatasChart3(Orders, numberOfTrades)[1];
 
   return (
     <>
@@ -73,8 +77,8 @@ const Charts = () => {
       <div style={{ marginTop: "20px" }}>
         <Container
           titlesLignes={labelsBarByResult}
-          numberLignes={valuesBarByResult}
-          graph={<BarByResult />}
+          numberLignes={valuesToDisplayChart3}
+          graph={<BarByResult datas={dataChart3} />}
         />
       </div>
     </>
