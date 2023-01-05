@@ -33,7 +33,6 @@ function App() {
             </div>
           </DashBoardContext>
         </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </div>
   );

@@ -34,6 +34,7 @@
     border-radius: 10px;
     background-color: $BckgContainer;
     box-shadow: $BoxShadow;
+    z-index: 20;
   }
 
   &-sectionRight {
@@ -42,7 +43,7 @@
     align-items: center;
     justify-content: center;
     width: 25%;
-    height: 97%;
+    height: 98.5%;
     box-sizing: content-box;
 
     &-array {
@@ -50,6 +51,7 @@
       background-color: $BckgContainer;
       box-shadow: $BoxShadow;
       border-radius: 10px;
+      z-index: 20;
 
       &-item {
         position: relative;

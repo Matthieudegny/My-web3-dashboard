@@ -40,8 +40,8 @@ const Home = () => {
       }}
     >
       <Container
-        titlesLignes={labelsLineEvolution}
-        numberLignes={valuesLineEvolution}
+        labels={labelsLineEvolution}
+        values={valuesLineEvolution}
         graph={<LineChartEvolution />}
       />
     </div>

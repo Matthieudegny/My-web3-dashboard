@@ -1,29 +1,32 @@
 import React, { useContext, useState } from "react";
 
 //composants
-import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
-import LineChart from "../../components/Charts/Lines/Line";
-import BarByMonth from "../../components/Charts/Bar/BarByMonth";
 import Container from "../../components/Container/Container";
-import BarByResult from "../../components/Charts/Bar/BarByResult";
+import Chart1 from "../../components/Charts/Lines/Chart1";
+import Chart2 from "../../components/Charts/Bar/Chart2";
+import Chart3 from "../../components/Charts/Bar/Chart3";
 
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
 //import fonctions
-import { getDatasChart3, getDatasChart2 } from "../../utils/utils";
+import {
+  getLabelsChart1,
+  getDatasChart2,
+  getDatasChart3,
+} from "../../utils/utils";
 
 //data
 import {
-  labelsBarByMonths,
-  labelsBarByResult,
-  labelsLineMarket,
+  labelsArrayChart1,
+  labelsArrayChart2,
+  labelsArrayChart3,
 } from "../../data/data";
 
 import "./Charts.scss";
 
 const Charts = () => {
-  const [averageTradesByMonth, setAverageTradesByMonth] = useState(0);
+  // const [averageTradesByMonth, setAverageTradesByMonth] = useState(0);
 
   const {
     Orders,
@@ -33,52 +36,65 @@ const Charts = () => {
     numberOfTradesBE,
     accountBalance,
     annualPerf,
+    percBTC,
+    percNSQ,
+    percPF,
     monthlyPerf,
   } = useContext(DashBoardContext);
 
-  //graph n°1
-  const valuesLineMarket = [annualPerf, accountBalance + "$"];
+  //Chart n°1
+  const datasChart1 = [percBTC, percNSQ, percPF];
+  const valuesChart1 = [annualPerf, accountBalance + "$"];
+  const labelsGraphChart1 = getLabelsChart1();
 
-  //graph n°2
-  const valuesBarByMonth = [numberOfTrades, averageTradesByMonth];
-  getDatasChart2(
-    valuesBarByMonth,
+  //Chart n°2
+  const valuesChart2 = getDatasChart2(
     numberOfTradesWon,
     numberOfTradesLost,
     numberOfTradesBE,
-    numberOfTrades
-  );
+    numberOfTrades,
+    Orders
+  )[0];
+  const labelsGraphChart2 = getDatasChart2(
+    numberOfTradesWon,
+    numberOfTradesLost,
+    numberOfTradesBE,
+    numberOfTrades,
+    Orders
+  )[1];
+  const datasChart2 = getDatasChart2(
+    numberOfTradesWon,
+    numberOfTradesLost,
+    numberOfTradesBE,
+    numberOfTrades,
+    Orders
+  )[2];
 
-  //graph n°3
+  //Chart n°3
   const dataChart3 = getDatasChart3(Orders, numberOfTrades)[0];
-  const valuesToDisplayChart3 = getDatasChart3(Orders, numberOfTrades)[1];
+  const valuesChart3 = getDatasChart3(Orders, numberOfTrades)[1];
 
   return (
     <>
       <div style={{ marginTop: "139px" }}>
         <Container
-          titlesLignes={labelsLineMarket}
-          numberLignes={valuesLineMarket}
-          graph={<LineChart />}
+          labels={labelsArrayChart1}
+          values={valuesChart1}
+          graph={<Chart1 datas={datasChart1} labels={labelsGraphChart1} />}
         />
       </div>
       <div style={{ marginTop: "20px" }}>
         <Container
-          titlesLignes={labelsBarByMonths}
-          numberLignes={valuesBarByMonth}
-          graph={
-            <BarByMonth
-              numberOfTrades={numberOfTrades}
-              setAverageTradesByMonth={setAverageTradesByMonth}
-            />
-          }
+          labels={labelsArrayChart2}
+          values={valuesChart2}
+          graph={<Chart2 datas={datasChart2} labels={labelsGraphChart2} />}
         />
       </div>
       <div style={{ marginTop: "20px" }}>
         <Container
-          titlesLignes={labelsBarByResult}
-          numberLignes={valuesToDisplayChart3}
-          graph={<BarByResult datas={dataChart3} />}
+          labels={labelsArrayChart3}
+          values={valuesChart3}
+          graph={<Chart3 datas={dataChart3} />}
         />
       </div>
     </>

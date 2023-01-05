@@ -23,7 +23,6 @@ function Login({
 
   const onSuccessLogin = (user) => {
     if (user) {
-      console.log("bien connecté", user);
       localStorage.setItem("user", JSON.stringify(user));
       setToken(user.token);
       user.user[1] !== null
@@ -38,7 +37,6 @@ function Login({
       setMessage("Veuillez vérider votre adresse mail et mot de passe");
       setbckColor("#550f87");
     }
-    console.log("user", user);
   };
 
   const { mutate: login, data } = useLogin(onSuccessLogin);

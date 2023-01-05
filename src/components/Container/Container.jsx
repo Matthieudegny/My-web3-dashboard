@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Container.scss";
 
-const Container = ({ titlesLignes, numberLignes, graph }) => {
+const Container = ({ labels, values, graph }) => {
   //titile and number = type string
   const displayLigne = (title, number) => {
     return (
@@ -23,10 +23,10 @@ const Container = ({ titlesLignes, numberLignes, graph }) => {
 
         <section className="container-sectionRight">
           <div className="container-sectionRight-array">
-            {titlesLignes?.map((ligne, index) => {
+            {labels?.map((ligne, index) => {
               return (
                 <React.Fragment key={index}>
-                  {displayLigne(titlesLignes[index], numberLignes[index])}
+                  {displayLigne(labels[index], values[index])}
                 </React.Fragment>
               );
             })}

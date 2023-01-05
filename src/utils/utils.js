@@ -239,19 +239,111 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
 };
 
+export const getLabelsChart1 = () => {
+  //i am looking for an array with the last 6 months with string format
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  let labelsChart1 = [];
+  let today = new Date();
+  let result;
+  let month;
+
+  for (let i = 6; i > 0; i -= 1) {
+    result = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    month = monthNames[result.getMonth()];
+    labelsChart1.push(month);
+  }
+
+  return labelsChart1;
+};
+
 export const getDatasChart2 = (
-  valuesBarByMonth,
   numberOfTradesWon,
   numberOfTradesLost,
   numberOfTradesBE,
-  numberOfTrades
+  numberOfTrades,
+  Orders
 ) => {
   let percTradesWon = (numberOfTradesWon * 100) / numberOfTrades;
-  valuesBarByMonth.push(percTradesWon.toFixed(1));
   let percTradesBE = (numberOfTradesBE * 100) / numberOfTrades;
-  valuesBarByMonth.push(percTradesBE.toFixed(1));
   let percTradesLost = (numberOfTradesLost * 100) / numberOfTrades;
-  valuesBarByMonth.push(percTradesLost.toFixed(1));
+
+  //i am looking for an array with all the months traded
+  //and the average of trade by month
+  let months = [];
+  let averageTradesByMonth;
+  const createArrayMonths = () => {
+    let arrayMonths = [];
+    Orders.map((order) => {
+      const date = new Date(order.date);
+      const month = date.toLocaleString("default", { month: "long" });
+      if (!arrayMonths.includes(month)) arrayMonths.push(month);
+    });
+    months = arrayMonths.reverse();
+
+    let result = numberOfTrades / months.length;
+    averageTradesByMonth = result.toFixed(1);
+  };
+  createArrayMonths();
+
+  //i need three arrays, with each one the number of trades won, lost, and BE
+  let tradeWonByMonth = [];
+  let tradeLostByMonth = [];
+  let tradeBEByMonth = [];
+  const getResultSortedinWonLostBE = () => {
+    //initailize arrays with the numbers of month
+    months?.map(() => {
+      tradeWonByMonth.push(0);
+      tradeLostByMonth.push(0);
+      tradeBEByMonth.push(0);
+    });
+    Orders?.map((order) => {
+      //dynamize each index of each arrays
+      months?.map((month, index) => {
+        const date = new Date(order.date);
+        const monthToCompare = date.toLocaleString("default", {
+          month: "long",
+        });
+        if (monthToCompare === month) {
+          if (order.profit < -500) {
+            tradeLostByMonth[index]++;
+          } else if (order.profit >= -500 && order.profit <= 500) {
+            tradeBEByMonth[index]++;
+          } else if (order.profit > 500) {
+            tradeWonByMonth[index]++;
+          }
+        }
+      });
+    });
+  };
+  getResultSortedinWonLostBE();
+
+  let valueChart2 = [
+    numberOfTrades.toString(),
+    averageTradesByMonth.toString(),
+    percTradesWon.toString(),
+    percTradesBE.toString(),
+    percTradesLost.toString(),
+  ];
+
+  let dataChart2 = [tradeWonByMonth, tradeLostByMonth, tradeBEByMonth];
+
+  const objectToReturn = [valueChart2, months, dataChart2];
+
+  return objectToReturn;
 };
 
 export const getDatasChart3 = (Orders, numberOfTrades) => {

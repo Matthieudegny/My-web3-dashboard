@@ -10,9 +10,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 20;
 
   &_Login {
-    height: 25%;
+    height: 27%;
     width: 100%;
     display: flex;
     flex-direction: column;

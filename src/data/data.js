@@ -10,8 +10,7 @@ export const pages = [
   { name: "Orders", link: "/orders", icon: <CgPlayListSearch /> },
 ];
 
-export const labelsLineMarket = ["Perf annuelle", "Balance compte"];
-
+//Labels Charts
 export const labelsLineEvolution = [
   "Total trades",
   "Balance compte",
@@ -21,7 +20,9 @@ export const labelsLineEvolution = [
   "BE/en profit",
 ];
 
-export const labelsBarByMonths = [
+export const labelsArrayChart1 = ["Perf annuelle", "Balance compte"];
+
+export const labelsArrayChart2 = [
   "Total trades",
   "Moyenne trade/mois",
   "% trades gagnés",
@@ -29,7 +30,7 @@ export const labelsBarByMonths = [
   "% trades perdus",
 ];
 
-export const labelsBarByResult = [
+export const labelsArrayChart3 = [
   "% trades < -5000$",
   "% trades -5000/ -2500$",
   "% trades -2500/ -500$",

@@ -16,6 +16,7 @@ const MainComponent = () => {
 
   return (
     <div className="MainComponent-container">
+      <div className="MainComponent-container-style"></div>
       <div
         style={{ backgroundColor: bckColor }}
         className={`errorMessage ${

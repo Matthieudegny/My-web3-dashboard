@@ -111,40 +111,13 @@ export const options = {
   },
 };
 
-function LineChart() {
-  const { percBTC, percNSQ, percPF } = useContext(DashBoardContext);
-
-  let monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  let monthToDisplay = [];
-  let today = new Date();
-  let result;
-  let month;
-
-  for (let i = 6; i > 0; i -= 1) {
-    result = new Date(today.getFullYear(), today.getMonth() - i, 1);
-    month = monthNames[result.getMonth()];
-    monthToDisplay.push(month);
-  }
-
+function LineChart({ datas, labels }) {
   const data = {
-    labels: monthToDisplay,
+    labels: labels,
     datasets: [
       {
         label: "BTC",
-        data: percBTC,
+        data: datas[0],
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
@@ -158,7 +131,7 @@ function LineChart() {
       },
       {
         label: "NSQ",
-        data: percNSQ,
+        data: datas[1],
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
@@ -171,7 +144,7 @@ function LineChart() {
       },
       {
         label: "Portefolio",
-        data: percPF,
+        data: datas[2],
         borderColor: (context) => {
           const ctx = context.chart.ctx;
           const gradientStroke = ctx.createLinearGradient(0, 500, 0, 200);
