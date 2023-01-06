@@ -20,8 +20,6 @@ export const labelsLineEvolution = [
   "BE/en profit",
 ];
 
-export const labelsArrayChart1 = ["Perf annuelle", "Balance compte"];
-
 export const labelsArrayChart2 = [
   "Total trades",
   "Moyenne trade/mois",

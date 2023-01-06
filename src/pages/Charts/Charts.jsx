@@ -17,17 +17,11 @@ import {
 } from "../../utils/utils";
 
 //data
-import {
-  labelsArrayChart1,
-  labelsArrayChart2,
-  labelsArrayChart3,
-} from "../../data/data";
+import { labelsArrayChart2, labelsArrayChart3 } from "../../data/data";
 
 import "./Charts.scss";
 
 const Charts = () => {
-  // const [averageTradesByMonth, setAverageTradesByMonth] = useState(0);
-
   const {
     Orders,
     numberOfTrades,
@@ -44,8 +38,9 @@ const Charts = () => {
 
   //Chart n°1
   const datasChart1 = [percBTC, percNSQ, percPF];
-  const valuesChart1 = [annualPerf, accountBalance + "$"];
-  const labelsGraphChart1 = getLabelsChart1();
+  const labelsGraphChart1 = getLabelsChart1(percBTC, percNSQ, percPF)[2];
+  const valuesChart1 = getLabelsChart1(percBTC, percNSQ, percPF)[1];
+  const labelsArrayChart1 = getLabelsChart1(percBTC, percNSQ, percPF)[0];
 
   //Chart n°2
   const valuesChart2 = getDatasChart2(
@@ -75,7 +70,7 @@ const Charts = () => {
   const valuesChart3 = getDatasChart3(Orders, numberOfTrades)[1];
 
   return (
-    <>
+    <div>
       <div style={{ marginTop: "139px" }}>
         <Container
           labels={labelsArrayChart1}
@@ -90,14 +85,14 @@ const Charts = () => {
           graph={<Chart2 datas={datasChart2} labels={labelsGraphChart2} />}
         />
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px", marginBottom: "110px" }}>
         <Container
           labels={labelsArrayChart3}
           values={valuesChart3}
           graph={<Chart3 datas={dataChart3} />}
         />
       </div>
-    </>
+    </div>
   );
 };
 

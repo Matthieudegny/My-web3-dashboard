@@ -157,7 +157,7 @@ function LineChart({ datas, labels }) {
       },
     ],
   };
-  return <Line options={options} data={data} style={{ zIndex: "50" }} />;
+  return <Line options={options} data={data} />;
 }
 
 export default LineChart;

@@ -2,7 +2,6 @@ export const getMonthlyPerf = (Orders, setMonthlyPerf) => {
   let month = new Date();
   month = month.getMonth() + 1;
   let monthlyPerf = 0;
-  let allMonths = [];
   if (Orders.length > 0) {
     Orders?.map((order) => {
       if (order.date.slice(5, 7) == month.toString())
@@ -239,8 +238,9 @@ const getAnnualPerf = (setannualPerf, accountBalance) => {
   setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
 };
 
-export const getLabelsChart1 = () => {
-  //i am looking for an array with the last 6 months with string format
+export const getLabelsChart1 = (percBTC, percNSQ, percPF) => {
+  //labelsGraph-> i am looking for an array with the last 6 months with string format
+  //labelsArray  = labelsGraph //valuesArray difference betwween PF/BTC and PF/NSQ
   let monthNames = [
     "January",
     "February",
@@ -255,19 +255,43 @@ export const getLabelsChart1 = () => {
     "November",
     "December",
   ];
-
   let labelsChart1 = [];
   let today = new Date();
   let result;
   let month;
-
   for (let i = 6; i > 0; i -= 1) {
     result = new Date(today.getFullYear(), today.getMonth() - i, 1);
     month = monthNames[result.getMonth()];
     labelsChart1.push(month);
   }
+  let LabelsArrayChart1 = ["Différence par mois", ...labelsChart1];
 
-  return labelsChart1;
+  //for every month in percPF i need to compare with percBTC and percNSQ
+  let ValuesArrayChart1 = [];
+  ValuesArrayChart1.push("PF-BTC / PF-NSQ");
+  if (percPF.length > 0) {
+    percPF?.map((monthPF, index) => {
+      let valueToPushBTC = Math.round(monthPF - percBTC[index]);
+      let valueToPushNSQ = Math.round(monthPF - percNSQ[index]);
+
+      if (valueToPushBTC > 0) valueToPushBTC = `+${valueToPushBTC}%`;
+      else {
+        valueToPushBTC = `${valueToPushBTC}%`;
+      }
+      if (valueToPushNSQ > 0) valueToPushNSQ = `+${valueToPushNSQ}%`;
+      else {
+        valueToPushNSQ = `${valueToPushNSQ}%`;
+      }
+
+      ValuesArrayChart1[index + 1] = `${valueToPushBTC} / ${valueToPushNSQ}`;
+    });
+  }
+
+  console.log("LabelsArrayChart1", LabelsArrayChart1);
+
+  const objectToReturn = [LabelsArrayChart1, ValuesArrayChart1, labelsChart1];
+
+  return objectToReturn;
 };
 
 export const getDatasChart2 = (

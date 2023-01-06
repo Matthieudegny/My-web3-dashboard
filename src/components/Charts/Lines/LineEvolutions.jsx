@@ -164,13 +164,7 @@ export function LineChart() {
     ],
   };
 
-  return (
-    <Line
-      options={options}
-      data={data}
-      style={{ height: "400px", width: "100%", zIndex: "50" }}
-    />
-  );
+  return <Line options={options} data={data} />;
 }
 
 export default LineChart;

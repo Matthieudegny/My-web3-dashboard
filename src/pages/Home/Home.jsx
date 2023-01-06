@@ -36,7 +36,10 @@ const Home = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100%",
-        marginLeft: "-1px",
+        //others pages have a marge on the right with the scroll-bar
+        //scroll-bar = 0.5%
+        width: "99.5%",
+        marginRight: "0.5%",
       }}
     >
       <Container

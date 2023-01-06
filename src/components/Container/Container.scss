@@ -43,7 +43,10 @@
     align-items: center;
     justify-content: center;
     width: 25%;
-    height: 98.5%;
+    max-width: 25%;
+    height: 83%;
+    padding: 3% 3%;
+    margin-right: -3%;
     box-sizing: content-box;
 
     &-array {
