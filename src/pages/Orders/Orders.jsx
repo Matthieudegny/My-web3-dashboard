@@ -14,16 +14,8 @@ import {
 import { GetDateFormatString } from "../../utils/utils";
 
 const Orders = () => {
-  const {
-    Orders,
-    setOrderToUpdate,
-    message,
-    setMessage,
-    bckColor,
-    setbckColor,
-    balances,
-    token,
-  } = useContext(DashBoardContext);
+  const { Orders, setOrderToUpdate, setMessage, setbckColor, balances, token } =
+    useContext(DashBoardContext);
 
   const [resetInputs, setResetInputs] = useState(false);
   const [date, setDate] = useState("");
@@ -54,35 +46,40 @@ const Orders = () => {
   const { mutate: deleteorderObject } = useDeleteOrder(onSuccessDeleteOrder);
 
   const creationOrder = async () => {
-    if (
-      date === "" ||
-      asset === "" ||
-      direction === "" ||
-      taille === null ||
-      risk === null ||
-      realise === null ||
-      profit === null
-    ) {
-      setMessage(" Vous devez remplir toutes les cases");
+    if (token === "") {
+      setMessage(" Vous devez vous connecter avant de passer un ordre");
       setbckColor("#550f87");
     } else {
-      //back
-      const orderObject = {
-        date: date,
-        asset: asset,
-        direction: direction,
-        taille: taille,
-        risk: risk,
-        realise: realise,
-        profit: profit,
-      };
-
-      if (token !== "") {
-        const objectToReturn = [orderObject, token];
-        addorderObject(objectToReturn);
-      } else {
-        setMessage(" Vous devez vous connecter avant de passer un ordre");
+      if (
+        date === "" ||
+        asset === "" ||
+        direction === "" ||
+        taille === null ||
+        risk === null ||
+        realise === null ||
+        profit === null
+      ) {
+        setMessage(" Vous devez remplir toutes les cases");
         setbckColor("#550f87");
+      } else {
+        //back
+        const orderObject = {
+          date: date,
+          asset: asset,
+          direction: direction,
+          taille: taille,
+          risk: risk,
+          realise: realise,
+          profit: profit,
+        };
+
+        if (token !== "") {
+          const objectToReturn = [orderObject, token];
+          addorderObject(objectToReturn);
+        } else {
+          setMessage(" Vous devez vous connecter avant de passer un ordre");
+          setbckColor("#550f87");
+        }
       }
     }
   };

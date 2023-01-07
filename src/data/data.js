@@ -5,16 +5,15 @@ import { CgPlayListSearch } from "react-icons/cg";
 
 //page -> links for sideBar
 export const pages = [
-  { name: "Home", link: "/", icon: <ImLibrary /> },
-  { name: "Charts", link: "/charts", icon: <AiOutlineAreaChart /> },
-  { name: "Orders", link: "/orders", icon: <CgPlayListSearch /> },
+  { name: "Synthèse", link: "/", icon: <ImLibrary /> },
+  { name: "Graphiques", link: "/charts", icon: <AiOutlineAreaChart /> },
+  { name: "Ordres", link: "/orders", icon: <CgPlayListSearch /> },
 ];
 
 //Labels Charts
 export const labelsLineEvolution = [
   "Total trades",
   "Balance compte",
-  "Perf annuelle",
   "Trades gagnés",
   "Trades perdus",
   "BE/en profit",
@@ -22,10 +21,10 @@ export const labelsLineEvolution = [
 
 export const labelsArrayChart2 = [
   "Total trades",
-  "Moyenne trade/mois",
-  "% trades gagnés",
-  "% trades BE",
-  "% trades perdus",
+  "Moyenne trades/mois",
+  "trades gagnés",
+  "trades BE",
+  "trades perdus",
 ];
 
 export const labelsArrayChart3 = [

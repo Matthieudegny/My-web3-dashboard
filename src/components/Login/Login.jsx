@@ -63,7 +63,7 @@ function Login({
         <div className="container-user">{userPseudo}</div>
       ) : token !== "" ? (
         <div className="container-login-containerButton">
-          <button onClick={setLogout}>Logout</button>
+          <button onClick={(e) => setLogout(e)}>Logout</button>
         </div>
       ) : (
         <div className="container-login">

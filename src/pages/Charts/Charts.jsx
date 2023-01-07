@@ -71,7 +71,7 @@ const Charts = () => {
 
   return (
     <div>
-      <div style={{ marginTop: "139px" }}>
+      <div style={{ marginTop: "138px" }}>
         <Container
           labels={labelsArrayChart1}
           values={valuesChart1}

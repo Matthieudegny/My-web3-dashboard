@@ -17,13 +17,11 @@ const Home = () => {
     numberOfTradesLost,
     numberOfTradesBE,
     accountBalance,
-    annualPerf,
   } = useContext(DashBoardContext);
 
   const valuesLineEvolution = [
     numberOfTrades,
     accountBalance + "$",
-    annualPerf,
     numberOfTradesWon,
     numberOfTradesLost,
     numberOfTradesBE,

@@ -26,7 +26,6 @@ const DashBoardContextProvider = (props) => {
   const [numberOfTradesLost, setnumberOfTradesLost] = useState(0);
   const [numberOfTradesBE, setnumberOfTradesBE] = useState(0);
   const [accountBalance, setAccountBalance] = useState(0);
-  const [annualPerf, setannualPerf] = useState(0);
   const [monthlyPerf, setMonthlyPerf] = useState(0);
   const [balances, setbalances] = useState([]);
   const [percBTC, setPercBTC] = useState([]);
@@ -74,13 +73,7 @@ const DashBoardContextProvider = (props) => {
       setnumberOfTradesBE
     );
     getMonthlyPerf(Orders, setMonthlyPerf);
-    getBalance(
-      Orders,
-      setbalances,
-      setAccountBalance,
-      setannualPerf,
-      setPercPF
-    );
+    getBalance(Orders, setbalances, setAccountBalance, setPercPF);
   }, [Orders]);
 
   //after 5 secondes (time of the animation) errorMessage is deleted
@@ -114,7 +107,6 @@ const DashBoardContextProvider = (props) => {
         numberOfTradesLost,
         numberOfTradesBE,
         accountBalance,
-        annualPerf,
         monthlyPerf,
         setAccountBalance,
         balances,

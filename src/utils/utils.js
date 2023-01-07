@@ -72,7 +72,6 @@ export const getBalance = (
   Orders,
   setbalances,
   setAccountBalance,
-  setannualPerf,
   setPercPF
 ) => {
   let allMonthsTraded = [];
@@ -161,7 +160,6 @@ export const getBalance = (
   //function set for the balance part
   setbalances(balancesArray.reverse());
   setAccountBalance(balancesArray[0]);
-  getAnnualPerf(setannualPerf, balancesArray[0]);
   balancesArray = [];
 
   // //i need the last 6 months + 1 for Line
@@ -231,13 +229,6 @@ export const GetDateFormatString = (value) => {
   return `${day}/${month}/${year} ${hour} `;
 };
 
-const perf2021 = 1000;
-const getAnnualPerf = (setannualPerf, accountBalance) => {
-  let perfThisYear = accountBalance - perf2021;
-  let perfThisYearPercent = (perfThisYear * 100) / perf2021;
-  setannualPerf(`${perfThisYear}$/${perfThisYearPercent}%`);
-};
-
 export const getLabelsChart1 = (percBTC, percNSQ, percPF) => {
   //labelsGraph-> i am looking for an array with the last 6 months with string format
   //labelsArray  = labelsGraph //valuesArray difference betwween PF/BTC and PF/NSQ
@@ -287,8 +278,6 @@ export const getLabelsChart1 = (percBTC, percNSQ, percPF) => {
     });
   }
 
-  console.log("LabelsArrayChart1", LabelsArrayChart1);
-
   const objectToReturn = [LabelsArrayChart1, ValuesArrayChart1, labelsChart1];
 
   return objectToReturn;
@@ -305,8 +294,8 @@ export const getDatasChart2 = (
   let percTradesBE = (numberOfTradesBE * 100) / numberOfTrades;
   let percTradesLost = (numberOfTradesLost * 100) / numberOfTrades;
 
-  //i am looking for an array with all the months traded
-  //and the average of trade by month
+  //labelsGraph -> i am looking for an array with all the months traded
+  //valuesArray -> and the average of trade by month
   let months = [];
   let averageTradesByMonth;
   const createArrayMonths = () => {
@@ -318,7 +307,24 @@ export const getDatasChart2 = (
     });
     months = arrayMonths.reverse();
 
-    let result = numberOfTrades / months.length;
+    let monthDiffValue;
+    if (Orders.length > 0) {
+      const firstTradeDate = Orders.slice(-1)[0].date;
+      const dateFrom = new Date(firstTradeDate);
+      function monthDiff() {
+        const now = new Date();
+        if (firstTradeDate) {
+          monthDiffValue =
+            now.getMonth() -
+            dateFrom.getMonth() +
+            1 +
+            12 * (now.getFullYear() - dateFrom.getFullYear());
+        }
+      }
+      monthDiff();
+    }
+
+    let result = numberOfTrades / monthDiffValue;
     averageTradesByMonth = result.toFixed(1);
   };
   createArrayMonths();
@@ -358,9 +364,9 @@ export const getDatasChart2 = (
   let valueChart2 = [
     numberOfTrades.toString(),
     averageTradesByMonth.toString(),
-    percTradesWon.toString(),
-    percTradesBE.toString(),
-    percTradesLost.toString(),
+    `${Math.round(percTradesWon.toString())} %`,
+    `${Math.round(percTradesBE.toString())} %`,
+    `${Math.round(percTradesLost.toString())} %`,
   ];
 
   let dataChart2 = [tradeWonByMonth, tradeLostByMonth, tradeBEByMonth];
