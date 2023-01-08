@@ -11,10 +11,13 @@ import {
   useSaveOrder,
   useDeleteOrder,
 } from "../../CustomHooks/useCustomeHook";
-import { GetDateFormatString } from "../../utils/utils";
+import {
+  GetDateFormatString,
+  checkIfMonthhasToBeDisplayed,
+} from "../../utils/utils";
 
 const Orders = () => {
-  const { Orders, setOrderToUpdate, setMessage, setbckColor, balances, token } =
+  const { Orders, setOrderToUpdate, balances, token, displayInfoMessage } =
     useContext(DashBoardContext);
 
   const [resetInputs, setResetInputs] = useState(false);
@@ -23,22 +26,21 @@ const Orders = () => {
   const [direction, setDirection] = useState("");
   const [taille, setTaille] = useState(0);
   const [risk, setRisk] = useState(0);
-  const [realise, setRealise] = useState(0);
+  const [realise, setRealise] = useState("");
   const [profit, setProfit] = useState("");
 
   const onSuccessSaveOrder = (data) => {
     refetch();
     setResetInputs(true);
-    setMessage("Votre ordre a été ajouté");
-    setbckColor("rgb(6, 181, 230)");
+    displayInfoMessage(" Votre ordre a été ajouté", "rgb(6, 181, 230)");
   };
 
   const onSuccessDeleteOrder = (data) => {
     refetch();
-    setMessage(" Vous ordre a été supprimé");
-    setbckColor("#550f87");
+    displayInfoMessage(" Vous ordre a été supprimé", "#550f87");
   };
 
+  //for every success fetching, i refetch the datas Orders, to keep the component dynamic
   const { refetch } = useFetchOrders();
 
   const { mutate: addorderObject } = useSaveOrder(onSuccessSaveOrder);
@@ -47,8 +49,10 @@ const Orders = () => {
 
   const creationOrder = async () => {
     if (token === "") {
-      setMessage(" Vous devez vous connecter avant de passer un ordre");
-      setbckColor("#550f87");
+      displayInfoMessage(
+        " Vous devez vous connecter avant de passer un ordre",
+        "#550f87"
+      );
     } else {
       if (
         date === "" ||
@@ -59,8 +63,7 @@ const Orders = () => {
         realise === null ||
         profit === null
       ) {
-        setMessage(" Vous devez remplir toutes les cases");
-        setbckColor("#550f87");
+        displayInfoMessage(" Vous devez remplir toutes les cases", "#550f87");
       } else {
         //back
         const orderObject = {
@@ -73,13 +76,8 @@ const Orders = () => {
           profit: profit,
         };
 
-        if (token !== "") {
-          const objectToReturn = [orderObject, token];
-          addorderObject(objectToReturn);
-        } else {
-          setMessage(" Vous devez vous connecter avant de passer un ordre");
-          setbckColor("#550f87");
-        }
+        const objectToReturn = [orderObject, token];
+        addorderObject(objectToReturn);
       }
     }
   };
@@ -90,8 +88,10 @@ const Orders = () => {
       const objectToReturn = [id, token];
       deleteorderObject(objectToReturn);
     } else {
-      setMessage(" Vous devez vous connecter avant de passer un ordre");
-      setbckColor("#550f87");
+      displayInfoMessage(
+        " Vous devez vous connecter avant de passer un ordre",
+        "#550f87"
+      );
     }
   };
 
@@ -104,29 +104,14 @@ const Orders = () => {
       setDirection("");
       setTaille(0);
       setRisk(0);
-      setRealise(0);
+      setRealise("");
       setProfit("");
       setResetInputs(false);
     }
   }, [resetInputs]);
 
-  let monthsToDisplay = [];
-  let monthToDisplay = "";
-
-  const checkIfMonthhasToBeDisplayed = (dateOrder) => {
-    const date = new Date(dateOrder);
-    const monthToCompare = date.toLocaleString("default", {
-      month: "long",
-    });
-    monthToDisplay =
-      monthToCompare.charAt(0).toUpperCase() + monthToCompare.slice(1);
-    if (!monthsToDisplay.includes(monthToCompare)) {
-      monthsToDisplay.push(monthToCompare);
-      return true;
-    } else {
-      return false;
-    }
-  };
+  // with function from utils -> checkIfMonthhasToBeDisplayed()
+  let monthsAlreadyToDisplay = [];
 
   return (
     <div className="Orders">
@@ -173,7 +158,7 @@ const Orders = () => {
                 onChange={(event) => setDirection(event.target.value)}
                 value={direction}
               >
-                <option value=""></option>
+                <option value="" disabled hidden></option>
                 <option value="long">long</option>
                 <option value="short">short</option>
               </select>
@@ -202,7 +187,7 @@ const Orders = () => {
               <input
                 type="number"
                 className={`Orders-realise ${
-                  realise === 0 ? "empty" : "checked"
+                  realise === "" ? "empty" : "checked"
                 }`}
                 name="realise"
                 value={realise}
@@ -215,7 +200,7 @@ const Orders = () => {
                 min=""
                 max=""
                 className={`Orders-profit ${
-                  profit === "" || profit === 0 ? "empty" : "checked"
+                  profit === "" ? "empty" : "checked"
                 }`}
                 name="profit"
                 value={profit}
@@ -233,7 +218,10 @@ const Orders = () => {
           {Orders?.map((order, index) => {
             return (
               <React.Fragment key={index + order.date}>
-                {checkIfMonthhasToBeDisplayed(order.date) && (
+                {checkIfMonthhasToBeDisplayed(
+                  order.date,
+                  monthsAlreadyToDisplay
+                )[1] && (
                   <tr
                     style={{
                       borderBottom: "none",
@@ -243,7 +231,13 @@ const Orders = () => {
                     <td
                       style={{ textAlign: "start", color: "rgb(6, 181, 230)" }}
                     >
-                      {monthToDisplay}:
+                      {
+                        checkIfMonthhasToBeDisplayed(
+                          order.date,
+                          monthsAlreadyToDisplay
+                        )[0]
+                      }
+                      :
                     </td>
                   </tr>
                 )}

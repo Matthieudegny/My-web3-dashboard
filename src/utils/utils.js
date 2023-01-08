@@ -1,16 +1,3 @@
-export const getMonthlyPerf = (Orders, setMonthlyPerf) => {
-  let month = new Date();
-  month = month.getMonth() + 1;
-  let monthlyPerf = 0;
-  if (Orders.length > 0) {
-    Orders?.map((order) => {
-      if (order.date.slice(5, 7) == month.toString())
-        monthlyPerf += order.profit;
-    });
-    setMonthlyPerf(`${monthlyPerf}$`);
-  }
-};
-
 export const getPricesAndTransformToPerc = (
   arrayPrices,
   arrayPerc,
@@ -67,6 +54,8 @@ export const sortTradeWonOrLostOrBE = (
   }
 };
 
+//goals : obtain the total balance at each order, the toal balance at the last order,
+//and the % realized for the each last 6 months, compare to its previous month
 let balancesArray = [];
 export const getBalance = (
   Orders,
@@ -76,7 +65,8 @@ export const getBalance = (
 ) => {
   let allMonthsTraded = [];
 
-  //creation of an array with all the months traded and a value set initaly to 0
+  //creation of an array with all the dates (month + year) traded and a value set initaly to 0
+  //ex: ['janvier',2022,0]
   const creationArrayFromtheFirstTrade = () => {
     if (Orders.length > 0) {
       let date1 = new Date(Orders.at(-1).date);
@@ -91,7 +81,7 @@ export const getBalance = (
       for (let i = 0; i < difference + 1; i++) {
         const newDate = new Date();
         newDate.setMonth(newDate.getMonth() - i);
-        //take of one day more, because only one month is 31 days, do with the month of 31 days, the month number don't change
+        //take off one day more, because the months doesnt change for some of them -> 31 days NO // 32 days YES
         newDate.setDate(newDate.getDate() - 1);
         const monthToPush = newDate.toLocaleString("default", {
           month: "long",
@@ -131,9 +121,10 @@ export const getBalance = (
   };
   creationArrayFromtheFirstTrade();
 
+  //here i obtain the last balance, and for each month i save the current balance
   if (Orders.length > 0) {
     const ordersReversed = [...Orders].reverse();
-    //for every order i nneed to add each profit to obtain the total balance
+    //for every order i need to add each profit to obtain the total balance
     ordersReversed?.map((order, index) => {
       let lastBalance;
       if (balancesArray.length === 0) {
@@ -143,7 +134,7 @@ export const getBalance = (
         lastBalance = balancesArray[index - 1] + order.profit;
         balancesArray.push(lastBalance);
       }
-      //for each month i save the balance (i use lastBalance)
+      //for each month i save the current balance (i use lastBalance)
       allMonthsTraded?.map((oneMonth, index) => {
         let newDate = new Date(order.date);
         let monthOrder = newDate.toLocaleString("default", {
@@ -157,16 +148,18 @@ export const getBalance = (
     });
   }
 
-  //function set for the balance part
+  //function set for the last total balance, and all the balances part ->
   setbalances(balancesArray.reverse());
   setAccountBalance(balancesArray[0]);
   balancesArray = [];
 
-  // //i need the last 6 months + 1 for Line
+  //the % realized for the each last 6 months, compare to its previous month part ->
+
+  //i need the last 6 months + 1 for Line
   const lastSevenMonth = allMonthsTraded.slice(1, 8);
 
-  // //in case the last month of lastSevenMonth has a value of 0, i take back the last balance !==0 from
-  // // the previous months
+  //in case the last month of lastSevenMonth has a value of 0, i take back the last balance !==0 from
+  // the previous months
   if (lastSevenMonth.length > 0) {
     if (lastSevenMonth.at(-1)[2] === 0) {
       let restMonthsTraded = allMonthsTraded.slice(7);
@@ -199,6 +192,7 @@ export const getBalance = (
     });
   }
 
+  //here i obtain the %
   let resultWithPercToPush = [];
   if (resultArray.length > 0) {
     const tranformPricetoPerc = (x, y) => {
@@ -218,6 +212,8 @@ export const getBalance = (
     });
   }
   const resultTodisplay = resultWithPercToPush.reverse();
+
+  //set result for the % part ->
   setPercPF(resultTodisplay);
 };
 
@@ -229,35 +225,58 @@ export const GetDateFormatString = (value) => {
   return `${day}/${month}/${year} ${hour} `;
 };
 
+//chart synthese
+//i need to display the month traded, one time for all the orders traded in the same month
+export const checkIfMonthhasToBeDisplayed = (
+  dateOrder,
+  monthsAlreadyToDisplay
+) => {
+  let monthToDisplay = "";
+
+  //collect the month of the order
+  const date = new Date(dateOrder);
+  const monthToCompare = date.toLocaleString("default", {
+    month: "long",
+  });
+
+  //format texte
+  monthToDisplay =
+    monthToCompare.charAt(0).toUpperCase() + monthToCompare.slice(1);
+
+  //i need to return the month to diplay it
+  let valuesToReturn = [monthToDisplay];
+
+  //if the month is already in monthsAlreadyToDisplay, so month already display
+  //return true to display it, and false to pass next
+  if (monthsAlreadyToDisplay.includes(monthToCompare)) {
+    valuesToReturn.push(false);
+    return valuesToReturn;
+  } else {
+    monthsAlreadyToDisplay.push(monthToCompare);
+    valuesToReturn.push(true);
+    return valuesToReturn;
+  }
+};
+
 export const getLabelsChart1 = (percBTC, percNSQ, percPF) => {
   //labelsGraph-> i am looking for an array with the last 6 months with string format
-  //labelsArray  = labelsGraph //valuesArray difference betwween PF/BTC and PF/NSQ
-  let monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  //labelsArray  = labelsGraph
+  //valuesArray difference betwween PF/BTC and PF/NSQ
+
+  //i collect the last 6 months format string and french
   let labelsChart1 = [];
   let today = new Date();
   let result;
-  let month;
   for (let i = 6; i > 0; i -= 1) {
     result = new Date(today.getFullYear(), today.getMonth() - i, 1);
-    month = monthNames[result.getMonth()];
-    labelsChart1.push(month);
+    const monthToPush = result.toLocaleString("default", {
+      month: "long",
+    });
+    labelsChart1.push(monthToPush);
   }
   let LabelsArrayChart1 = ["Différence par mois", ...labelsChart1];
 
-  //for every month in percPF i need to compare with percBTC and percNSQ
+  //for every month in percPF i need to compare each iteration[X]  with percBTC and percNSQ iteration[X]
   let ValuesArrayChart1 = [];
   ValuesArrayChart1.push("PF-BTC / PF-NSQ");
   if (percPF.length > 0) {

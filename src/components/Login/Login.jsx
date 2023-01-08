@@ -14,9 +14,9 @@ function Login({
   setFormVisibility,
   userPseudo,
   setuserPseudo,
+  displayInfoMessage,
 }) {
-  const { setMessage, setbckColor, setToken, token } =
-    useContext(DashBoardContext);
+  const { setToken, token } = useContext(DashBoardContext);
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -28,14 +28,16 @@ function Login({
       user.user[1] !== null
         ? setuserPseudo(`Dashboard de ${user.user[1]}`)
         : setuserPseudo(`Dashboard de utilisateur`);
-      setMessage("Vous êtes bien connecté");
+
+      displayInfoMessage(" Vous êtes bien connecté", "rgb(6, 181, 230)");
       setpassword("");
       setemail("");
       setFormVisibility(false);
-      setbckColor("rgb(6, 181, 230)");
     } else {
-      setMessage("Veuillez vérider votre adresse mail et mot de passe");
-      setbckColor("#550f87");
+      displayInfoMessage(
+        " Veuillez vérider votre adresse mail et mot de passe",
+        "#550f87"
+      );
     }
   };
 
@@ -52,8 +54,7 @@ function Login({
     localStorage.removeItem("user");
     setToken("");
     setuserPseudo("Compte visiteur");
-    setMessage("Vous êtes déconnecté");
-    setbckColor("#550f87");
+    displayInfoMessage(" Vous êtes déconnecté", "#550f87");
     setFormVisibility(false);
   };
 

@@ -11,7 +11,7 @@ import Charts from "../Charts/Charts";
 import Orders from "../Orders/Orders";
 
 const MainComponent = () => {
-  const { page, message, setMessage, bckColor, setbckColor } =
+  const { page, message, setMessage, bckColor, setbckColor, showErrorMessage } =
     useContext(DashBoardContext);
 
   return (
@@ -20,7 +20,7 @@ const MainComponent = () => {
       <div
         style={{ backgroundColor: bckColor }}
         className={`errorMessage ${
-          message !== "" && bckColor !== "" ? "ErrorActive" : ""
+          showErrorMessage ? "showErrorMessage" : "hideErrorMessage"
         }`}
       >
         {message}

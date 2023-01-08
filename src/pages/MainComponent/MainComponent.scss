@@ -34,17 +34,23 @@
   transform: translate(-50%, -50%);
   z-index: 100;
 }
-.ErrorActive {
-  animation: 3s errorMessage forwards;
+.showErrorMessage {
+  animation: 1.5s showError forwards;
 }
-@keyframes errorMessage {
+@keyframes showError {
   0% {
     top: -40px;
   }
-  25% {
+  100% {
     top: 36.5px;
   }
-  80% {
+}
+.hideErrorMessage {
+  transition: 1.5s;
+  animation: 1.5s hideError forwards;
+}
+@keyframes hideError {
+  0% {
     top: 36.5px;
   }
   100% {

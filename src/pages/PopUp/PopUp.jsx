@@ -12,13 +12,13 @@ import {
 } from "../../CustomHooks/useCustomeHook";
 
 function PopUp() {
-  const { orderToUpdate, setOrderToUpdate, setMessage, setbckColor, token } =
+  const { orderToUpdate, setOrderToUpdate, token, displayInfoMessage } =
     useContext(DashBoardContext);
 
   const [idOrder, setIdOrder] = useState(0);
-  const [date, setDate] = useState("");
-  const [asset, setAsset] = useState("");
-  const [direction, setDirection] = useState("");
+  const [date, setDate] = useState(0);
+  const [asset, setAsset] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [taille, setTaille] = useState(0);
   const [risk, setRisk] = useState(0);
   const [realise, setRealise] = useState(0);
@@ -26,7 +26,7 @@ function PopUp() {
 
   const [openPopUp, setOpenPopUp] = useState(false);
 
-  //i recover the value of the object orderToUpdate
+  //i charge all the informations from orderToUpdate to Popup's inputs
   useEffect(() => {
     const { asset, date, direction, profit, realise, risk, taille, _id } =
       orderToUpdate;
@@ -42,8 +42,7 @@ function PopUp() {
   }, [orderToUpdate]);
 
   const onSuccessUpdateOrder = (data) => {
-    setMessage(" Votre ordre a bien été modifié");
-    setbckColor("rgb(13, 73, 158)");
+    displayInfoMessage(" Votre ordre a bien été modifié", "rgb(13, 73, 158)");
     setOpenPopUp(false);
     refetch();
     setOrderToUpdate("");
@@ -72,8 +71,7 @@ function PopUp() {
       orderObject.risk === orderToUpdate.risk &&
       orderObject.taille === orderToUpdate.taille
     ) {
-      setMessage(" Vous n'avez rien modifié");
-      setbckColor("rgb(13, 73, 158)");
+      displayInfoMessage(" Vous n'avez rien modifié", "rgb(13, 73, 158)");
       setOpenPopUp(false);
       setOrderToUpdate("");
     } else {
@@ -81,8 +79,10 @@ function PopUp() {
         const objetIdANdOrder = [idOrder, orderObject, token];
         updateOneOrder(objetIdANdOrder);
       } else {
-        setMessage(" Vous devez vous connecter avant de passer un ordre");
-        setbckColor("#550f87");
+        displayInfoMessage(
+          " Vous devez vous connecter avant de passer un ordre",
+          "#550f87"
+        );
         setOpenPopUp(false);
         setOrderToUpdate("");
       }
@@ -105,7 +105,7 @@ function PopUp() {
                   type="datetime-local"
                   name="date"
                   className="Orders-date PopUp-input"
-                  value={date}
+                  value={date ? date : 0}
                   onChange={(event) => setDate(event.target.value)}
                 />
               </div>
@@ -116,7 +116,7 @@ function PopUp() {
                   type="text"
                   className="Orders-asset PopUp-input"
                   name="asset"
-                  value={asset}
+                  value={asset ? asset : 0}
                   onChange={(event) => setAsset(event.target.value)}
                 />
               </div>
@@ -126,10 +126,9 @@ function PopUp() {
                 <select
                   name="direction"
                   className="Orders-direction PopUp-input"
+                  value={direction ? direction : 0}
                   onChange={(event) => setDirection(event.target.value)}
-                  value={direction}
                 >
-                  <option value=""></option>
                   <option value="long">long</option>
                   <option value="short">short</option>
                 </select>
@@ -141,7 +140,7 @@ function PopUp() {
                   type="number"
                   className="Orders-taille PopUp-input"
                   name="taille"
-                  value={taille}
+                  value={taille ? taille : 0}
                   onChange={(event) => setTaille(+event.target.value)}
                 />
               </div>
@@ -152,7 +151,7 @@ function PopUp() {
                   type="number"
                   className="Orders-risk PopUp-input"
                   name="risk"
-                  value={risk}
+                  value={risk ? risk : 0}
                   onChange={(event) => setRisk(+event.target.value)}
                 />
               </div>
@@ -163,7 +162,7 @@ function PopUp() {
                   type="number"
                   className="Orders-realise PopUp-input"
                   name="realise"
-                  value={realise}
+                  value={realise ? realise : 0}
                   onChange={(event) => setRealise(+event.target.value)}
                 />
               </div>
@@ -174,7 +173,7 @@ function PopUp() {
                   type="number"
                   className="Orders-profit PopUp-input"
                   name="profit"
-                  value={profit}
+                  value={profit ? profit : 0}
                   onChange={(event) => setProfit(+event.target.value)}
                 />
               </div>

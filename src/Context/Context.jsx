@@ -1,10 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import {
-  getMonthlyPerf,
   getPricesAndTransformToPerc,
   sortTradeWonOrLostOrBE,
   getBalance,
-  getPFLastSevenMonthsResults,
 } from "../utils/utils";
 import {
   useFetchOrders,
@@ -15,8 +13,7 @@ import {
 export const DashBoardContext = createContext();
 
 const DashBoardContextProvider = (props) => {
-  const [page, setPage] = useState("Home");
-  const [message, setMessage] = useState("gggggggggg");
+  const [message, setMessage] = useState("");
   const [bckColor, setbckColor] = useState("");
   const [Orders, setOrders] = useState([]);
   const [orderToUpdate, setOrderToUpdate] = useState("");
@@ -26,12 +23,13 @@ const DashBoardContextProvider = (props) => {
   const [numberOfTradesLost, setnumberOfTradesLost] = useState(0);
   const [numberOfTradesBE, setnumberOfTradesBE] = useState(0);
   const [accountBalance, setAccountBalance] = useState(0);
-  const [monthlyPerf, setMonthlyPerf] = useState(0);
   const [balances, setbalances] = useState([]);
   const [percBTC, setPercBTC] = useState([]);
   const [percNSQ, setPercNSQ] = useState([]);
   const [percPF, setPercPF] = useState([]);
   const [token, setToken] = useState("");
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [triggerInfoMessage, setTriggerInfoMessage] = useState(false);
 
   const onSuccessOrdersRequest = (allOrders) => {
     setOrders(allOrders);
@@ -72,42 +70,42 @@ const DashBoardContextProvider = (props) => {
       setnumberOfTradesLost,
       setnumberOfTradesBE
     );
-    getMonthlyPerf(Orders, setMonthlyPerf);
     getBalance(Orders, setbalances, setAccountBalance, setPercPF);
   }, [Orders]);
 
-  //after 5 secondes (time of the animation) errorMessage is deleted
+  //after 2.5 secondes InfoMessage is deleted
   useEffect(() => {
     if (message) {
-      let deleteErrorMessage = setTimeout(() => {
-        setMessage("");
-        setbckColor("");
-      }, 4500);
+      setShowErrorMessage(true);
+      let deleteInfosMessage = setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 2500);
       return () => {
-        clearTimeout(deleteErrorMessage);
+        clearTimeout(deleteInfosMessage);
       };
     }
-  }, [message]);
+  }, [triggerInfoMessage]);
+
+  const displayInfoMessage = (message, bckgColor) => {
+    setTriggerInfoMessage(!triggerInfoMessage);
+    setMessage(message);
+    setbckColor(bckgColor);
+  };
 
   return (
     <DashBoardContext.Provider
       value={{
-        setPage,
-        page,
+        message,
+        bckColor,
         Orders,
         setOrders,
         orderToUpdate,
         setOrderToUpdate,
-        message,
-        setMessage,
-        bckColor,
-        setbckColor,
         numberOfTrades,
         numberOfTradesWon,
         numberOfTradesLost,
         numberOfTradesBE,
         accountBalance,
-        monthlyPerf,
         setAccountBalance,
         balances,
         setbalances,
@@ -116,6 +114,11 @@ const DashBoardContextProvider = (props) => {
         percPF,
         token,
         setToken,
+        showErrorMessage,
+        setShowErrorMessage,
+        triggerInfoMessage,
+        setTriggerInfoMessage,
+        displayInfoMessage,
       }}
     >
       {props.children}
