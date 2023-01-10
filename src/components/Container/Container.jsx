@@ -17,7 +17,6 @@ const Container = ({ labels, values, graph }) => {
 
   return (
     <div className="Main-container">
-      {/* <h2>Performances du Portefeuille:</h2> */}
       <div className="container">
         <section className="container-sectionLeft">{graph}</section>
 

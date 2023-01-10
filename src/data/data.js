@@ -10,8 +10,8 @@ export const pages = [
   { name: "Ordres", link: "/orders", icon: <CgPlayListSearch /> },
 ];
 
-//Labels Charts
-export const labelsLineEvolution = [
+//Labels Arrays Charts
+export const labelsChartSynthesis = [
   "Total trades",
   "Balance compte",
   "Trades gagnés",

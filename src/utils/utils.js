@@ -284,6 +284,7 @@ export const getLabelsChart1 = (percBTC, percNSQ, percPF) => {
       let valueToPushBTC = Math.round(monthPF - percBTC[index]);
       let valueToPushNSQ = Math.round(monthPF - percNSQ[index]);
 
+      //adjust the format
       if (valueToPushBTC > 0) valueToPushBTC = `+${valueToPushBTC}%`;
       else {
         valueToPushBTC = `${valueToPushBTC}%`;

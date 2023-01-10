@@ -57,6 +57,7 @@ const DashBoardContextProvider = (props) => {
     );
   };
 
+  //requests
   const { allOrders } = useFetchOrders(onSuccessOrdersRequest);
   const { pricesBtc } = useFetchBTCPrices(onSuccessBTCrequest);
   const { pricesNSQ } = useFetchNSQPrices(onSuccessNSQrequest);

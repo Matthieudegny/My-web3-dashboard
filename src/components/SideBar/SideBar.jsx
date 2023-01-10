@@ -17,7 +17,7 @@ import Login from "../Login/Login";
 import { pages } from "../../data/data";
 
 const SideBar = () => {
-  const { mobileVersion, setToken } = useContext(DashBoardContext);
+  const { setToken } = useContext(DashBoardContext);
 
   const [FormVisibility, setFormVisibility] = useState(false);
   const [userPseudo, setuserPseudo] = useState("Compte Visiteur");
@@ -80,16 +80,10 @@ const SideBar = () => {
               end
               className={({ isActive }) => (isActive ? "activeLink" : "")}
             >
-              {!mobileVersion ? (
-                <div className="SideBar_container_Links_Container_Links_Item">
-                  {page.name}
-                  {page.icon}
-                </div>
-              ) : (
-                <div className="SideBar_container_Links_Container_Links_Item">
-                  {page.icon}
-                </div>
-              )}
+              <div className="SideBar_container_Links_Container_Links_Item">
+                {page.name}
+                {page.icon}
+              </div>
             </NavLink>
           </React.Fragment>
         ))}

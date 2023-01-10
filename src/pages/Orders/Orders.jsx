@@ -197,8 +197,6 @@ const Orders = () => {
             <td>
               <input
                 type="number"
-                min=""
-                max=""
                 className={`Orders-profit ${
                   profit === "" ? "empty" : "checked"
                 }`}

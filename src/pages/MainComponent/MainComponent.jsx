@@ -11,12 +11,12 @@ import Charts from "../Charts/Charts";
 import Orders from "../Orders/Orders";
 
 const MainComponent = () => {
-  const { page, message, setMessage, bckColor, setbckColor, showErrorMessage } =
-    useContext(DashBoardContext);
+  const { message, bckColor, showErrorMessage } = useContext(DashBoardContext);
 
   return (
     <div className="MainComponent-container">
       <div className="MainComponent-container-style"></div>
+      {/* Info Message */}
       <div
         style={{ backgroundColor: bckColor }}
         className={`errorMessage ${

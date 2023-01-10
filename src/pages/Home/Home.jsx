@@ -1,14 +1,14 @@
 import React, { useContext, useEffect } from "react";
 
 //composants
-import LineChartEvolution from "../../components/Charts/Lines/LineEvolutions";
+import ChartSynthesis from "../../components/Charts/Lines/ChartSynthesis";
 import Container from "../../components/Container/Container";
 
 //import context
 import { DashBoardContext } from "../../Context/Context";
 
 //data
-import { labelsLineEvolution } from "../../data/data";
+import { labelsChartSynthesis } from "../../data/data";
 
 const Home = () => {
   const {
@@ -19,7 +19,7 @@ const Home = () => {
     accountBalance,
   } = useContext(DashBoardContext);
 
-  const valuesLineEvolution = [
+  const valuesChartSynthesis = [
     numberOfTrades,
     accountBalance + "$",
     numberOfTradesWon,
@@ -41,9 +41,9 @@ const Home = () => {
       }}
     >
       <Container
-        labels={labelsLineEvolution}
-        values={valuesLineEvolution}
-        graph={<LineChartEvolution />}
+        labels={labelsChartSynthesis}
+        values={valuesChartSynthesis}
+        graph={<ChartSynthesis />}
       />
     </div>
   );

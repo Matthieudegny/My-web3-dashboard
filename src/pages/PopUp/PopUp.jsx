@@ -26,7 +26,7 @@ function PopUp() {
 
   const [openPopUp, setOpenPopUp] = useState(false);
 
-  //i charge all the informations from orderToUpdate to Popup's inputs
+  //i charge all the informations from orderToUpdate(Order -> Context) to Popup's inputs
   useEffect(() => {
     const { asset, date, direction, profit, realise, risk, taille, _id } =
       orderToUpdate;
@@ -53,7 +53,7 @@ function PopUp() {
   const { mutate: updateOneOrder } = useUpdateOrder(onSuccessUpdateOrder);
 
   const updateOrder = async () => {
-    const orderObject = {
+    const orderObjectToUpdate = {
       date: date,
       asset: asset,
       direction: direction,
@@ -63,20 +63,20 @@ function PopUp() {
       profit: profit,
     };
     if (
-      orderObject.asset === orderToUpdate.asset &&
-      orderObject.date === orderToUpdate.date &&
-      orderObject.direction === orderToUpdate.direction &&
-      orderObject.profit === orderToUpdate.profit &&
-      orderObject.realise === orderToUpdate.realise &&
-      orderObject.risk === orderToUpdate.risk &&
-      orderObject.taille === orderToUpdate.taille
+      orderObjectToUpdate.asset === orderToUpdate.asset &&
+      orderObjectToUpdate.date === orderToUpdate.date &&
+      orderObjectToUpdate.direction === orderToUpdate.direction &&
+      orderObjectToUpdate.profit === orderToUpdate.profit &&
+      orderObjectToUpdate.realise === orderToUpdate.realise &&
+      orderObjectToUpdate.risk === orderToUpdate.risk &&
+      orderObjectToUpdate.taille === orderToUpdate.taille
     ) {
       displayInfoMessage(" Vous n'avez rien modifié", "rgb(13, 73, 158)");
       setOpenPopUp(false);
       setOrderToUpdate("");
     } else {
       if (token !== "") {
-        const objetIdANdOrder = [idOrder, orderObject, token];
+        const objetIdANdOrder = [idOrder, orderObjectToUpdate, token];
         updateOneOrder(objetIdANdOrder);
       } else {
         displayInfoMessage(

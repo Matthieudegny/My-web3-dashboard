@@ -8,7 +8,6 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import DashBoardContext from "./Context/Context";
 
 //import components
-import Header from "./components/Header/Header";
 import SideBar from "./components/SideBar/SideBar";
 import MainComponent from "./pages/MainComponent/MainComponent";
 import PopUp from "./pages/PopUp/PopUp";
@@ -25,8 +24,6 @@ function App() {
         <BrowserRouter>
           <DashBoardContext>
             <PopUp />
-            {/* <Header /> */}
-
             <div className="App-main-container">
               <SideBar />
               <MainComponent />

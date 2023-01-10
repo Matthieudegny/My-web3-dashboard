@@ -28,12 +28,9 @@ const Charts = () => {
     numberOfTradesWon,
     numberOfTradesLost,
     numberOfTradesBE,
-    accountBalance,
-    annualPerf,
     percBTC,
     percNSQ,
     percPF,
-    monthlyPerf,
   } = useContext(DashBoardContext);
 
   //Chart n°1

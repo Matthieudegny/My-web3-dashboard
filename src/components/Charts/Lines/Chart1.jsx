@@ -1,7 +1,4 @@
-import React, { useContext, useEffect } from "react";
-
-//import context
-import { DashBoardContext } from "../../../Context/Context";
+import React from "react";
 
 import {
   Chart as ChartJS,
@@ -14,7 +11,6 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-// import faker from "faker";
 
 ChartJS.register(
   CategoryScale,
