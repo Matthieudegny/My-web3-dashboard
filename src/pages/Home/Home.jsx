@@ -11,7 +11,6 @@ import { DashBoardContext } from "../../Context/Context";
 import { labelsChartSynthesis } from "../../data/data";
 
 const Home = () => {
-  console.log("test");
   const {
     numberOfTrades,
     numberOfTradesWon,
